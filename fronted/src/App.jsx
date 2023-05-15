@@ -8,9 +8,11 @@ import Activate from './containers/Activate';
 import ResetPassword from './containers/ResetPassword';
 import ResetPasswordConfirm from './containers/ResetPasswordConfirm';
 
+
 import { Provider } from 'react-redux';
 import store from './store';
 import PaginaDeInicio from './containers/PaginaDeInicio';
+import Perfil from './containers/Perfil';
 
 const App = () => (
   <Provider store={store}>
@@ -24,6 +26,8 @@ const App = () => (
                     <Route path='/password/reset/confirm/:uid/:token' element={<ResetPasswordConfirm />}></Route>
                     <Route path='/paginadeinicio' element={<PaginaDeInicio />}></Route>
                     <Route path='/activate/:uid/:token' element={<Activate />}></Route>
+                    <Route path='/profile' element={<Perfil />}></Route>
+                    
               </Routes>
         </Router>
   </Provider>

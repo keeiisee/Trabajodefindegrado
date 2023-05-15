@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
@@ -33,3 +34,26 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     
     def __str__(self):
         return self.email
+    
+class Post(models.Model):
+    author = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    created_date = models.DateTimeField(default=datetime.now())
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    image = models.ImageField(upload_to='post_images/', blank=True)
+    likes = models.ManyToManyField(UserAccount, related_name='liked_posts', blank=True)
+
+    def total_likes(self):
+        return self.likes.count()
+
+    def __str__(self):
+        return self.title
+    
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    created_date = models.DateTimeField(default=datetime.now())
+    content = models.TextField()
+
+    def __str__(self):
+        return f'Comment by {self.author} on {self.post}'

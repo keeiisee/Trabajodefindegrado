@@ -1,8 +1,8 @@
 from rest_framework import generics, permissions, viewsets
 # from .models import Post, Comment
 # from .serializers import PostSerializer, CommentSerializer
-from .models import Profile
-from .serializers import ProfileCreateSerializer
+from .models import Profile, UserAccount
+from .serializers import ProfileCreateSerializer, UserCreateSerializerView
 
 class ProfileList(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
@@ -11,6 +11,18 @@ class ProfileList(viewsets.ModelViewSet):
 class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileCreateSerializer
+
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = UserAccount.objects.all()
+    serializer_class = UserCreateSerializerView
+
+class UserListLeter(viewsets.ModelViewSet):
+    queryset = UserAccount.objects.all()
+    serializer_class = UserCreateSerializerView
+    def get_queryset(self):
+        letter = self.kwargs['pk']
+        return self.queryset.filter(name__icontains=letter)
+
 # class PostList(viewsets.ModelViewSet):
 #     queryset = Post.objects.all()
 #     serializer_class = PostSerializer

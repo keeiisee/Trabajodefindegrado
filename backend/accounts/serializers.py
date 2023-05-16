@@ -15,7 +15,11 @@ class ProfileCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = '__all__'
-        
+
+class UserCreateSerializerView(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('name',)
 # class PostSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Post

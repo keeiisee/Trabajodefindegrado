@@ -19,7 +19,7 @@ const Signup = ({ signup, isAuthenticated }) => {
     const navigate = useNavigate()
     const onSubmit = e => {
         e.preventDefault();
-
+        console.log(name, email)
         if (password === re_password) {
             signup(name, email, password, re_password);
             setAccountCreated(true);

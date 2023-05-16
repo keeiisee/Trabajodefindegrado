@@ -1,20 +1,24 @@
 import React from 'react'
-import { logout } from '../actions/auth';
+import { load_user, login, logout } from '../actions/auth';
 import { useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-export const Navbar = ({ logout }) => {
+export const Navbar = ({ logout, isAuthenticated, login }) => {
   const navigate = useNavigate()
   const logout_user = () => {
       logout();
       navigate('/');
   };
   const perfil = () => {
+    login()
     navigate('/profile');
   };
   const inicio = () => {
     navigate('/paginadeinicio');
   };
+  const subir = () =>{
+    navigate('/pp')
+  }
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -32,7 +36,7 @@ export const Navbar = ({ logout }) => {
             <a className="nav-link" href="#">Explorar</a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="#">Subir</a>
+            <a className="nav-link" href="" onClick={subir}>Subir</a>
           </li>
           <li className="nav-item">
             <a className="nav-link" href="" onClick={perfil}>Perfil</a>
@@ -51,5 +55,8 @@ export const Navbar = ({ logout }) => {
     </>
   )
 }
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
 
-export default connect(null, { logout })(Navbar)
+export default connect(mapStateToProps, {login,  logout })(Navbar)

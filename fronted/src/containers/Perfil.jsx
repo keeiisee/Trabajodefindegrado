@@ -9,7 +9,7 @@ export const Perfil = () => {
     <div className="container">
       <div className="row align-items-center">
         <div className="col-md-3">
-          <img src="https://via.placeholder.com/150" alt="Foto de perfil" className="rounded-circle img-fluid"/>
+          <img src="https://via.placeholder.com/150" alt="Foto de perfil" class="rounded-circle img-fluid"/>
         </div>
         <div className="col-md-9">
           <h1 className="text-light mb-0">Nombre de usuario</h1>

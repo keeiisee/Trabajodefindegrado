@@ -13,6 +13,8 @@ import {
     PASSWORD_RESET_CONFIRM_FAIL,
     ACTIVATION_SUCCESS,
     ACTIVATION_FAIL,
+    SIGNUP_SUCCESS,
+    SIGNUP_FAIL,
 } from './types';
 
 export const reset_password_confirm = (uid, token, new_password, re_new_password) => async dispatch => {
@@ -23,7 +25,7 @@ export const reset_password_confirm = (uid, token, new_password, re_new_password
     };
 
     const body = JSON.stringify({ uid, token, new_password, re_new_password });
-
+    console.log(body)
     try {
         await axios.post(`http://127.0.0.1:8000/auth/users/reset_password_confirm/`, body, config);
 

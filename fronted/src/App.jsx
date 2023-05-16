@@ -13,6 +13,7 @@ import { Provider } from 'react-redux';
 import store from './store';
 import PaginaDeInicio from './containers/PaginaDeInicio';
 import Perfil from './containers/Perfil';
+import NewPostForm from './containers/NewPost';
 
 const App = () => (
   <Provider store={store}>
@@ -27,6 +28,7 @@ const App = () => (
                     <Route path='/paginadeinicio' element={<PaginaDeInicio />}></Route>
                     <Route path='/activate/:uid/:token' element={<Activate />}></Route>
                     <Route path='/profile' element={<Perfil />}></Route>
+                    <Route path='/pp' element={<NewPostForm />}></Route>
                     
               </Routes>
         </Router>

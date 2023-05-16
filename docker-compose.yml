@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  web:
+    build:
+      context: .
+    container_name: tfg_frontend
+    user: node
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./fronted:/home/node

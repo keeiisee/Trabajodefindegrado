@@ -27,7 +27,7 @@ class UserListLeter(viewsets.ModelViewSet):
     serializer_class = UserCreateSerializerView
     def get_queryset(self):
         letter = self.kwargs['pk']
-        return self.queryset.filter(name__icontains=letter)
+        return self.queryset.filter(name__icontains=letter, is_active=True)
 
 # class PostList(viewsets.ModelViewSet):
 #     queryset = Post.objects.all()

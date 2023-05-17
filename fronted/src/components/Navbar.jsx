@@ -1,15 +1,22 @@
-import React from 'react'
-import { logout } from '../actions/auth';
+import React, { useState } from 'react'
+import { logout, load_personas } from '../actions/auth';
 import { useNavigate, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-export const Navbar = ({ logout }) => {
+export const Navbar = ({ logout, load_personas }) => {
   const navigate = useNavigate()
+  const [persona, setPersona] = useState('')
   const logout_user = () => {
     logout();
     navigate('/');
   };
-
+  const onChange = (e) => {
+    setPersona(e.target.value);
+  }
+  const buscarGente = (e) => {
+    e.preventDefault();
+    load_personas(persona)
+  }
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -37,8 +44,11 @@ export const Navbar = ({ logout }) => {
               </li>
             </ul>
             <form className="d-flex">
-              <input className="form-control me-2" type="search" placeholder="Buscar" aria-label="Buscar" />
-              <button className="btn btn-outline-success" type="submit">Buscar Amigos</button>
+              <input className="form-control me-2" onChange={e => onChange(e)} type="search" placeholder="Buscar" aria-label="Buscar" value={persona} />
+              <div className="input-group-append">
+                <span className="input-group-text me-2" id="sugerencias"></span>
+              </div>
+              <button className="btn btn-outline-success" onClick={buscarGente} type="submit">Buscar Gente</button>
             </form>
           </div>
         </div>
@@ -47,4 +57,4 @@ export const Navbar = ({ logout }) => {
   )
 }
 
-export default connect(null, { logout })(Navbar)
+export default connect(null, { logout, load_personas })(Navbar)

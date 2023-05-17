@@ -20,7 +20,21 @@ import {
     PROFILE_LOADED_SUCCES,
     PROFILE_LOADED_FAIL,
 } from './types';
+export const load_personas = (palabra) => async dispatch => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `JWT ${localStorage.getItem('access')}`,
+            'Accept': 'application/json'
+        }
+    }
+    try {
+        const res = await axios.get(`http://localhost:8000/accounts/users/${palabra}/`, config);
+        console.log(res)
+    } catch (err) {
 
+    }
+}
 export const crear_perfil = (descripcion, user1) => async dispatch => {
     const user = user1.id
     const config = {

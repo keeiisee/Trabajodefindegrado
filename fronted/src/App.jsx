@@ -28,8 +28,8 @@ const App = () => {
 
                               <Routes>
                                     <Route path='/' element={<Home />}></Route>
-                                    <Route path='/login' element={<Login />}></Route>
-                                    <Route path='/signup' element={<Signup />}></Route>
+                                    <Route path='/login' element={<Home />}></Route>
+                                    <Route path='/signup' element={<Home />}></Route>
                                     <Route path='/activate' element={<Activate />}></Route>
                                     <Route path='/reset-password' element={<ResetPassword />}></Route>
                                     <Route path='/password/reset/confirm/:uid/:token' element={<ResetPasswordConfirm />}></Route>

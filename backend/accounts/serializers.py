@@ -20,6 +20,7 @@ class UserCreateSerializerView(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id','name')
+        
 # class PostSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Post

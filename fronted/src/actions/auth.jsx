@@ -20,7 +20,9 @@ import {
     PROFILE_LOADED_SUCCES,
     PROFILE_LOADED_FAIL,
 } from './types';
+
 export const load_personas = (palabra) => async dispatch => {
+   
     const config = {
         headers: {
             'Content-Type': 'application/json',
@@ -30,7 +32,11 @@ export const load_personas = (palabra) => async dispatch => {
     }
     try {
         const res = await axios.get(`http://localhost:8000/accounts/users/${palabra}/`, config);
-        console.log(res)
+        if (res.data != []){
+            return res.data
+        } else {
+            return []
+        }
     } catch (err) {
 
     }

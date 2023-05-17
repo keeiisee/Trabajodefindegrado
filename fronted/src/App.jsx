@@ -12,8 +12,9 @@ import ResetPasswordConfirm from './containers/ResetPasswordConfirm';
 import { Provider } from 'react-redux';
 import store from './store';
 import PaginaDeInicio from './containers/PaginaDeInicio';
-import Perfil from './containers/Perfil';
+import Perfil from './containers/Perfil/Perfil';
 import NewPostForm from './containers/NewPost';
+import CrearPerfil from './containers/Perfil/CrearPerfil';
 
 const App = () => (
   <Provider store={store}>
@@ -29,7 +30,7 @@ const App = () => (
                     <Route path='/activate/:uid/:token' element={<Activate />}></Route>
                     <Route path='/profile' element={<Perfil />}></Route>
                     <Route path='/pp' element={<NewPostForm />}></Route>
-                    
+                    <Route path='/crear-perfil' element={<CrearPerfil />}></Route>
               </Routes>
         </Router>
   </Provider>

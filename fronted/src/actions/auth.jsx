@@ -15,8 +15,33 @@ import {
     ACTIVATION_FAIL,
     SIGNUP_SUCCESS,
     SIGNUP_FAIL,
+    PROFILE_CREATE_SUCCES,
+    PROFILE_CREATE_FAIL,
+    PROFILE_LOADED_SUCCES,
+    PROFILE_LOADED_FAIL,
 } from './types';
 
+export const crear_perfil = (descripcion, user1) => async dispatch => {
+    const user = user1.id
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `JWT ${localStorage.getItem('access')}`,
+        }
+    }
+    const body = JSON.stringify({ user, descripcion });
+    try {
+        await axios.post(`http://localhost:8000/accounts/profiles/profiles/`, body, config);
+        dispatch({
+            type: PROFILE_CREATE_SUCCES
+        });
+       
+    } catch (err) {
+        dispatch({
+            type: PROFILE_CREATE_FAIL
+        });
+    }
+}
 export const reset_password_confirm = (uid, token, new_password, re_new_password) => async dispatch => {
     const config = {
         headers: {
@@ -25,7 +50,7 @@ export const reset_password_confirm = (uid, token, new_password, re_new_password
     };
 
     const body = JSON.stringify({ uid, token, new_password, re_new_password });
-    console.log(body)
+
     try {
         await axios.post(`http://127.0.0.1:8000/auth/users/reset_password_confirm/`, body, config);
 
@@ -89,31 +114,21 @@ export const checkAuthenticated = () => async dispatch => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
             }
         }; 
 
-        const body = JSON.stringify({ token: localStorage.getItem('access') });
+        const body = JSON.stringify({ token:localStorage.getItem('access') });
 
         try {
-            const res = await fetch(`http://127.0.0.1:8000/auth/jwt/verify/`, body, config)
-            const data = await res.json();
-
-            if (data.code !== 'token_not_valid') {
-                dispatch({
-                    type: AUTHENTICATED_SUCCESS
-                });
-            } else {
-                dispatch({
-                    type: AUTHENTICATED_FAIL
-                });
-            }
+            await axios.post(`http://127.0.0.1:8000/auth/jwt/verify`, body, config);
+            dispatch({
+                type: AUTHENTICATED_SUCCESS
+            });
         } catch (err) {
             dispatch({
                 type: AUTHENTICATED_FAIL
             });
         }
-
     } else {
         dispatch({
             type: AUTHENTICATED_FAIL
@@ -171,7 +186,30 @@ export const load_user = () => async dispatch => {
     }
 };
 
-
+export const load_profile = () => async dispatch =>{
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `JWT ${localStorage.getItem('access')}`,
+        }
+    }
+    try {
+        const res = await axios.get(`http://localhost:8000/accounts/profiles/profiles/`, config);
+        if (res.data.length !== 0){
+            dispatch({
+                type: PROFILE_LOADED_SUCCES,
+            });
+        } else {
+            dispatch({
+                type: PROFILE_LOADED_FAIL,
+            });
+        }
+    } catch (err) {
+        dispatch({
+            type: PROFILE_LOADED_FAIL,
+        });
+    }
+}
 export const login = (email, password) => async dispatch => {
     const config = {
       method: 'POST',
@@ -191,6 +229,7 @@ export const login = (email, password) => async dispatch => {
           payload: data
         });
         dispatch(load_user());
+        dispatch(load_profile())
       } else {
         dispatch({
           type: LOGIN_FAIL

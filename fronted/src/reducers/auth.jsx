@@ -14,13 +14,18 @@ import {
     SIGNUP_FAIL,
     ACTIVATION_SUCCESS,
     ACTIVATION_FAIL,
+    PROFILE_CREATE_SUCCES,
+    PROFILE_CREATE_FAIL,
+    PROFILE_LOADED_SUCCES,
+    PROFILE_LOADED_FAIL,
 } from '../actions/types';
 
 const initialState = {
     access: localStorage.getItem('access'),
     refresh: localStorage.getItem('refresh'),
     isAuthenticated: null,
-    user: null
+    user: null,
+    profile: null
 };
 
 export default function(state = initialState, action) {
@@ -28,6 +33,7 @@ export default function(state = initialState, action) {
 
     switch(type) {
         case AUTHENTICATED_SUCCESS:
+            console.log(initialState)
             return {
                 ...state,
                 isAuthenticated: true
@@ -50,6 +56,20 @@ export default function(state = initialState, action) {
                 ...state,
                 user: payload
             }
+        case PROFILE_LOADED_SUCCES:
+        case PROFILE_CREATE_SUCCES:
+            return{
+                ...state,
+                profile: true
+            }
+        case PROFILE_LOADED_FAIL:
+        case PROFILE_CREATE_FAIL:
+            return{
+                ...state,
+                profile: null
+            }
+       
+
         case AUTHENTICATED_FAIL:
             return {
                 ...state,
@@ -59,20 +79,11 @@ export default function(state = initialState, action) {
         case USER_LOADED_FAIL:
             return {
                 ...state,
-                user: null
+                user: null,
+                profile: null
             }
         case LOGIN_FAIL:
         case SIGNUP_FAIL:
-        case LOGOUT:
-            localStorage.removeItem('access');
-            localStorage.removeItem('refresh');
-                return {
-                    ...state,
-                    access: null,
-                    refresh: null,
-                    isAuthenticated: false,
-                    user: null
-                }
         case LOGOUT:
             localStorage.removeItem('access');
             localStorage.removeItem('refresh');
@@ -81,7 +92,8 @@ export default function(state = initialState, action) {
                 access: null,
                 refresh: null,
                 isAuthenticated: false,
-                user: null
+                user: null,
+                profile:null
             }
         case PASSWORD_RESET_SUCCESS:
         case PASSWORD_RESET_FAIL:

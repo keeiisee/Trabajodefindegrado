@@ -1,24 +1,19 @@
 import React from 'react'
-import { load_user, login, logout } from '../actions/auth';
-import { useNavigate } from 'react-router-dom';
+import { checkAuthenticated, logout } from '../actions/auth';
+import { useNavigate, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-export const Navbar = ({ logout, isAuthenticated, login }) => {
+export const Navbar = ({ logout, isAuthenticated }) => {
   const navigate = useNavigate()
   const logout_user = () => {
       logout();
       navigate('/');
   };
-  const perfil = () => {
-    login()
-    navigate('/profile');
-  };
+
   const inicio = () => {
     navigate('/paginadeinicio');
   };
-  const subir = () =>{
-    navigate('/pp')
-  }
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -30,16 +25,16 @@ export const Navbar = ({ logout, isAuthenticated, login }) => {
       <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
         <ul className="navbar-nav">
           <li className="nav-item">
-            <a className="nav-link active" aria-current="page" href="" onClick={inicio}>Inicio</a>
+            <Link className="nav-link active" aria-current="page" to="/paginadeinicio">Inicio</Link>
           </li>
           <li className="nav-item">
             <a className="nav-link" href="#">Explorar</a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="" onClick={subir}>Subir</a>
+            <Link className="nav-link" to="/pp">Subir</Link>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="" onClick={perfil}>Perfil</a>
+          <Link className="nav-link" to="/profile">Perfil</Link>
           </li>
           <li className="nav-item">
             <a className="nav-link" href="" onClick={logout_user}>Cerrar Sesion</a>
@@ -59,4 +54,4 @@ const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated
 });
 
-export default connect(mapStateToProps, {login,  logout })(Navbar)
+export default connect(mapStateToProps, { logout })(Navbar)

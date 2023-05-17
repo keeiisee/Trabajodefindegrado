@@ -3,13 +3,22 @@ version: '3'
 services:
   web:
     build:
-      context: .
+      context: .docker/frontend/
     container_name: tfg_frontend
     user: node
     ports:
       - "5173:5173"
     volumes:
       - ./fronted:/home/node
+
+  server:
+    build:
+      context: .docker/server/
+    container_name: tfg_server
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/usr/src/app
 
   database:
     image: postgres:14.7

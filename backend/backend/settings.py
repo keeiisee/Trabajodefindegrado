@@ -111,7 +111,7 @@ DATABASES = {
         'NAME': 'auth_system',
         'USER': 'postgres',
         'PASSWORD': '2203',
-        'HOST': 'localhost'
+        'HOST': 'localhost' # Si se quiere usar con docker cambiarlo a:  database
     }
 }
 

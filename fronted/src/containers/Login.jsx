@@ -1,38 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { login } from '../actions/auth';
 
 const Login = ({ login, isAuthenticated }) => {
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '' 
-    });
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
 
-    const { email, password } = formData;
+  const { email, password } = formData;
 
-    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
-    const navigate = useNavigate()
-    const onSubmit = e => {
-        e.preventDefault();
+  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const navigate = useNavigate()
+  const onSubmit = e => {
+    e.preventDefault();
 
-        login(email, password);
-    };
-  
-    useEffect(() => {
-        if (isAuthenticated) {
-          navigate('/paginadeinicio');
-        }
-      }, [isAuthenticated, navigate]);
+    login(email, password);
+  };
 
-    return (
-        <div className="container d-flex justify-content-center align-items-center vh-100">
-          <div className="card p-3 w-50">
-            <h1 className="text-center mb-4">Iniciar Sesión</h1>
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/paginadeinicio');
+    }
+  }, [isAuthenticated, navigate]);
+
+  return (
+    <section className="bg-light py-5">
+      <div className="container">
+        <div className="row">
+          <div className="col-md-6">
+            <h2 className="text-black mb-4">Iniciar sesión</h2>
+
             <form onSubmit={e => onSubmit(e)}>
-              <div className="form-floating mb-3">
+              <div className="form-group">
                 <input
-                  className='form-control'
+                  className='form-control form-control-lg'
                   type='email'
                   placeholder='Email'
                   name='email'
@@ -41,32 +44,36 @@ const Login = ({ login, isAuthenticated }) => {
                   required
                 />
               </div>
-              <div className="form-floating mb-3">
+              <br />
+              <div className="form-group">
                 <input
-                   className='form-control'
-                   type='password'
-                   placeholder='Password'
-                   name='password'
-                   value={password}
-                   onChange={e => onChange(e)}
-                   minLength='6'
-                   required
+                  className='form-control form-control-lg'
+                  type='password'
+                  placeholder='Password'
+                  name='password'
+                  value={password}
+                  onChange={e => onChange(e)}
+                  minLength='6'
+                  required
                 />
               </div>
+              <br />
               <button type="submit" className="btn btn-primary d-block w-100">
                 Iniciar Sesión
               </button>
-              <p className="mt-3 text-center">¿No tienes cuenta? <Link to="/signup">Registrate aquí</Link></p>
-              <p className='mt-3 text-center'>
-                    Forgot your Password? <Link to='/reset-password'>Reset Password</Link>
-                </p>
             </form>
           </div>
+          <div className="col-md-6">
+            <br />
+            <img src="https://picsum.photos/800/600" alt="" className="img-fluid" />
+          </div>
         </div>
-      );
-    };
+      </div>
+    </section>
+  );
+};
 const mapStateToProps = state => ({
-    isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated
 });
 
-export default connect(mapStateToProps,{ login })(Login);
+export default connect(mapStateToProps, { login })(Login);

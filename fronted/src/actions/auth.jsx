@@ -35,7 +35,7 @@ export const crear_perfil = (descripcion, user1) => async dispatch => {
         dispatch({
             type: PROFILE_CREATE_SUCCES
         });
-       
+
     } catch (err) {
         dispatch({
             type: PROFILE_CREATE_FAIL
@@ -115,9 +115,9 @@ export const checkAuthenticated = () => async dispatch => {
             headers: {
                 'Content-Type': 'application/json',
             }
-        }; 
+        };
 
-        const body = JSON.stringify({ token:localStorage.getItem('access') });
+        const body = JSON.stringify({ token: localStorage.getItem('access') });
 
         try {
             await axios.post(`http://127.0.0.1:8000/auth/jwt/verify`, body, config);
@@ -166,7 +166,7 @@ export const load_user = () => async dispatch => {
                 'Authorization': `JWT ${localStorage.getItem('access')}`,
                 'Accept': 'application/json'
             }
-        }; 
+        };
 
         try {
             const res = await axios.get(`http://127.0.0.1:8000/auth/users/me/`, config);
@@ -186,7 +186,7 @@ export const load_user = () => async dispatch => {
     }
 };
 
-export const load_profile = () => async dispatch =>{
+export const load_profile = () => async dispatch => {
     const config = {
         headers: {
             'Content-Type': 'application/json',
@@ -194,8 +194,8 @@ export const load_profile = () => async dispatch =>{
         }
     }
     try {
-        const res = await axios.get(`http://localhost:8000/accounts/profiles/profiles/`, config);
-        if (res.data.length !== 0){
+        const res = await axios.get(`http://localhost:8000/accounts/profile/`, config);
+        if (res.data.length !== 0) {
             dispatch({
                 type: PROFILE_LOADED_SUCCES,
             });
@@ -212,38 +212,38 @@ export const load_profile = () => async dispatch =>{
 }
 export const login = (email, password) => async dispatch => {
     const config = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email, password })
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
     };
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/auth/jwt/create/", config);
-      const data = await res.json();
-  
-      if (res.ok) {
-        dispatch({
-          type: LOGIN_SUCCESS,
-          payload: data
-        });
-        dispatch(load_user());
-        dispatch(load_profile())
-      } else {
-        dispatch({
-          type: LOGIN_FAIL
-        });
-      }
-    } catch (err) {
-      console.error(err);
-      dispatch({
-        type: LOGIN_FAIL
-      });
-    }
-  };
+        const res = await fetch("http://127.0.0.1:8000/auth/jwt/create/", config);
+        const data = await res.json();
 
-  export const logout = () => dispatch => {
+        if (res.ok) {
+            dispatch({
+                type: LOGIN_SUCCESS,
+                payload: data
+            });
+            dispatch(load_user());
+            dispatch(load_profile())
+        } else {
+            dispatch({
+                type: LOGIN_FAIL
+            });
+        }
+    } catch (err) {
+        console.error(err);
+        dispatch({
+            type: LOGIN_FAIL
+        });
+    }
+};
+
+export const logout = () => dispatch => {
     dispatch({
         type: LOGOUT
     });

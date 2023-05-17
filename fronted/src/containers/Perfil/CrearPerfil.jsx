@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { connect } from 'react-redux';
 import { crear_perfil } from '../../actions/auth';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../../components/Navbar';
 
-function CrearPerfil( {crear_perfil, user} ) {
+function CrearPerfil({ crear_perfil, user }) {
   const [descripcion, setDescripcion] = useState('');
   const navigate = useNavigate();
   const handleDescripcionChange = (event) => {
@@ -18,6 +19,7 @@ function CrearPerfil( {crear_perfil, user} ) {
 
   return (
     <div>
+      <Navbar></Navbar>
       <h2>Crear perfil</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
@@ -36,7 +38,7 @@ function CrearPerfil( {crear_perfil, user} ) {
   );
 }
 const mapStateToProps = state => ({
-    user: state.auth.user
-  });
+  user: state.auth.user
+});
 
-export default connect(mapStateToProps, {crear_perfil})(CrearPerfil);
+export default connect(mapStateToProps, { crear_perfil })(CrearPerfil);

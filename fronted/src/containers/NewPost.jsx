@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {createPost} from '../components/createPost';
+import Navbar from '../components/Navbar';
 
 function NewPostForm() {
   const [title, setTitle] = useState('');
@@ -24,6 +25,8 @@ function NewPostForm() {
   };
 
   return (
+    <>
+    <Navbar></Navbar>
     <form onSubmit={handleSubmit}>
       <label htmlFor="title">Título:</label>
       <input type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
@@ -36,6 +39,8 @@ function NewPostForm() {
 
       <button type="submit">Crear post</button>
     </form>
+    </>
+    
   );
 }
 

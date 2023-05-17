@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar';
 export const PaginaDeInicio = () => {
   return (
     <>
-  <Navbar></Navbar>
+  <Navbar/>
   <div className="container my-4">
     <div className="row">
       <div className="col-6">

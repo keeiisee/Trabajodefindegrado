@@ -12,6 +12,12 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileCreateSerializer
 
+class ProfileDetailForUser(viewsets.ModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileCreateSerializer
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = UserAccount.objects.all()
     serializer_class = UserCreateSerializerView

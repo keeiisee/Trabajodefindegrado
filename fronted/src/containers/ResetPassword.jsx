@@ -22,9 +22,9 @@ const ResetPassword = ({ reset_password }) => {
 
     useEffect(() => {
         if (requestSent) {
-          navigate('/');
+            navigate('/');
         }
-      }, [requestSent, navigate]);
+    }, [requestSent, navigate]);
 
     return (
         <div className='container mt-5'>

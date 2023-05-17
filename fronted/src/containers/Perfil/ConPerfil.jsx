@@ -2,14 +2,14 @@ import React from 'react'
 import Navbar from '../../components/Navbar'
 
 export const ConPerfil = () => {
-    return (
-        <>
-        <Navbar/>
-        <div className="container-fluid bg-primary py-5">
+  return (
+    <>
+      <Navbar />
+      <div className="container-fluid bg-primary py-5">
         <div className="container">
           <div className="row align-items-center">
             <div className="col-md-3">
-              <img src="https://via.placeholder.com/150" alt="Foto de perfil" className="rounded-circle img-fluid"/>
+              <img src="https://via.placeholder.com/150" alt="Foto de perfil" className="rounded-circle img-fluid" />
             </div>
             <div className="col-md-9">
               <h1 className="text-light mb-0">Nombre de usuario</h1>
@@ -18,7 +18,7 @@ export const ConPerfil = () => {
           </div>
         </div>
       </div>
-    
+
       <div className="container py-5">
         <div className="row">
           <div className="col-md-8">
@@ -43,14 +43,14 @@ export const ConPerfil = () => {
             </ul>
           </div>
         </div>
-    
-     
+
+
         <hr />
         <h2 className="text-accent">Mis publicaciones</h2>
         <div className="row">
           <div className="col-md-4 mb-4">
             <div className="card bg-secondary">
-              <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="..."/>
+              <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="..." />
               <div className="card-body">
                 <h5 className="card-title text-accent">Título de la publicación</h5>
                 <p className="card-text text-light">Descripción de la publicación.</p>
@@ -59,7 +59,7 @@ export const ConPerfil = () => {
           </div>
           <div className="col-md-4 mb-4">
             <div className="card bg-secondary">
-              <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="..."/>
+              <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="..." />
               <div className="card-body">
                 <h5 className="card-title text-accent">Título de la publicación</h5>
                 <p className="card-text text-light">Descripción de la publicación.</p>
@@ -68,7 +68,7 @@ export const ConPerfil = () => {
           </div>
           <div className="col-md-4 mb-4">
             <div className="card bg-secondary">
-              <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="..."/>
+              <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="..." />
               <div className="card-body">
                 <h5 className="card-title text-accent">Título de la publicación</h5>
                 <p className="card-text text-light">Descripción de la publicación.</p>
@@ -77,6 +77,6 @@ export const ConPerfil = () => {
           </div>
         </div>
       </div>
-        </>
-      )
+    </>
+  )
 }

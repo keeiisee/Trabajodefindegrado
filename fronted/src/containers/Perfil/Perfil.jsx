@@ -3,7 +3,6 @@ import { ConPerfil } from './ConPerfil';
 import { SinPerfil } from './SinPerfil';
 import { connect } from 'react-redux';
 
-
 export const Perfil = ({ profile }) => {
   return (
     <>

@@ -8,6 +8,7 @@ const Activate = ({ verify }) => {
     const [verified, setVerified] = useState(false);
     const routeParams = useParams()
     const navigate = useNavigate()
+    
     const verify_account = e => {
         const uid = routeParams.uid;
         const token = routeParams.token;
@@ -18,13 +19,13 @@ const Activate = ({ verify }) => {
 
     useEffect(() => {
         if (verified) {
-          navigate('/login');
+            navigate('/login');
         }
-      }, [verified, navigate]);
+    }, [verified, navigate]);
 
     return (
         <div className='container'>
-            <div 
+            <div
                 className='d-flex flex-column justify-content-center align-items-center'
                 style={{ marginTop: '200px' }}
             >

@@ -17,7 +17,7 @@ const ResetPasswordConfirm = ({ reset_password_confirm }) => {
 
     const onSubmit = e => {
         e.preventDefault();
-        const uid =routeParams.uid
+        const uid = routeParams.uid
         const token = routeParams.token
         console.log(uid)
         console.log(token)
@@ -27,13 +27,13 @@ const ResetPasswordConfirm = ({ reset_password_confirm }) => {
     const navigate = useNavigate()
     useEffect(() => {
         if (requestSent) {
-          navigate('/');
+            navigate('/');
         }
-      }, [requestSent, navigate]);
+    }, [requestSent, navigate]);
     return (
         <div className='container mt-5'>
             <form onSubmit={e => onSubmit(e)}>
-            <div className='form-group'>
+                <div className='form-group'>
                     <input
                         className='form-control'
                         type='password'

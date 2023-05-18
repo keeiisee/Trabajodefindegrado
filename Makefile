@@ -2,7 +2,7 @@
 
 UID = $(shell id -u)
 DOCKER_FE=tfg_frontend
-DOCKER_BE=tfg_server
+DOCKER_BE=tfg_backend
 
 help: ## Mostrar este mensaje de ayuda
 	@echo 'usage: make [target]'

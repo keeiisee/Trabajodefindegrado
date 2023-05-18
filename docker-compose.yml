@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  web:
+  frontend:
     build:
       context: .docker/frontend/
     container_name: tfg_frontend
@@ -11,10 +11,10 @@ services:
     volumes:
       - ./fronted:/home/node
 
-  server:
+  backend:
     build:
-      context: .docker/server/
-    container_name: tfg_server
+      context: .docker/backend/
+    container_name: tfg_backend
     ports:
       - "8000:8000"
     volumes:

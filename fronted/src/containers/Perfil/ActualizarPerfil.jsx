@@ -62,7 +62,7 @@ function ActualizarPerfil({ load_Idprofile, modificar_perfil, user }) {
                         </div>
                         <div className="mb-3">
                             <label htmlFor="descripcion" className="form-label">Descripción:</label>
-                            <textarea className="form-control" onChange={handleDescripcionChange} id="descripcion" name="descripcion" value={descripcion} rows="3"></textarea>
+                            <textarea type="text" class="form-control" onChange={handleDescripcionChange} id="descripcion" name="descripcion" value={descripcion} rows="3"></textarea>
                         </div>
                         <div className="mb-3">
                             <label className="form-label">Logros:</label>

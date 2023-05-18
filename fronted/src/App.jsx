@@ -15,6 +15,7 @@ import NewPostForm from './containers/NewPost';
 import CrearPerfil from './containers/Perfil/CrearPerfil';
 import { Navbar } from './components/Navbar';
 import { UserProvider } from './provider/ProviderContext';
+import ConPerfil from './containers/Perfil/ConPerfil';
 
 
 const App = () => {
@@ -32,7 +33,7 @@ const App = () => {
                                     <Route path='/password/reset/confirm/:uid/:token' element={<ResetPasswordConfirm />}></Route>
                                     <Route path='/paginadeinicio' element={<PaginaDeInicio />}></Route>
                                     <Route path='/activate/:uid/:token' element={<Activate />}></Route>
-                                    <Route path='/profile' element={<Perfil />}></Route>
+                                    <Route path='/profile' element={<ConPerfil />}></Route>
                                     <Route path='/pp' element={<NewPostForm />}></Route>
                                     <Route path='/crear-perfil' element={<CrearPerfil />}></Route>
                               </Routes>

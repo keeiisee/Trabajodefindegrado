@@ -21,6 +21,22 @@ import {
     PROFILE_LOADED_FAIL,
 } from './types';
 
+export const load_info_profile = () => async dispatch => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `JWT ${localStorage.getItem('access')}`,
+        }
+    }
+    try {
+        const res = await axios.get(`http://localhost:8000/accounts/profile/`, config);
+        if (res.data.length !== 0) {
+            return res.data
+        } 
+    } catch (err) {
+        console.log(err)
+    }
+}
 export const load_personas = (palabra) => async dispatch => {
    
     const config = {
@@ -41,15 +57,17 @@ export const load_personas = (palabra) => async dispatch => {
 
     }
 }
-export const crear_perfil = (descripcion, user1) => async dispatch => {
-    const user = user1.id
+export const crear_perfil = (imagen, descripcion, logros ,user1) => async dispatch => {
+    if (user1){
+        var user = user1.id
+    }
     const config = {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `JWT ${localStorage.getItem('access')}`,
         }
     }
-    const body = JSON.stringify({ user, descripcion });
+    const body = JSON.stringify({ user, descripcion, logros });
     try {
         await axios.post(`http://localhost:8000/accounts/profiles/profiles/`, body, config);
         dispatch({

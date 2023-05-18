@@ -7,7 +7,6 @@ export const Perfil = ({ profile }) => {
   return (
     <>
     {profile && <ConPerfil />}
-    {!profile && <SinPerfil />}
     </>
   )
 }

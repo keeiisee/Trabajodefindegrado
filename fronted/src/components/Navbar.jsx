@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { UserContext } from '../provider/UserContext';
 
-export const Navbar = ({ logout, load_personas }) => {
+export const Navbar = ({ logout, load_personas, profile }) => {
   const {palabras, setPalabras} = useContext(UserContext)
   
   function PalabrasList({ palabras }) {
@@ -47,7 +47,7 @@ export const Navbar = ({ logout, load_personas }) => {
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
-          <a className="navbar-brand" href="#">Calistenia</a>
+          <Link className="navbar-brand" to={'/paginadeinicio'}>Calistenia</Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -77,9 +77,12 @@ export const Navbar = ({ logout, load_personas }) => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/profile">
+                {profile && <Link className="nav-link" to="/profile">
                   Perfil
-                </Link>
+                </Link>}
+                {!profile && <Link className="nav-link" to="/crear-perfil">
+                Crear Perfil
+                </Link>}
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="" onClick={logout_user}>
@@ -104,5 +107,7 @@ export const Navbar = ({ logout, load_personas }) => {
     </>
   );
 }
-
-export default connect(null, { logout, load_personas })(Navbar)
+const mapStateToProps = state => ({
+  profile: state.auth.profile
+});
+export default connect(mapStateToProps, { logout, load_personas })(Navbar)

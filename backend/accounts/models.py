@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
@@ -48,9 +47,16 @@ class Profile(models.Model):
     descripcion = models.TextField(blank=True)
     amigos = models.ManyToManyField(UserAccount, blank=True, related_name='user_friends')
     logros = models.TextField(blank=True)
-    
+    imagen = models.ImageField(default='descarga.png', blank=True, null=True)
+
     def __str__(self):
         return self.descripcion
+
+    def get_imagen_url(self):
+        if self.imagen:
+            return self.imagen.url
+        else:
+            return ''
 
 # class Post(models.Model):
 #     author = models.ForeignKey(Profile, on_delete=models.CASCADE)

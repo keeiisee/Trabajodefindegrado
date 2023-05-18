@@ -40,8 +40,12 @@ export const PerfilDeOtro = () => {
                             <span className="badge bg-primary">Logros: {profile && profile[0].logros.length}</span>
                             <span className="badge bg-primary">Amigos: {profile && profile[0].amigos.length}</span>
                         </div>
-                        <label htmlFor="bio">Biografia</label>
-                        <p className="mt-3">{profile && profile[0].descripcion}</p>
+                        <div class="card">
+                            <div class="card-body">
+                                <label for="bio" class="form-label">Biografía:</label>
+                                <p class="mt-3">{profile && profile[0].descripcion}</p>
+                            </div>
+                        </div>
                         <h4 className="mt-4">Logros:</h4>
                         <ul className="list-group">
                             {profile && profile[0].logros.map((logro, key) => {

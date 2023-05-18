@@ -19,6 +19,8 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/usr/src/app
+    environment:
+      DB_HOST: ${DB_HOST:-localhost}
     depends_on:
       database:
         condition: service_healthy

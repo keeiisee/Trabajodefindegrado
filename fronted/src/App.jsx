@@ -16,6 +16,8 @@ import CrearPerfil from './containers/Perfil/CrearPerfil';
 import { Navbar } from './components/Navbar';
 import { UserProvider } from './provider/ProviderContext';
 import ConPerfil from './containers/Perfil/ConPerfil';
+import ActualizarPerfil from './containers/Perfil/ActualizarPerfil';
+import { PerfilDeOtro } from './containers/Perfil/PerfilDeOtro';
 
 
 const App = () => {
@@ -36,6 +38,8 @@ const App = () => {
                                     <Route path='/profile' element={<ConPerfil />}></Route>
                                     <Route path='/pp' element={<NewPostForm />}></Route>
                                     <Route path='/crear-perfil' element={<CrearPerfil />}></Route>
+                                    <Route path='/profile/modificar-perfil' element={<ActualizarPerfil />}></Route>
+                                    <Route path='/perfil/:id' element={<PerfilDeOtro />}></Route>
                               </Routes>
                         </Router>
                   </Provider>

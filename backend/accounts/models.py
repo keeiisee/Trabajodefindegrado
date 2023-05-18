@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.postgres.fields import ArrayField
 
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -46,7 +47,7 @@ class Profile(models.Model):
     user = models.OneToOneField(UserAccount, on_delete=models.CASCADE)
     descripcion = models.TextField(blank=True)
     amigos = models.ManyToManyField(UserAccount, blank=True, related_name='user_friends')
-    logros = models.TextField(blank=True)
+    logros = ArrayField(models.CharField(max_length=100), blank=True)
     imagen = models.ImageField(default='descarga.png', blank=True, null=True)
 
     def __str__(self):

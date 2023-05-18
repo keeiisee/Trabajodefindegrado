@@ -21,22 +21,6 @@ import {
     PROFILE_LOADED_FAIL,
 } from './types';
 
-export const load_info_profile = () => async dispatch => {
-    const config = {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `JWT ${localStorage.getItem('access')}`,
-        }
-    }
-    try {
-        const res = await axios.get(`http://localhost:8000/accounts/profile/`, config);
-        if (res.data.length !== 0) {
-            return res.data
-        } 
-    } catch (err) {
-        console.log(err)
-    }
-}
 export const load_personas = (palabra) => async dispatch => {
    
     const config = {
@@ -57,6 +41,24 @@ export const load_personas = (palabra) => async dispatch => {
 
     }
 }
+export const modificar_perfil = (imagen, descripcion, logros ,user1, idPerfil) => async dispatch => {
+    if (user1){
+        var user = user1.id
+    }
+    const body = JSON.stringify({ user, descripcion, logros });
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `JWT ${localStorage.getItem('access')}`,
+        }
+    };
+    try {        
+        await axios.put(`http://localhost:8000/accounts/profiles/profiles/${idPerfil}/`, body, config);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const crear_perfil = (imagen, descripcion, logros ,user1) => async dispatch => {
     if (user1){
         var user = user1.id
@@ -67,7 +69,7 @@ export const crear_perfil = (imagen, descripcion, logros ,user1) => async dispat
             'Authorization': `JWT ${localStorage.getItem('access')}`,
         }
     }
-    const body = JSON.stringify({ user, descripcion, logros });
+    const body = JSON.stringify({ user, descripcion, logros, imagen });
     try {
         await axios.post(`http://localhost:8000/accounts/profiles/profiles/`, body, config);
         dispatch({
@@ -223,7 +225,22 @@ export const load_user = () => async dispatch => {
         });
     }
 };
-
+export const load_Idprofile = () => async dispatch => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `JWT ${localStorage.getItem('access')}`,
+        }
+    }
+    try {
+        const res = await axios.get(`http://localhost:8000/accounts/profile/`, config);
+        if (res.data.length !== 0) {
+            return res.data
+        } 
+    } catch (err) {
+        console.log(err)
+    }
+}
 export const load_profile = () => async dispatch => {
     const config = {
         headers: {

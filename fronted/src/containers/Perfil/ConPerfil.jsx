@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../../components/Navbar'
+import { Link } from 'react-router-dom';
 
 export const ConPerfil = () => {
   const [user, setUser] = useState(null);
@@ -44,7 +45,7 @@ export const ConPerfil = () => {
           </div>
         </div>
       </div>
-
+      <Link to='modificar-perfil' className="btn btn-primary">Modificar Perfil</Link>
       <div className="container py-5">
         <div className="row">
           <div className="col-md-8">

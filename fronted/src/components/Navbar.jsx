@@ -13,7 +13,13 @@ export const Navbar = ({ logout, load_personas, profile }) => {
         <ul className="list-group position-absolute top-100 start-0">
           {palabras.map((palabra, index) => (
             <li className="list-group-item" key={index}>
-              <Link to={`/perfil/${palabra.id}`}>{palabra.name}</Link>
+              {!palabra.id && 
+                <p style={{ whiteSpace: 'nowrap' }}>{palabra.name}</p>
+              }
+              {palabra.id && 
+                 <Link onClick={()=>{setPalabras([])} } to={`/perfil/${palabra.id}`}>{palabra.name}</Link>
+              }
+             
             </li>
           ))}
         </ul>
@@ -35,7 +41,7 @@ export const Navbar = ({ logout, load_personas, profile }) => {
       if (personas.length !== 0){
         setPalabras(personas)
       } else {
-        setPalabras([]);
+        setPalabras([{'name':'No se ha encontrado resultado'}])
       }
       
     } else {
@@ -96,8 +102,8 @@ export const Navbar = ({ logout, load_personas, profile }) => {
                 className="form-control me-2"
                 onChange={e => onChange(e)}
                 type="search"
-                placeholder="Buscar"
-                aria-label="Buscar"
+                placeholder="Buscar usuarios"
+                aria-label="Buscar usuarios"
                 value={letras}
               />
             </form> 

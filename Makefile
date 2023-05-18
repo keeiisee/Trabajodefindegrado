@@ -12,7 +12,6 @@ help: ## Mostrar este mensaje de ayuda
 
 start:
 	docker compose up -d
-	@docker exec ${DOCKER_BE} python manage.py runserver 0.0.0.0:8000 &
 	@docker exec ${DOCKER_FE} yarn dev --host &
 
 down:
@@ -20,9 +19,7 @@ down:
 
 init: ## Iniciar contenedores y sus servicios
 	@docker compose up -d
-	@docker exec -it ${DOCKER_BE} pip install --no-cache-dir -r requirements.txt
 	@docker exec -it ${DOCKER_BE} python manage.py makemigrations
 	@docker exec -it ${DOCKER_BE} python manage.py migrate
 	@docker exec -it ${DOCKER_FE} yarn install
-	@docker exec ${DOCKER_BE} python manage.py runserver 0.0.0.0:8000 &
 	@docker exec ${DOCKER_FE} yarn dev --host &

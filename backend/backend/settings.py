@@ -111,7 +111,7 @@ DATABASES = {
         'NAME': 'auth_system',
         'USER': 'postgres',
         'PASSWORD': '2203',
-        'HOST': os.getenv('DB_HOST')
+        'HOST': os.getenv('DB_HOST', 'localhost')
     }
 }
 

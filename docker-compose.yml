@@ -20,7 +20,7 @@ services:
     volumes:
       - ./backend:/usr/src/app
     environment:
-      DB_HOST: ${DB_HOST:-localhost}
+      DB_HOST: ${DB_HOST}
     depends_on:
       database:
         condition: service_healthy

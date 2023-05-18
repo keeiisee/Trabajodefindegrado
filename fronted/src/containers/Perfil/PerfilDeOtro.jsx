@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
+import Navbarperfil from './Navbarperfil';
 
 export const PerfilDeOtro = () => {
-    const [user, setUser] = useState(null);
-    const [profile, setProfile] = useState(null);
+    const [user, setUser] = useState("");
+    const [profile, setProfile] = useState("");
     const routeParams = useParams()
-    
+
     useEffect(() => {
         const fetchData = async () => {
             const config = {
@@ -26,80 +27,28 @@ export const PerfilDeOtro = () => {
                 console.log(error);
             }
         }
-
         fetchData();
     }, []);
     return (
         <>
             <Navbar />
-            <div className="container-fluid bg-primary py-5">
-                <div className="container">
-                    <div className="row align-items-center">
-                        <div className="col-md-3">
-                            <img src={profile && profile[0].imagen} alt="Foto de perfil" className="rounded-circle img-fluid" />
-                        </div>
-                        <div className="col-md-9">
-                            <h1 className="text-light mb-0">{user && user.name}</h1>
-                            <p className="text-light">{profile && profile[0].descripcion}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="container py-5">
-                <div className="row">
+            <div className="container-fluid vh-100 h-md-50">
+                <div className="row h-100">
                     <div className="col-md-8">
-                        <h2 className="text-accent">Mi rutina de calistenia</h2>
-                        <p className="text-black">En esta sección puedes describir tu rutina de entrenamiento de calistenia. Puedes incluir ejercicios, repeticiones, series, etc.</p>
-                    </div>
-                    <div className="col-md-4">
-                        <h3 className="text-accent">Estadísticas</h3>
+                        <div className="d-flex justify-content-between align-items-center mt-3">
+                            <h2>Perfil de {user && user.name}</h2>
+                            <span className="badge bg-primary">Logros: {profile && profile[0].logros.length}</span>
+                            <span className="badge bg-primary">Amigos: {profile && profile[0].amigos.length}</span>
+                        </div>
+                        <label htmlFor="bio">Biografia</label>
+                        <p className="mt-3">{profile && profile[0].descripcion}</p>
+                        <h4 className="mt-4">Logros:</h4>
                         <ul className="list-group">
-                            <li className="list-group-item d-flex justify-content-between align-items-center bg-secondary">
-                                Logros
-                                <span className="badge bg-accent rounded-pill">{profile && profile[0].logros.length}</span>
-                            </li>
-                            <li className="list-group-item d-flex justify-content-between align-items-center bg-secondary">
-                                Amigos
-                                <span className="badge bg-accent rounded-pill">{profile && profile[0].amigos.length}</span>
-                            </li>
-                            <li className="list-group-item d-flex justify-content-between align-items-center bg-secondary">
-                                Publicaciones
-                                <span className="badge bg-accent rounded-pill">50</span>
-                            </li>
+                            {profile && profile[0].logros.map((logro, key) => {
+                                return <li key={key} className="list-group-item" >{logro}</li>
+                            })}
                         </ul>
-                    </div>
-                </div>
-
-
-                <hr />
-                <h2 className="text-accent">Mis publicaciones</h2>
-                <div className="row">
-                    <div className="col-md-4 mb-4">
-                        <div className="card bg-secondary">
-                            <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="..." />
-                            <div className="card-body">
-                                <h5 className="card-title text-accent">Título de la publicación</h5>
-                                <p className="card-text text-light">Descripción de la publicación.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-md-4 mb-4">
-                        <div className="card bg-secondary">
-                            <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="..." />
-                            <div className="card-body">
-                                <h5 className="card-title text-accent">Título de la publicación</h5>
-                                <p className="card-text text-light">Descripción de la publicación.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-md-4 mb-4">
-                        <div className="card bg-secondary">
-                            <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="..." />
-                            <div className="card-body">
-                                <h5 className="card-title text-accent">Título de la publicación</h5>
-                                <p className="card-text text-light">Descripción de la publicación.</p>
-                            </div>
-                        </div>
+                        <button>Añadir como amigo</button>
                     </div>
                 </div>
             </div>

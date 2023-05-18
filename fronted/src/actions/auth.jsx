@@ -63,13 +63,14 @@ export const crear_perfil = (imagen, descripcion, logros ,user1) => async dispat
     if (user1){
         var user = user1.id
     }
+    console.log(imagen)
     const config = {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `JWT ${localStorage.getItem('access')}`,
         }
     }
-    const body = JSON.stringify({ user, descripcion, logros, imagen });
+    const body = JSON.stringify({ user, descripcion, logros });
     try {
         await axios.post(`http://localhost:8000/accounts/profiles/profiles/`, body, config);
         dispatch({

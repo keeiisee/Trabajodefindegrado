@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../../components/Navbar'
 import { Link } from 'react-router-dom';
+import Navbarperfil from './Navbarperfil';
 
 export const ConPerfil = () => {
   const [user, setUser] = useState(null);
@@ -9,10 +10,10 @@ export const ConPerfil = () => {
   useEffect(() => {
     const fetchData = async () => {
       const config = {
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `JWT ${localStorage.getItem('access')}`,
-          }
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `JWT ${localStorage.getItem('access')}`,
+        }
       };
       try {
         const responseProfile = await fetch('http://localhost:8000/accounts/profile/', config);
@@ -32,7 +33,27 @@ export const ConPerfil = () => {
   return (
     <>
       <Navbar />
-      <div className="container-fluid bg-primary py-5">
+      <div className="container-fluid vh-100 h-md-50">
+        <div className="row h-100">
+          <Navbarperfil />
+          <div className="col-md-8">
+            <div className="d-flex justify-content-between align-items-center mt-3">
+              <h2>Perfil de {user && user[0].name}</h2>
+              <span className="badge bg-primary">Logros: {profile && profile[0].logros.length}</span>
+              <span className="badge bg-primary">Amigos: {profile && profile[0].amigos.length}</span>
+            </div>
+            <label htmlFor="bio">Biografia</label>
+            <p className="mt-3">{profile && profile[0].descripcion}</p>
+            <h4 className="mt-4">Logros:</h4>
+            <ul className="list-group">
+              {profile && profile[0].logros.map((logro, key) => {
+                return <li key={key} className="list-group-item" >{logro}</li>
+              })}
+            </ul>
+          </div>
+        </div>
+      </div>
+      {/* <div className="container-fluid bg-primary py-5">
         <div className="container">
           <div className="row align-items-center">
             <div className="col-md-3">
@@ -55,6 +76,7 @@ export const ConPerfil = () => {
           <div className="col-md-4">
             <h3 className="text-accent">Estadísticas</h3>
             <ul className="list-group">
+              {console.log(profile)}
               <li className="list-group-item d-flex justify-content-between align-items-center bg-secondary">
                 Logros
                 <span className="badge bg-accent rounded-pill">{profile && profile[0].logros.length}</span>
@@ -103,7 +125,7 @@ export const ConPerfil = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   )
 };

@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { load_Idprofile, modificar_perfil } from '../../actions/auth';
 import { connect } from 'react-redux';
+import Navbarperfil from './Navbarperfil';
 
 function ActualizarPerfil({ load_Idprofile, modificar_perfil, user }) {
 
 
     const [imagen, setImagen] = useState('');
     const [logros, setLogros] = useState([]);
-    const [profile, setProfile] = useState(null);
+    const [profile, setProfile] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const opcionesLogros = ['primer logro', 'segundo logro', 'tercer  logro']
     function handleLogrosChange(e) {
@@ -29,10 +30,6 @@ function ActualizarPerfil({ load_Idprofile, modificar_perfil, user }) {
     function handleImagenChange(event) {
         setImagen(event.target.files[0].name);
     }
-    const fechData1 = async () => {
-        const datosProfile = await load_Idprofile()
-        return datosProfile
-    }
     useEffect(() => {
         const fechData = async () => {
             const datosProfile = await load_Idprofile()
@@ -47,11 +44,10 @@ function ActualizarPerfil({ load_Idprofile, modificar_perfil, user }) {
         modificar_perfil(imagen, descripcion, logros, user, profile[0].id)
         navigate('/profile')
     };
-
+    
     return (
         <div>
             <Navbar></Navbar>
-
             <div className="container py-5">
                 <h1 className="mb-4">Modificar Perfil</h1>
                 <form action="#" method="POST" encType="multipart/form-data">

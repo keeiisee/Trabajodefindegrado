@@ -58,7 +58,17 @@ class Profile(models.Model):
             return self.imagen.url
         else:
             return ''
+        
+class Publicacion(models.Model):
+    autor = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    imagen = models.ImageField(default='descarga.png', blank=True, null=True)
+    descripcion = models.TextField(max_length=1000)
+    fecha_publicacion = models.DateTimeField(auto_now_add=True)
+    like = models.ManyToManyField(Profile, blank=True, related_name='publicacion_likes')
 
+    def __str__(self):
+        return f'{self.autor.user.name}: {self.descripcion}'
+    
 # class Post(models.Model):
 #     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
 #     created_date = models.DateTimeField(default=datetime.now())

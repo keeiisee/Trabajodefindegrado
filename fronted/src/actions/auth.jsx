@@ -63,7 +63,7 @@ export const crear_perfil = (imagen, descripcion, logros ,user1) => async dispat
     if (user1){
         var user = user1.id
     }
-    console.log(imagen)
+
     const config = {
         headers: {
             'Content-Type': 'application/json',

@@ -1,8 +1,19 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, viewsets
-from .models import Profile, UserAccount
-from .serializers import ProfileCreateSerializer, UserCreateSerializerView
+from .models import Profile, UserAccount, Publicacion
+from .serializers import ProfileCreateSerializer, UserCreateSerializerView, PublicacionCreateSerializer
 
+class PublicacionList(viewsets.ModelViewSet):
+    queryset = Publicacion.objects.all()
+    serializer_class = PublicacionCreateSerializer
+
+class PublicacionListForUser(viewsets.ModelViewSet):
+    queryset = Publicacion.objects.all()
+    serializer_class = PublicacionCreateSerializer
+    def get_queryset(self): 
+        perfil = Profile.objects.get(id=self.kwargs['pk'])
+        return self.queryset.filter(autor=perfil)
+    
 class ProfileList(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileCreateSerializer

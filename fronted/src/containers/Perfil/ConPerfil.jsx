@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Navbar from '../../components/Navbar'
 import { Link } from 'react-router-dom';
 import Navbarperfil from './Navbarperfil';
+import { connect } from 'react-redux';
 
-export const ConPerfil = () => {
-  const [user, setUser] = useState(null);
-  const [profile, setProfile] = useState(null);
-
+export const ConPerfil = ({user}) => {
+  const [profile, setProfile] = useState("");
+  const [post, setPost] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       const config = {
@@ -19,9 +19,11 @@ export const ConPerfil = () => {
         const responseProfile = await fetch('http://localhost:8000/accounts/profile/', config);
         const dataProfile = await responseProfile.json();
         setProfile(dataProfile)
-        const responseUser = await fetch('http://localhost:8000/auth/users/', config);
-        const dataUser = await responseUser.json()
-        setUser(dataUser);
+        if (dataProfile){
+          const responsePost = await fetch(`http://localhost:8000/accounts/publicaciones/${dataProfile[0].id}/`, config);
+          const dataPost = await responsePost.json()
+          setPost(dataPost)
+        }
       } catch (error) {
         console.log(error);
       }
@@ -29,21 +31,36 @@ export const ConPerfil = () => {
 
     fetchData();
   }, []);
+  const url = useMemo(() => {
+    if (profile) {
+        return profile[0].imagen;
+    }
+    return '';
+}, [profile]);
 
   return (
     <>
       <Navbar />
       <div className="container-fluid vh-100 h-md-50">
         <div className="row h-100">
-          <Navbarperfil />
+          <Navbarperfil imagen={url}/>
           <div className="col-md-8">
+            <br />
+          <h2 >Perfil de {user.name}</h2>
             <div className="d-flex justify-content-between align-items-center mt-3">
-              <h2>Perfil de {user && user[0].name}</h2>
+              
               <span className="badge bg-primary">Logros: {profile && profile[0].logros.length}</span>
+              <span className="badge bg-primary">Publicaciones: {post.length}</span>
               <span className="badge bg-primary">Amigos: {profile && profile[0].amigos.length}</span>
             </div>
-            <label htmlFor="bio">Biografia</label>
-            <p className="mt-3">{profile && profile[0].descripcion}</p>
+            <br />
+            <label htmlFor="bio" className="form-label">Biografía:</label>
+            <div className="card">
+              <div className="card-body">
+
+                <p className="mt-3">{profile && profile[0].descripcion}</p>
+              </div>
+            </div>
             <h4 className="mt-4">Logros:</h4>
             <ul className="list-group">
               {profile && profile[0].logros.map((logro, key) => {
@@ -53,80 +70,10 @@ export const ConPerfil = () => {
           </div>
         </div>
       </div>
-      {/* <div className="container-fluid bg-primary py-5">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-md-3">
-              <img src={profile && profile[0].imagen} alt="Foto de perfil" className="rounded-circle img-fluid" />
-            </div>
-            <div className="col-md-9">
-              <h1 className="text-light mb-0">{user && user[0].name}</h1>
-              <p className="text-light">{profile && profile[0].descripcion}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <Link to='modificar-perfil' className="btn btn-primary">Modificar Perfil</Link>
-      <div className="container py-5">
-        <div className="row">
-          <div className="col-md-8">
-            <h2 className="text-accent">Mi rutina de calistenia</h2>
-            <p className="text-black">En esta sección puedes describir tu rutina de entrenamiento de calistenia. Puedes incluir ejercicios, repeticiones, series, etc.</p>
-          </div>
-          <div className="col-md-4">
-            <h3 className="text-accent">Estadísticas</h3>
-            <ul className="list-group">
-              {console.log(profile)}
-              <li className="list-group-item d-flex justify-content-between align-items-center bg-secondary">
-                Logros
-                <span className="badge bg-accent rounded-pill">{profile && profile[0].logros.length}</span>
-              </li>
-              <li className="list-group-item d-flex justify-content-between align-items-center bg-secondary">
-                Amigos
-                <span className="badge bg-accent rounded-pill">{profile && profile[0].amigos.length}</span>
-              </li>
-              <li className="list-group-item d-flex justify-content-between align-items-center bg-secondary">
-                Publicaciones
-                <span className="badge bg-accent rounded-pill">50</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-
-        <hr />
-        <h2 className="text-accent">Mis publicaciones</h2>
-        <div className="row">
-          <div className="col-md-4 mb-4">
-            <div className="card bg-secondary">
-              <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="..." />
-              <div className="card-body">
-                <h5 className="card-title text-accent">Título de la publicación</h5>
-                <p className="card-text text-light">Descripción de la publicación.</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-4 mb-4">
-            <div className="card bg-secondary">
-              <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="..." />
-              <div className="card-body">
-                <h5 className="card-title text-accent">Título de la publicación</h5>
-                <p className="card-text text-light">Descripción de la publicación.</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-4 mb-4">
-            <div className="card bg-secondary">
-              <img src="https://via.placeholder.com/350x200" className="card-img-top" alt="..." />
-              <div className="card-body">
-                <h5 className="card-title text-accent">Título de la publicación</h5>
-                <p className="card-text text-light">Descripción de la publicación.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
     </>
   )
 };
-export default ConPerfil
+const mapStateToProps = state => ({
+  user: state.auth.user
+});
+export default connect(mapStateToProps)(ConPerfil)

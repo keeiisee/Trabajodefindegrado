@@ -5,7 +5,6 @@ services:
     build:
       context: .docker/frontend/
     container_name: tfg_frontend
-    user: node
     ports:
       - "5173:5173"
     volumes:

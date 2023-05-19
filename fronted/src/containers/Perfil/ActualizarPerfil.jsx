@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { load_Idprofile, modificar_perfil } from '../../actions/auth';
@@ -44,17 +44,23 @@ function ActualizarPerfil({ load_Idprofile, modificar_perfil, user }) {
         modificar_perfil(imagen, descripcion, logros, user, profile[0].id)
         navigate('/profile')
     };
-    Navbarperfil
+    const url = useMemo(() => {
+        if (profile) {
+            return profile[0].imagen;
+        }
+        return '';
+    }, [profile]); 
     return (
         <div>
             <Navbar></Navbar>
             <div className="container-fluid vh-100 h-md-50">
                 <div className="row h-100">
-                    <Navbarperfil></Navbarperfil>
+                    
+                    <Navbarperfil  imagen={url}/>
                     
                     <div className="col-md-8">
                         <br />
-                    <h1 className="mb-4">Modificar Perfil</h1>
+                    <h2 className="mb-4">Modificar Perfil</h2>
                     <form action="#" method="POST" encType="multipart/form-data">
                         <div className="mb-3">
                             <label htmlFor="imagen" className="form-label">Imagen:</label>
@@ -62,7 +68,7 @@ function ActualizarPerfil({ load_Idprofile, modificar_perfil, user }) {
                         </div>
                         <div className="mb-3">
                             <label htmlFor="descripcion" className="form-label">Descripción:</label>
-                            <textarea type="text" class="form-control" onChange={handleDescripcionChange} id="descripcion" name="descripcion" value={descripcion} rows="3"></textarea>
+                            <textarea type="text" className="form-control" onChange={handleDescripcionChange} id="descripcion" name="descripcion" value={descripcion} rows="3"></textarea>
                         </div>
                         <div className="mb-3">
                             <label className="form-label">Logros:</label>

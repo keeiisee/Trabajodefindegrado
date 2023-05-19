@@ -4,6 +4,4 @@ EXPOSE 5173
 
 WORKDIR /home/node
 
-USER node
-
 CMD ["tail", "-f", "/dev/null"]

@@ -1,7 +1,7 @@
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 #from .models import Post, Comment
-from .models import Profile
+from .models import Profile, Publicacion
 from rest_framework import serializers
 
 User = get_user_model()
@@ -20,6 +20,11 @@ class UserCreateSerializerView(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id','name')
+
+class PublicacionCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Publicacion
+        fields = '__all__'
         
 # class PostSerializer(serializers.ModelSerializer):
 #     class Meta:

@@ -32,7 +32,7 @@ function CrearPerfil({ crear_perfil, user }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     crear_perfil(imagen, descripcion, logros, user)
-    navigate('/profile')
+    navigate('/paginadeinicio')
   };
 
   return (
@@ -46,7 +46,7 @@ function CrearPerfil({ crear_perfil, user }) {
             <input type="file" className="form-control" onChange={handleImagenChange} id="imagen" name="imagen" />
           </div>
           <div className="mb-3">
-            <label htmlFor="descripcion" className="form-label">Descripción:</label>
+            <label htmlFor="descripcion" className="form-label">Biografía:</label>
             <textarea className="form-control" onChange={handleDescripcionChange} id="descripcion" name="descripcion" rows="3"></textarea>
           </div>
           <div className="mb-3">

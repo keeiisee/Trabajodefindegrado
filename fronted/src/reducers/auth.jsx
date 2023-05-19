@@ -33,7 +33,7 @@ export default function(state = initialState, action) {
 
     switch(type) {
         case AUTHENTICATED_SUCCESS:
-            console.log(initialState)
+            
             return {
                 ...state,
                 isAuthenticated: true

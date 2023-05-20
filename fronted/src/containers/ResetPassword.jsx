@@ -5,14 +5,11 @@ import { reset_password } from '../actions/auth';
 
 const ResetPassword = ({ reset_password }) => {
     const [requestSent, setRequestSent] = useState(false);
-    const [formData, setFormData] = useState({
-        email: ''
-    });
-
-    const { email } = formData;
-
+    const [formData, setFormData] = useState({email: ''});
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
     const navigate = useNavigate()
+    const { email } = formData;
+
     const onSubmit = e => {
         e.preventDefault();
 

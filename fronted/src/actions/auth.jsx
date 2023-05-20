@@ -149,34 +149,69 @@ export const verify = (uid, token) => async dispatch => {
     }
 };
 
+// export const checkAuthenticated1 = () => async dispatch => {
+//     if (localStorage.getItem('access')) {
+//         const config = {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             }
+//         };
+
+//         const body = JSON.stringify({ token: localStorage.getItem('access') });
+
+//         try {
+//             await axios.post(`http://127.0.0.1:8000/auth/jwt/verify`, body, config);
+//             dispatch({
+//                 type: AUTHENTICATED_SUCCESS
+//             });
+//         } catch (err) {
+//             dispatch({
+//                 type: AUTHENTICATED_FAIL
+//             });
+//         }
+//     } else {
+//         dispatch({
+//             type: AUTHENTICATED_FAIL
+//         });
+//     }
+// };
 export const checkAuthenticated = () => async dispatch => {
     if (localStorage.getItem('access')) {
         const config = {
-            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json'
             }
-        };
+        }; 
 
         const body = JSON.stringify({ token: localStorage.getItem('access') });
 
         try {
-            await axios.post(`http://127.0.0.1:8000/auth/jwt/verify`, body, config);
-            dispatch({
-                type: AUTHENTICATED_SUCCESS
-            });
+            const res = await axios.post(`http://127.0.0.1:8000/auth/jwt/verify`, body, config)
+            
+            if (res.data.code !== 'token_not_valid') {
+                load_profile()
+                dispatch({
+                    type: AUTHENTICATED_SUCCESS
+                });
+            } else {
+                dispatch({
+                    type: AUTHENTICATED_FAIL
+                });
+            }
         } catch (err) {
             dispatch({
                 type: AUTHENTICATED_FAIL
             });
         }
+
     } else {
         dispatch({
             type: AUTHENTICATED_FAIL
         });
     }
 };
-
 export const reset_password = (email) => async dispatch => {
     const config = {
         headers: {
@@ -251,9 +286,11 @@ export const load_profile = () => async dispatch => {
     }
     try {
         const res = await axios.get(`http://localhost:8000/accounts/profile/`, config);
+        
         if (res.data.length !== 0) {
             dispatch({
                 type: PROFILE_LOADED_SUCCES,
+                payload: true
             });
         } else {
             dispatch({

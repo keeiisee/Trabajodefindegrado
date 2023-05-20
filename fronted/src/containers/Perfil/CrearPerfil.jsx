@@ -9,22 +9,23 @@ function CrearPerfil({ crear_perfil, user }) {
   const [imagen, setImagen] = useState('');
   const [logros, setLogros] = useState([]);
   const opcionesLogros = ['primer logro', 'segundo logro', 'tercer  logro']
-
-    function handleLogrosChange(e) {
-      const options = e.target.options;
-      const selectedValues = [];
-      for (let i = 0; i < options.length; i++) {
-        if (options[i].selected) {
-          selectedValues.push(options[i].value);
-        }
-      }
-      setLogros(selectedValues);
-    }
-
   const navigate = useNavigate();
+
+  function handleLogrosChange(e) {
+    const options = e.target.options;
+    const selectedValues = [];
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].selected) {
+        selectedValues.push(options[i].value);
+      }
+    }
+    setLogros(selectedValues);
+  }
+
   const handleDescripcionChange = (event) => {
     setDescripcion(event.target.value);
   };
+
   function handleImagenChange(event) {
     setImagen(event.target.files[0].name);
   }
@@ -37,7 +38,6 @@ function CrearPerfil({ crear_perfil, user }) {
 
   return (
     <div>
-      <Navbar></Navbar>
       <div className="container py-5">
         <h1 className="mb-4">Crear Perfil</h1>
         <form action="#" method="POST" encType="multipart/form-data">
@@ -52,7 +52,7 @@ function CrearPerfil({ crear_perfil, user }) {
           <div className="mb-3">
             <label className="form-label">Logros:</label>
             <select className="form-select" onChange={handleLogrosChange} name="logros" multiple>
-              {opcionesLogros && opcionesLogros.map((logro, key)=>(
+              {opcionesLogros && opcionesLogros.map((logro, key) => (
                 <option key={key} value={logro}>{logro}</option>
               ))}
             </select>

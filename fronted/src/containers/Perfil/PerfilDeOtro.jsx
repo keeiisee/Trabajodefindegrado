@@ -27,10 +27,9 @@ export const PerfilDeOtro = () => {
             }
         }
         fetchData();
-    }, []);
+    }, [routeParams.id]);
     return (
         <>
-            <Navbar />
             <div className="container-fluid vh-100 h-md-50">
                 <div className="row h-100">
 

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-
 import Navbar from '../../components/Navbar';
 import { load_Idprofile } from '../../actions/auth';
 import { connect } from 'react-redux';
@@ -10,14 +9,17 @@ function NewPostForm({ load_Idprofile, crear_post }) {
   const [descripcion, setDescripcion] = useState('');
   const [profile, setProfile] = useState('');
   const navigate = useNavigate()
+
   const handleSubmit = (event) => {
     event.preventDefault();
     crear_post(descripcion, profile[0].id, '', '')
     navigate('/profile')
   };
+
   const handleDescripcionChange = (event) => {
     setDescripcion(event.target.value);
   };
+
   useEffect(() => {
     const fechData = async () => {
       const datosProfile = await load_Idprofile()
@@ -28,7 +30,7 @@ function NewPostForm({ load_Idprofile, crear_post }) {
 
   return (
     <>
-      <Navbar></Navbar>
+      
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="descripcion" className="form-label">Descripción:</label>

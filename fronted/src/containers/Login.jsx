@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { login } from '../actions/auth';
+import { useSelector } from 'react-redux';
 
-const Login = ({ login, isAuthenticated }) => {
+const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   const { email, password } = formData;
 
   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,7 +18,7 @@ const Login = ({ login, isAuthenticated }) => {
   const onSubmit = e => {
     e.preventDefault();
 
-    login(email, password);
+    dispatch(login(email, password));;
   };
 
   useEffect(() => {
@@ -72,8 +74,4 @@ const Login = ({ login, isAuthenticated }) => {
     </section>
   );
 };
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
-});
-
-export default connect(mapStateToProps, { login })(Login);
+export default Login;

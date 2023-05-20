@@ -1,9 +1,11 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux';
 
-export const Navbarperfil = ({imagen, user}) => {
+export const Navbarperfil = ({imagen}) => {
+  const user = useSelector(state => state.auth.user);
   const navigate = useNavigate()
+  
   const modificar = () =>{
     navigate("/modificar-perfil")
   }
@@ -19,7 +21,7 @@ export const Navbarperfil = ({imagen, user}) => {
                 <div className="d-flex justify-content-center align-items-center flex-column my-3">
                     <img src={imagen} className="img-fluid rounded-circle my-3" alt="Foto de perfil" width="150"/>
                 </div> 
-                <h3>{user.name}</h3>
+                <h3>{user && user.name}</h3>
 
                 <div className="d-flex flex-column mt-3">
                     <button className="btn btn-primary mb-2" onClick={miPerfil}>Inicio</button>
@@ -31,7 +33,5 @@ export const Navbarperfil = ({imagen, user}) => {
     </>
   )
 }
-const mapStateToProps = state => ({
-  user: state.auth.user
-});
-export default connect(mapStateToProps)( Navbarperfil)
+
+export default Navbarperfil

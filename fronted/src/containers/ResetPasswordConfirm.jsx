@@ -6,10 +6,7 @@ import { useParams } from "react-router-dom"
 
 const ResetPasswordConfirm = ({ reset_password_confirm }) => {
     const [requestSent, setRequestSent] = useState(false);
-    const [formData, setFormData] = useState({
-        new_password: '',
-        re_new_password: ''
-    });
+    const [formData, setFormData] = useState({new_password: '', re_new_password: ''});
     const routeParams = useParams()
     const { new_password, re_new_password } = formData;
 
@@ -24,12 +21,15 @@ const ResetPasswordConfirm = ({ reset_password_confirm }) => {
         reset_password_confirm(uid, token, new_password, re_new_password);
         setRequestSent(true);
     };
+
     const navigate = useNavigate()
+
     useEffect(() => {
         if (requestSent) {
             navigate('/');
         }
     }, [requestSent, navigate]);
+    
     return (
         <div className='container mt-5'>
             <form onSubmit={e => onSubmit(e)}>

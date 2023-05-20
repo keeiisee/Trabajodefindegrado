@@ -6,13 +6,13 @@ import { connect } from 'react-redux';
 import Navbarperfil from './Navbarperfil';
 
 function ActualizarPerfil({ load_Idprofile, modificar_perfil, user }) {
-
-
     const [imagen, setImagen] = useState('');
     const [logros, setLogros] = useState([]);
     const [profile, setProfile] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const opcionesLogros = ['primer logro', 'segundo logro', 'tercer  logro']
+    const navigate = useNavigate();
+
     function handleLogrosChange(e) {
         const options = e.target.options;
         const selectedValues = [];
@@ -23,13 +23,15 @@ function ActualizarPerfil({ load_Idprofile, modificar_perfil, user }) {
         }
         setLogros(selectedValues);
     }
-    const navigate = useNavigate();
+    
     const handleDescripcionChange = (event) => {
         setDescripcion(event.target.value);
     };
+
     function handleImagenChange(event) {
         setImagen(event.target.files[0].name);
     }
+
     useEffect(() => {
         const fechData = async () => {
             const datosProfile = await load_Idprofile()
@@ -44,15 +46,16 @@ function ActualizarPerfil({ load_Idprofile, modificar_perfil, user }) {
         modificar_perfil(imagen, descripcion, logros, user, profile[0].id)
         navigate('/profile')
     };
+
     const url = useMemo(() => {
         if (profile) {
             return profile[0].imagen;
         }
         return '';
     }, [profile]); 
+
     return (
         <div>
-            <Navbar></Navbar>
             <div className="container-fluid vh-100 h-md-50">
                 <div className="row h-100">
                     

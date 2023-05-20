@@ -6,10 +6,9 @@ import { connect } from 'react-redux';
 export const MisPublicaciones = () => {
     const [profile, setProfile] = useState("");
     const [post, setPost] = useState([]);
+
     useEffect(() => {
-
         const fetchData = async () => {
-
             const config = {
                 headers: {
                     'Content-Type': 'application/json',
@@ -29,18 +28,21 @@ export const MisPublicaciones = () => {
                 console.log(error);
             }
         }
+
         fetchData();
     }, []);
+
     const url = useMemo(() => {
         if (profile) {
             return profile[0].imagen;
         }
         return '';
-    }, [profile]);    
+    }, [profile]);
+
     return (
 
         <>
-            <Navbar />
+           
             <div className="container-fluid vh-100 h-md-50">
                 <div className="row h-100">
                     <Navbarperfil imagen={url}/>
@@ -50,16 +52,18 @@ export const MisPublicaciones = () => {
                         <br />
                         <div className="row row-cols-1 row-cols-md-3 g-4">
                             
-                            {post && post.map((img, key) => {
+                            {post.length > 0 ? post.map((img, index) => {
+                                
                                 return <>
-                                    <div key={key} className="col">
+                                
+                                    <div className="col" key={index}>
                                         <div className="card">
                                             <img src={img.imagen} className="card-img-top" alt="Foto 3" />
                                         </div>
                                     </div>
                                 </>
 
-                            })}
+                            }) : null}
                         </div>
                     </div>
                 </div>

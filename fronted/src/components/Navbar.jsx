@@ -1,11 +1,14 @@
 import React, { useContext, useState } from 'react'
 import { logout, load_personas } from '../actions/auth';
 import { useNavigate, Link } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { UserContext } from '../provider/UserContext';
+import { useSelector } from 'react-redux';
 
-export const Navbar = ({ logout, load_personas, profile }) => {
+export const Navbar = () => {
   const { palabras, setPalabras } = useContext(UserContext)
+  const dispatch = useDispatch();
+  const profile = useSelector(state => state.auth.profile);
 
   function PalabrasList({ palabras }) {
     return (
@@ -30,14 +33,14 @@ export const Navbar = ({ logout, load_personas, profile }) => {
   const navigate = useNavigate()
   const [letras, setLetras] = useState('')
   const logout_user = () => {
-    logout();
+    dispatch(logout());
     navigate('/')
   };
   const onChange = async (e) => {
     setLetras(e.target.value);
 
     if (e.target.value !== '') {
-      const personas = await load_personas(e.target.value);
+      const personas = await dispatch(load_personas(e.target.value));
       if (personas.length !== 0) {
         setPalabras(personas)
       } else {
@@ -131,7 +134,6 @@ export const Navbar = ({ logout, load_personas, profile }) => {
     </>
   );
 }
-const mapStateToProps = state => ({
-  profile: state.auth.profile
-});
-export default connect(mapStateToProps, { logout, load_personas })(Navbar)
+
+
+export default Navbar

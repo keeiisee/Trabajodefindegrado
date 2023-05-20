@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 export const Perfil = ({ profile }) => {
   return (
     <>
-    {profile && <ConPerfil />}
+      {profile && <ConPerfil />}
     </>
   )
 }

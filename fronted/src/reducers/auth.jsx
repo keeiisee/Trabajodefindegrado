@@ -25,7 +25,7 @@ const initialState = {
     refresh: localStorage.getItem('refresh'),
     isAuthenticated: null,
     user: null,
-    profile: null
+    profile: localStorage.getItem('profile'),
 };
 
 export default function(state = initialState, action) {
@@ -33,13 +33,13 @@ export default function(state = initialState, action) {
 
     switch(type) {
         case AUTHENTICATED_SUCCESS:
-            
             return {
                 ...state,
                 isAuthenticated: true
             }
         case LOGIN_SUCCESS:
             localStorage.setItem('access', payload.access);
+            localStorage.setItem('refresh', payload.refresh);
             return {
                 ...state,
                 isAuthenticated: true,
@@ -58,15 +58,17 @@ export default function(state = initialState, action) {
             }
         case PROFILE_LOADED_SUCCES:
         case PROFILE_CREATE_SUCCES:
+            localStorage.setItem('profile', true);
             return{
                 ...state,
                 profile: true
             }
         case PROFILE_LOADED_FAIL:
         case PROFILE_CREATE_FAIL:
+            localStorage.removeItem('profile')
             return{
                 ...state,
-                profile: null
+                profile: false
             }
        
 
@@ -87,6 +89,7 @@ export default function(state = initialState, action) {
         case LOGOUT:
             localStorage.removeItem('access');
             localStorage.removeItem('refresh');
+            localStorage.removeItem('profile');
             return {
                 ...state,
                 access: null,

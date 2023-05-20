@@ -15,6 +15,7 @@ export const Navbarperfil = ({imagen}) => {
   const misPos = () =>{
     navigate("/mispublicaciones")
   }
+  
   return (
     <>
             <div className="col-12 col-md-2 bg-light border-end">

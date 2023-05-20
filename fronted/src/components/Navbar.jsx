@@ -54,7 +54,7 @@ export const Navbar = () => {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      {/* <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
           <Link className="navbar-brand" to={'/paginadeinicio'}>Calistenia</Link>
           <button
@@ -130,7 +130,61 @@ export const Navbar = () => {
             </form>
           </div>
         </div>
+      </nav> */}
+      <nav className="bg-white border-gray-200 dark:bg-gray-900">
+        <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
+          <a href="https://flowbite.com" className="flex items-center">
+            <img src="https://feswc.org/wp-content/uploads/2023/02/Club-Calistenia-Sitges-Logo.png" className="h-8 mr-3" alt="Flowbite Logo" />
+            <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Calistenia</span>
+          </a>
+          <nav className="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
+            <Link className="mr-5 hover:text-blue-900" to="/paginadeinicio">
+              Inicio
+            </Link>
+            <Link className="mr-5 hover:text-blue-900" to="#">
+              Explorar
+            </Link>
+            {profile &&
+              <>
+                <Link className="mr-5 hover:text-gray-900" to="/crear-post">
+                  Subir Imagen
+                </Link>
+                <Link className="mr-5 hover:text-gray-900" to="/profile">
+                  Perfil
+                </Link>
+              </>
+            }
+            {!profile &&
+              <>
+                <Link className="mr-5 hover:text-gray-900" to="/crear-perfil">
+                  Crear Perfil
+                </Link>
+              </>
+            }
+            <form className="d-flex">
+              <PalabrasList palabras={palabras} />
+              <input
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                  }
+                }}
+
+                className="form-control me-2"
+                onChange={e => onChange(e)}
+                type="search"
+                placeholder="Buscar usuarios"
+                aria-label="Buscar usuarios"
+                value={letras}
+              />
+            </form>
+            <a className="mr-5 hover:text-gray-900" href="" onClick={logout_user}>
+                  Cerrar Sesion
+                </a>
+          </nav>
+        </div>
       </nav>
+
     </>
   );
 }

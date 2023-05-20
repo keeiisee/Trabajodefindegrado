@@ -1,10 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from '../components/Navbar';
+import ImagenInicio from '../Inicio/ImagenInicio';
+import imagenesInicio from '../Inicio/imagenesInicio.json';
+import PopupInicio from '../Inicio/PopupInicio';
 
 export const PaginaDeInicio = () => {
+  
+  const [popupImagen, setPopupImagen] = useState(null);
+
+  const handleClick = (imagen) => {
+    setPopupImagen(imagen);
+  };
+
+  const handleClosePopup = () => {
+    setPopupImagen(null);
+  };
+  // Aquí irá el código para mostrar las imágenes y el popup
   return (
     <>
-      <div className="container my-4">
+      {/* <div className="container my-4">
         <div className="row">
           <div className="col-6">
             <div className="card">
@@ -33,9 +47,16 @@ export const PaginaDeInicio = () => {
             </div>
           </div>
         </div>
+      </div> */}
+      <div className="App">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
+        {imagenesInicio.map((imagen) => (
+          <ImagenInicio key={imagen.id} imagen={imagen} onClick={handleClick} />
+        ))}
       </div>
+      {popupImagen && <PopupInicio imagen={popupImagen} onClose={handleClosePopup} />}
+    </div>
     </>
   )
 }
-
 export default PaginaDeInicio;

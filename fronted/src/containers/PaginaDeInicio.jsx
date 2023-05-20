@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar';
 import ImagenInicio from '../Inicio/ImagenInicio';
 import imagenesInicio from '../Inicio/imagenesInicio.json';
@@ -15,6 +15,37 @@ export const PaginaDeInicio = () => {
   const handleClosePopup = () => {
     setPopupImagen(null);
   };
+
+  const [profile, setProfile] = useState("");
+  const [post, setPost] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `JWT ${localStorage.getItem('access')}`,
+        }
+      };
+      try {
+
+        const responseProfile = await fetch('http://localhost:8000/accounts/profile/', config);
+        const dataProfile = await responseProfile.json();
+        setProfile(dataProfile)
+        if (dataProfile) {
+          const responsePost = await fetch(`http://localhost:8000/accounts/publicaciones/${dataProfile[0].id}/`, config);
+          const dataPost = await responsePost.json()
+          setPost(dataPost)
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+
   // Aquí irá el código para mostrar las imágenes y el popup
   return (
     <>
@@ -50,8 +81,8 @@ export const PaginaDeInicio = () => {
       </div> */}
       <div className="App">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
-        {imagenesInicio.map((imagen) => (
-          <ImagenInicio key={imagen.id} imagen={imagen} onClick={handleClick} />
+        {post.map((imagen) => (
+          <ImagenInicio key={imagen} imagen={imagen} onClick={handleClick} />
         ))}
       </div>
       {popupImagen && <PopupInicio imagen={popupImagen} onClose={handleClosePopup} />}

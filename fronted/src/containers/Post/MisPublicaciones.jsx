@@ -2,11 +2,21 @@ import React, { useEffect, useMemo, useState } from 'react'
 import Navbarperfil from '../Perfil/Navbarperfil';
 import Navbar from '../../components/Navbar';
 import { connect } from 'react-redux';
+import ImagenInicio from '../../Inicio/ImagenInicio';
+import PopupInicio from '../../Inicio/PopupInicio';
 
 export const MisPublicaciones = () => {
     const [profile, setProfile] = useState("");
     const [post, setPost] = useState([]);
+    const [popupImagen, setPopupImagen] = useState(null);
 
+    const handleClick = (imagen) => {
+      setPopupImagen(imagen);
+    };
+  
+    const handleClosePopup = () => {
+      setPopupImagen(null);
+    };
     useEffect(() => {
         const fetchData = async () => {
             const config = {
@@ -42,28 +52,21 @@ export const MisPublicaciones = () => {
     return (
 
         <>
-           
+
             <div className="container-fluid vh-100 h-md-50">
                 <div className="row h-100">
-                    <Navbarperfil imagen={url}/>
+                    <Navbarperfil imagen={url} />
                     <div className="col-md-8">
                         <br />
                         <h2>Mis fotos</h2>
                         <br />
-                        <div className="row row-cols-1 row-cols-md-3 g-4">
-                            
-                            {post.length > 0 ? post.map((img, index) => {
-                                
-                                return <>
-                                
-                                    <div className="col" key={index}>
-                                        <div className="card">
-                                            <img src={img.imagen} className="card-img-top" alt="Foto 3" />
-                                        </div>
-                                    </div>
-                                </>
-
-                            }) : null}
+                        <div className="App">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
+                                {post.map((imagen) => (
+                                    <ImagenInicio key={imagen} imagen={imagen} onClick={handleClick} />
+                                ))}
+                            </div>
+                            {popupImagen && <PopupInicio imagen={popupImagen} onClose={handleClosePopup} />}
                         </div>
                     </div>
                 </div>

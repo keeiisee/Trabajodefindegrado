@@ -4,9 +4,10 @@ import { useNavigate, Link } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { UserContext } from '../provider/UserContext';
 import { useSelector } from 'react-redux';
+import NewPost from '../containers/Post/NewPost';
 
 export const Navbar = () => {
-  const { palabras, setPalabras } = useContext(UserContext)
+  const { palabras, setPalabras, isOpenP, openPos  } = useContext(UserContext)
   const dispatch = useDispatch();
   const profile = useSelector(state => state.auth.profile);
 
@@ -54,6 +55,11 @@ export const Navbar = () => {
 
   return (
     <>
+    <div className="relative">
+                {isOpenP && (
+                    <NewPost />
+                )}
+            </div>
       {/* <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
           <Link className="navbar-brand" to={'/paginadeinicio'}>Calistenia</Link>
@@ -138,7 +144,8 @@ export const Navbar = () => {
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Calistenia</span>
           </a>
           <nav className="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
-            <Link className="mr-5 hover:text-blue-900" to="/paginadeinicio">
+            <Link className="mr-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center"  to="/paginadeinicio">
+            
               Inicio
             </Link>
             <Link className="mr-5 hover:text-blue-900" to="#">
@@ -146,9 +153,9 @@ export const Navbar = () => {
             </Link>
             {profile &&
               <>
-                <Link className="mr-5 hover:text-gray-900" to="/crear-post">
+                <a type='button' className="mr-5 hover:text-gray-900" onClick={openPos}>
                   Subir Imagen
-                </Link>
+                </a>
                 <Link className="mr-5 hover:text-gray-900" to="/profile">
                   Perfil
                 </Link>
@@ -178,6 +185,7 @@ export const Navbar = () => {
                 value={letras}
               />
             </form>
+            
             <a className="mr-5 hover:text-gray-900" href="" onClick={logout_user}>
                   Cerrar Sesion
                 </a>

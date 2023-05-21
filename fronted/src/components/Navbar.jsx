@@ -5,12 +5,16 @@ import { connect, useDispatch } from 'react-redux';
 import { UserContext } from '../provider/UserContext';
 import { useSelector } from 'react-redux';
 import NewPost from '../containers/Post/NewPost';
+import { LogOut, User, Upload } from 'react-feather';
 
 export const Navbar = () => {
-  const { palabras, setPalabras, isOpenP, openPos  } = useContext(UserContext)
+  const { palabras, setPalabras, isOpenP, openPos } = useContext(UserContext)
   const dispatch = useDispatch();
   const profile = useSelector(state => state.auth.profile);
-
+  const [isOpen, setIsOpen] = useState(false);
+  function toggleMenu() {
+    setIsOpen(!isOpen);
+  }
   function PalabrasList({ palabras }) {
     return (
       <div className="position-relative">
@@ -18,10 +22,10 @@ export const Navbar = () => {
           {palabras.map((palabra, index) => (
             <li className="list-group-item" key={index}>
               {!palabra.id &&
-                <p style={{ whiteSpace: 'nowrap' }}>{palabra.name}</p>
+                <p style={{ whiteSpace: 'nowrap', fontSize: '12px' }}>{palabra.name}</p>
               }
               {palabra.id &&
-                <Link onClick={() => { setPalabras([]) }} to={`/perfil/${palabra.id}`}>{palabra.name}</Link>
+                <a style={{ whiteSpace: 'nowrap', fontSize: '12px' }} onClick={() => { setPalabras([]) }} href={`/perfil/${palabra.id}`}>{palabra.name}</a>
               }
 
             </li>
@@ -30,6 +34,11 @@ export const Navbar = () => {
       </div>
     );
   }
+  const [showSearch, setShowSearch] = useState(false);
+
+  const toggleSearch = () => {
+    setShowSearch(!showSearch);
+  };
 
   const navigate = useNavigate()
   const [letras, setLetras] = useState('')
@@ -55,89 +64,238 @@ export const Navbar = () => {
 
   return (
     <>
-    <div className="relative">
-                {isOpenP && (
-                    <NewPost />
-                )}
+      <div className="relative">
+        {isOpenP && (
+          <NewPost />
+        )}
+      </div>
+      <nav className="max-w-7 mx-4 mt-4 mb-4 px-2 sm:px-6 lg:px-8 nav-border border-4 bg-gradient-to-tr from-blue-200 via-blue-500 to-green-500">
+        
+          <div className="max-w-8 mx-auto px-4 mt-4 mb-4 px-2 sm:px-6 lg:px-8">
+            <div className="relative flex items-center justify-between h-16 ">
+              <Link to="/paginadeinicio" className="text-3xl font-bold tracking-wide">
+                Cal<span className="text-gray-500">istenia</span>
+              </Link>
+              
+              <div className="absolute inset-y-0 right-0 flex items-center sm:hidden">
+                
+                <button
+                  onClick={toggleMenu}
+                  type="button"
+                  className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white transition duration-150 ease-in-out"
+                  aria-label="Main menu"
+                  aria-expanded="false"
+                >
+                  <svg
+                    className={`${isOpen ? 'hidden' : 'block'} h-6 w-6`}
+                    stroke="currentColor"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  </svg>
+                  <svg
+                    className={`${isOpen ? 'block' : 'hidden'} h-6 w-6`}
+                    stroke="currentColor"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+                
+              </div>
+              <div className="hidden sm:block sm:ml-6">
+                <div className="flex">
+                <div className="flex-1 flex justify-center px-2 lg:ml-6 lg:justify-end">
+                <div className="max-w-md w-full lg:max-w-xs mb:w-10">
+                  <label htmlFor="search" className="sr-only">
+                    Search
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg
+                        className="h-5 w-5 text-gray-500"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M7.5 13A5.5 5.5 0 1113 7.5a5.51 5.51 0 01-5.5 5.5zm0-1a4.5 4.5 0 100-9 4.5 4.5 0 000 9z"
+                        />
+                      </svg>
+                    </div>
+                   
+                    <input
+                    onChange={e => onChange(e)}
+                    value={letras}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                      }
+                    }}
+                      id="search"
+                      name="search"
+                      className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:bg-gray-800 focus:text-white sm:text-sm transition duration-150 ease-in-out"
+                      placeholder="Search"
+                      type="search"
+                    />
+                     <PalabrasList palabras={palabras} />
+                  </div>
+                </div>
+              </div>
+                  <ul className="flex items-center space-x-6 space-y-0 md:space-y-0 md:space-x-6 ">
+                    {profile && (
+                      <>
+                        <li className="text-lg  font-medium group">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              openPos();
+                              setIsOpen(false);
+                            }}
+                          >
+                            <Upload size={18} className="inline-block mr-1" />
+                          </button>
+                          <div
+                            className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
+                          />
+                        </li>
+                        <li className="text-lg  font-medium group">
+                          <Link onClick={() => setIsOpen(false)} to="/profile">
+                            <User size={18} className="inline-block mr-1" />
+                          </Link>
+                          <div
+                            className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
+                          />
+                        </li>
+                      </>
+                    )}
+                    {!profile && (
+                      <>
+                        <li className="text-lg  font-medium group">
+                          <Link onClick={() => setIsOpen(false)} to="/crear-perfil">
+                            <User size={18} className="inline-block mr-1" />
+                          </Link>
+                          <div
+                            className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
+                          />
+                        </li>
+                      </>
+                    )}
+                    <li className="text-lg lg:text-lg font-medium group">
+                      <button type="button" onClick={logout_user}>
+                        <LogOut size={18} className="inline-block mr-1" />
+                      </button>
+                      <div
+                        className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
+                      />
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
-      {/* <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <div className="container-fluid">
-          <Link className="navbar-brand" to={'/paginadeinicio'}>Calistenia</Link>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
-            <ul className="navbar-nav">
-              <li className="nav-item">
-                <Link className="nav-link active" aria-current="page" to="/paginadeinicio">
-                  Inicio
-                </Link>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Explorar
-                </a>
-              </li>
-
+          </div>
+        
+        <div className={`${isOpen ? 'block' : 'hidden'} sm:hidden`}>
+          
+          <div className="px-2 pt-2 pb-3">
+            <ul className="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-6 lg:md:-x-8">
               {profile &&
                 <>
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/crear-post">
-                      Subir
-                    </Link>
+                  <li className="text-lg md:text-base lg:text-lg font-medium group text-yellow-500">
+                    <a type='button' onClick={openPos}>Subir Imagen
+                    </a>
+                    <div
+                      className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out">
+                    </div>
                   </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/profile">
+                  <li className="text-lg md:text-base lg:text-lg font-medium group text-yellow-500">
+                    <Link to="/profile">
                       Perfil
                     </Link>
+                    <div
+                      className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out">
+                    </div>
                   </li>
                 </>
               }
-              {!profile &&
+              {!profile && (
                 <>
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/crear-perfil">
+                  <li className="text-lg md:text-base lg:text-lg font-medium group text-yellow-500">
+                    <Link to="/crear-perfil">
                       Crear Perfil
                     </Link>
+                    <div
+                      className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out">
+                    </div>
                   </li>
                 </>
-              }
 
-              <li className="nav-item">
-                <a className="nav-link" href="" onClick={logout_user}>
+              )}
+              <li className="text-lg md:text-base lg:text-lg font-medium group text-yellow-500">
+                <a className="mr-5 hover:text-gray-900" href="" onClick={logout_user}>
                   Cerrar Sesion
                 </a>
+                <div
+                  className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out">
+                </div>
               </li>
+              <div className="flex-1 flex justify-center px-2 lg:ml-6 lg:justify-end">
+                <div className="max-w-md w-full lg:max-w-xs mb:w-10">
+                  <label htmlFor="search" className="sr-only">
+                    Search
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <svg
+                        className="h-5 w-5 text-gray-500"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M7.5 13A5.5 5.5 0 1113 7.5a5.51 5.51 0 01-5.5 5.5zm0-1a4.5 4.5 0 100-9 4.5 4.5 0 000 9z"
+                        />
+                      </svg>
+                    </div>
+                    <input
+                    onChange={e => onChange(e)}
+                    value={letras}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                      }
+                    }}
+                      id="search"
+                      name="search"
+                      className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:bg-gray-800 focus:text-white sm:text-sm transition duration-150 ease-in-out"
+                      placeholder="Search"
+                      type="search"
+                    />
+                     <PalabrasList palabras={palabras} />
+                  </div>
+                </div>
+              </div>
             </ul>
-            <form className="d-flex">
-              <PalabrasList palabras={palabras} />
-              <input
-                onKeyDown={e => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                  }
-                }}
-
-                className="form-control me-2"
-                onChange={e => onChange(e)}
-                type="search"
-                placeholder="Buscar usuarios"
-                aria-label="Buscar usuarios"
-                value={letras}
-              />
-            </form>
           </div>
         </div>
-      </nav> */}
-      <nav className="bg-white border-gray-200 dark:bg-gray-900">
+      </nav>
+
+
+      {/* <nav className="bg-white border-gray-200 dark:bg-gray-900">
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
           <a href="https://flowbite.com" className="flex items-center">
             <img src="https://feswc.org/wp-content/uploads/2023/02/Club-Calistenia-Sitges-Logo.png" className="h-8 mr-3" alt="Flowbite Logo" />
@@ -191,7 +349,7 @@ export const Navbar = () => {
                 </a>
           </nav>
         </div>
-      </nav>
+      </nav> */}
 
     </>
   );

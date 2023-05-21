@@ -19,6 +19,7 @@ function NewPostForm({ load_Idprofile, crear_post }) {
   const onSubmit = (event) => {
     event.preventDefault();
     crear_post(descripcion, profile[0].id, '', '')
+    closePos()
     navigate('/profile')
   };
 

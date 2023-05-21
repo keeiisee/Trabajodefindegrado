@@ -5,7 +5,7 @@ import imagenesInicio from '../Inicio/imagenesInicio.json';
 import PopupInicio from '../Inicio/PopupInicio';
 
 export const PaginaDeInicio = () => {
-  
+
   const [popupImagen, setPopupImagen] = useState(null);
 
   const handleClick = (imagen) => {
@@ -32,7 +32,7 @@ export const PaginaDeInicio = () => {
         const responseProfile = await fetch('http://localhost:8000/accounts/profile/', config);
         const dataProfile = await responseProfile.json();
         setProfile(dataProfile)
-        if (dataProfile) {
+        if (dataProfile && dataProfile.length > 0) {
           const responsePost = await fetch(`http://localhost:8000/accounts/publicaciones/${dataProfile[0].id}/`, config);
           const dataPost = await responsePost.json()
           setPost(dataPost)
@@ -80,13 +80,13 @@ export const PaginaDeInicio = () => {
         </div>
       </div> */}
       <div className="App">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
-        {post.map((imagen) => (
-          <ImagenInicio key={imagen} imagen={imagen} onClick={handleClick} />
-        ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
+          {post.map((imagen) => (
+            <ImagenInicio key={imagen.id} imagen={imagen} onClick={handleClick} />
+          ))}
+        </div>
+        {popupImagen && <PopupInicio imagen={popupImagen} onClose={handleClosePopup} />}
       </div>
-      {popupImagen && <PopupInicio imagen={popupImagen} onClose={handleClosePopup} />}
-    </div>
     </>
   )
 }

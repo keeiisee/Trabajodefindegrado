@@ -1,6 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.nav-border {
+  border: 2px solid;
+  animation: border-animation 3s infinite;
+}
+
+@keyframes border-animation {
+  0% {
+    border-color: red;
+  }
+  25% {
+    border-color: red;
+  }
+  50% {
+    border-color: red;
+  }
+  75% {
+    border-color: red;
+  }
+  100% {
+    border-color: red;
+  }
+}
 /*:root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

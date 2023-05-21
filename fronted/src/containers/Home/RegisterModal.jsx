@@ -1,33 +1,50 @@
 //registro con tailwind
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../provider/UserContext";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { signup } from "../../actions/auth";
 
 const RegisterModal = () => {
-    const { setIsOpenR } = useContext(UserContext)
-    const [email, setEmail] = useState("");
-    const [name, setName] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    const dispatch = useDispatch();
+    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+    const { closeReg } = useContext(UserContext)
     const [error, setError] = useState("");
+    const [accountCreated, setAccountCreated] = useState(false);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        password: '',
+        re_password: ''
+    });
+    const navigate = useNavigate()
+    const { name, email, password, re_password } = formData;
 
-    const closeReg = () => {
-        setIsOpenR(false);
-        setEmail("");
-        setName("");
-        setPassword("");
-        setConfirmPassword("");
-        setError("");
-    };
-
-    const handleSubmit = (e) => {
+    const onSubmit = (e) => {
         e.preventDefault();
-        if (password !== confirmPassword) {
+        if (password !== re_password) {
             setError("Las contraseñas no coinciden.");
             return;
         }
-        // Aquí iría la lógica para enviar los datos del formulario al servidor
+        
+        dispatch(signup(name, email, password, re_password));
+        setAccountCreated(true);
         closeReg();
     };
+
+    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/');
+        }
+    }, [isAuthenticated, navigate]);
+
+    useEffect(() => {
+        if (accountCreated) {
+            navigate('/');
+        }
+    }, [accountCreated, navigate]);
 
     return (
         <div className="relative">
@@ -38,7 +55,7 @@ const RegisterModal = () => {
             >
                 <div className="bg-white rounded-lg shadow-lg w-96 p-6">
                     <h2 className="text-2xl font-semibold mb-4">Registro</h2>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={e => onSubmit(e)}>
                         <div className="mb-4">
                             <label
                                 className="block text-gray-700 font-bold mb-2"
@@ -50,9 +67,10 @@ const RegisterModal = () => {
                                 className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 id="email"
                                 type="email"
+                                name="email"
                                 placeholder="Ingresa tu correo electrónico"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={e => onChange(e)}
                                 required
                             />
                         </div>
@@ -67,9 +85,10 @@ const RegisterModal = () => {
                                 className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 id="name"
                                 type="text"
+                                name="name"
                                 placeholder="Ingresa tu nombre"
                                 value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                onChange={e => onChange(e)}
                                 required
                             />
                         </div>
@@ -83,10 +102,12 @@ const RegisterModal = () => {
                             <input
                                 className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                                 id="password"
-                                type="password"
-                                placeholder="Ingresa tu contraseña"
+                                type='password'
+                                placeholder='Password'
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                name='password'
+                                onChange={e => onChange(e)}
+                                minLength='6'
                                 required
                             />
                         </div>
@@ -99,11 +120,13 @@ const RegisterModal = () => {
                             </label>
                             <input
                                 className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                                id="confirmPassword"
-                                type="password"
-                                placeholder="Confirma tu contraseña"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                id="re_password"
+                                type='password'
+                                placeholder='Re password'
+                                name='re_password'
+                                value={re_password}
+                                onChange={e => onChange(e)}
+                                minLength='6'
                                 required
                             />
                         </div>

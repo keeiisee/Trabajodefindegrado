@@ -56,14 +56,14 @@ export const MisPublicaciones = () => {
             <div className="container-fluid vh-100 h-md-50">
                 <div className="row h-100">
                     <Navbarperfil imagen={url} />
-                    <div className="col-md-8">
+                    <div className="col">
                         <br />
                         <h2>Mis fotos</h2>
                         <br />
                         <div className="App">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
                                 {post.map((imagen) => (
-                                    <ImagenInicio key={imagen} imagen={imagen} onClick={handleClick} />
+                                    <ImagenInicio key={imagen.id} imagen={imagen} onClick={handleClick} />
                                 ))}
                             </div>
                             {popupImagen && <PopupInicio imagen={popupImagen} onClose={handleClosePopup} />}

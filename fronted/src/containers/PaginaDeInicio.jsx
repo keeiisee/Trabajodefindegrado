@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar';
 import ImagenInicio from '../Inicio/ImagenInicio';
 import imagenesInicio from '../Inicio/imagenesInicio.json';
-import PopupInicio from '../Inicio/PopupInicio';
 
 export const PaginaDeInicio = () => {
-
   const [popupImagen, setPopupImagen] = useState(null);
 
   const handleClick = (imagen) => {
@@ -49,44 +47,40 @@ export const PaginaDeInicio = () => {
   // Aquí irá el código para mostrar las imágenes y el popup
   return (
     <>
-      {/* <div className="container my-4">
-        <div className="row">
-          <div className="col-6">
-            <div className="card">
-              <img src="https://picsum.photos/800/600" className="card-img-top post-image" alt="..." />
-              <div className="card-body">
-                <div className="d-flex align-items-center">
-                  <div className="post-like me-3">
-                    <a href="#">
-                      <i className="far fa-heart"></i>
-                    </a>
-                    <div className="post-comment me-3">
-                      <a href="#">
-                        <i className="far fa-comment"></i>
-                      </a>
-                    </div>
-                    <div className="post-bookmark">
-                      <a href="#">
-                        <i className="far fa-bookmark"></i>
-                      </a>
-                    </div>
-                  </div>
-                  <h5 className="card-title my-3">Título de la publicación</h5>
-                  <p className="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor nisi libero, nec dictum neque bibendum quis. Sed et sapien euismod, ornare libero et, euismod nibh. In hac habitasse platea dictumst.</p>
-                </div>
-              </div>
-            </div>
-          </div>
+      {post.length <= 0 && (
+  <>
+    {profile.length <= 0 ? (
+      <div className="mt-40 ml-20 mr-20 text-center animate-bounce">
+        <h1 className="text-4xl font-bold text-gray-700 animate-pulse">No tienes un perfil</h1>
+        <p className="mt-4 text-gray-500">Lo sentimos, crea un perfil.</p>
+      </div>
+    ) : (
+      <div className="mt-40 ml-20 mr-20 text-center animate-bounce">
+        <h1 className="text-4xl font-bold text-gray-700 animate-pulse">No hay publicaciones que ver</h1>
+        <p className="mt-4 text-gray-500">Lo sentimos, no hay contenido disponible en este momento.</p>
+      </div>
+    )}
+  </>
+)}
+
+
+      <div className="container mx-auto max-w-screen-lg px-2 py-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 auto-cols-min">
+          {post.map((imagen) => (
+            <ImagenInicio key={imagen.id} imagen={imagen} />
+          ))}
         </div>
-      </div> */}
-      <div className="App">
+      </div>
+
+
+      {/* <div className="App">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
           {post.map((imagen) => (
             <ImagenInicio key={imagen.id} imagen={imagen} onClick={handleClick} />
           ))}
         </div>
         {popupImagen && <PopupInicio imagen={popupImagen} onClose={handleClosePopup} />}
-      </div>
+      </div> */}
     </>
   )
 }

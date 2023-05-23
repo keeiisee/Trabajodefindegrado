@@ -3,7 +3,7 @@ import Navbarperfil from '../Perfil/Navbarperfil';
 import Navbar from '../../components/Navbar';
 import { connect } from 'react-redux';
 import ImagenInicio from '../../Inicio/ImagenInicio';
-import PopupInicio from '../../Inicio/PopupInicio';
+
 
 export const MisPublicaciones = () => {
     const [profile, setProfile] = useState("");
@@ -11,11 +11,11 @@ export const MisPublicaciones = () => {
     const [popupImagen, setPopupImagen] = useState(null);
 
     const handleClick = (imagen) => {
-      setPopupImagen(imagen);
+        setPopupImagen(imagen);
     };
-  
+
     const handleClosePopup = () => {
-      setPopupImagen(null);
+        setPopupImagen(null);
     };
     useEffect(() => {
         const fetchData = async () => {
@@ -53,15 +53,25 @@ export const MisPublicaciones = () => {
 
         <>
 
-            <div className="container-fluid vh-100 h-md-50">
-                <div className="row h-100">
-                    <Navbarperfil imagen={url} />
+
+            <Navbarperfil imagen={url} />
+
+
+            <div className="sm:ml-64 mr-6">
+                <div className="p-4 ml-6 sm:ml-14 border-4 nav-border bg-marron rounded-lg dark:border-gray-700">
+
                     <div className="col">
-                        <br />
-                        <h2>Mis fotos</h2>
-                        <br />
-                        <div className="App">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
+
+                        <div className="container mx-auto max-w-screen-lg px-2 py-2">
+                            {post.length <= 0 && (
+
+
+                                <div className="mt-20 ml-20 mr-20 mb-20 text-center animate-bounce">
+                                    <h1 className="text-4xl font-bold text-gray-700 animate-pulse">No hay publicaciones que ver</h1>
+                                    <p className="mt-4 text-gray-500">Lo sentimos, no hay contenido disponible en este momento.</p>
+                                </div>
+                            )}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 auto-cols-min">
                                 {post.map((imagen) => (
                                     <ImagenInicio key={imagen.id} imagen={imagen} onClick={handleClick} />
                                 ))}
@@ -71,6 +81,17 @@ export const MisPublicaciones = () => {
                     </div>
                 </div>
             </div>
+            {/* <div className="col">
+                        <div className="container mx-auto max-w-screen-lg px-2 py-2">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 auto-cols-min">
+                                {post.map((imagen) => (
+                                    <ImagenInicio key={imagen.id} imagen={imagen} onClick={handleClick} />
+                                ))}
+                            </div>
+                            {popupImagen && <PopupInicio imagen={popupImagen} onClose={handleClosePopup} />}
+                        </div>
+                    </div> */}
+
         </>
     )
 }

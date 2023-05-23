@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
-const ImagenInicio = ({ imagen, profile, onClick }) => {
+const ImagenInicio = ({ imagen,  onClick }) => {
     const user = useSelector(state => state.auth.user);
     return (
         <>
@@ -17,23 +17,24 @@ const ImagenInicio = ({ imagen, profile, onClick }) => {
         />
       </div>
       </div> */}
-            <div className="container py-5 text-white">
-
-                <Card className="mb-3 h-100 game-card">
-
-
-                    <Card.Img variant="top" className="game-image" onClick={() => onClick(imagen)} src={imagen.imagen} alt={imagen.descripcion} />
-
-                    <Card.Body className="p-5">
-
-                        <Card.Title className="text-gray-900 font-bold text-2xl tracking-tight mb-2">{user.name}</Card.Title>
-
-                        <Card.Text className="font-normal text-gray-700 mb-3">{imagen.descripcion} fecha: {imagen.fecha_publicacion}</Card.Text>
-                    </Card.Body>
-                </Card>
-                <div className="max-w-lg">
-                </div>
+            <div
+            key={imagen.id}
+            className="relative overflow-hidden rounded-lg shadow-lg"
+          >
+            <img
+              src={imagen.imagen}
+              alt={imagen.descripcion}
+              className="w-full h-full object-cover"
+            />
+            
+             <div className="absolute inset-0 bg-gray-800 bg-opacity-75 transition-opacity duration-300 flex items-end justify-center px-4 py-2 opacity-0 hover:opacity-100">
+            
             </div>
+            <div className="absolute inset-x-0 bottom-0 bg-marron px-4 py-2">
+            <p className="text-gray-900 text-base font-bold">{user.name} - {imagen.fecha_publicacion.substr(0,10)}</p>
+            
+            </div>
+          </div>
         </>
 
 

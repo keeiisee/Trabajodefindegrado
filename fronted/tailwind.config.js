@@ -1,3 +1,5 @@
+import { rgbToHex } from '@mui/material';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -7,9 +9,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        beige: {
-          pastel: '#F2EFE9',
-        },
+        'marron':"#eaccad",
       },
     },
   },

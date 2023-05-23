@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { logout, load_personas } from '../actions/auth';
 import { useNavigate, Link } from 'react-router-dom';
-import { connect, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { UserContext } from '../provider/UserContext';
 import { useSelector } from 'react-redux';
 import NewPost from '../containers/Post/NewPost';
@@ -15,6 +15,30 @@ export const Navbar = () => {
   function toggleMenu() {
     setIsOpen(!isOpen);
   }
+  const [profileI, setProfile] = useState("");
+  const [post, setPost] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `JWT ${localStorage.getItem('access')}`,
+        }
+      };
+      try {
+
+        const responseProfile = await fetch('http://localhost:8000/accounts/profile/', config);
+        const dataProfile = await responseProfile.json();
+        setProfile(dataProfile)
+  
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchData();
+  }, []);
   function PalabrasList({ palabras }) {
     return (
       <div className="position-relative">
@@ -61,6 +85,12 @@ export const Navbar = () => {
       setPalabras([])
     }
   }
+const url = useMemo(() => {
+    if (profileI) {
+        return profileI[0].imagen; 
+    }
+    return '';
+  }, [profileI]);
 
   return (
     <>
@@ -69,12 +99,11 @@ export const Navbar = () => {
           <NewPost />
         )}
       </div>
-      <nav className="max-w-7 mx-4 mt-4 mb-4 px-2 sm:px-6 lg:px-8 nav-border border-4 bg-gradient-to-tr from-blue-200 via-blue-500 to-green-500">
-        
+      <nav className="bg-marron max-w-7 mx-4 mt-4 mb-4 px-2 sm:px-6 lg:px-8 nav-border border-4">
           <div className="max-w-8 mx-auto px-4 mt-4 mb-4 px-2 sm:px-6 lg:px-8">
             <div className="relative flex items-center justify-between h-16 ">
-              <Link to="/paginadeinicio" className="text-3xl font-bold tracking-wide">
-                Cal<span className="text-gray-500">istenia</span>
+              <Link to="/paginadeinicio" className="text-3xl font-bold tracking-wide font-sans hover:BlinkMacSystemFont">
+                Cal<span className="text-white">istenia</span>
               </Link>
               
               <div className="absolute inset-y-0 right-0 flex items-center sm:hidden">
@@ -147,7 +176,7 @@ export const Navbar = () => {
                     }}
                       id="search"
                       name="search"
-                      className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:bg-gray-800 focus:text-white sm:text-sm transition duration-150 ease-in-out"
+                      className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 bg-gray-300 text-black placeholder-black focus:outline-none focus:bg-gray-300 focus:text-black sm:text-sm transition duration-150 ease-in-out"
                       placeholder="Search"
                       type="search"
                     />
@@ -155,7 +184,7 @@ export const Navbar = () => {
                   </div>
                 </div>
               </div>
-                  <ul className="flex items-center space-x-6 space-y-0 md:space-y-0 md:space-x-6 ">
+                  <ul className="ml-3 flex items-center space-x-6 space-y-0 md:space-y-0 md:space-x-6 ">
                     {profile && (
                       <>
                         <li className="text-lg  font-medium group">
@@ -172,9 +201,9 @@ export const Navbar = () => {
                             className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
                           />
                         </li>
-                        <li className="text-lg  font-medium group">
+                        <li className="text-lg font-medium group">
                           <Link onClick={() => setIsOpen(false)} to="/profile">
-                            <User size={18} className="inline-block mr-1" />
+                          <img className="w-10 h-10 rounded inline-block mr-1" src={url} alt="Foto de Perfil" />
                           </Link>
                           <div
                             className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
@@ -214,14 +243,14 @@ export const Navbar = () => {
             <ul className="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-6 lg:md:-x-8">
               {profile &&
                 <>
-                  <li className="text-lg md:text-base lg:text-lg font-medium group text-yellow-500">
+                  <li className="text-lg md:text-base lg:text-lg font-medium group text-white">
                     <a type='button' onClick={openPos}>Subir Imagen
                     </a>
                     <div
                       className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out">
                     </div>
                   </li>
-                  <li className="text-lg md:text-base lg:text-lg font-medium group text-yellow-500">
+                  <li className="text-lg md:text-base lg:text-lg font-medium group text-white">             
                     <Link to="/profile">
                       Perfil
                     </Link>
@@ -233,7 +262,7 @@ export const Navbar = () => {
               }
               {!profile && (
                 <>
-                  <li className="text-lg md:text-base lg:text-lg font-medium group text-yellow-500">
+                  <li className="text-lg md:text-base lg:text-lg font-medium group text-white">
                     <Link to="/crear-perfil">
                       Crear Perfil
                     </Link>
@@ -244,7 +273,7 @@ export const Navbar = () => {
                 </>
 
               )}
-              <li className="text-lg md:text-base lg:text-lg font-medium group text-yellow-500">
+              <li className="text-lg md:text-base lg:text-lg font-medium group text-white">
                 <a className="mr-5 hover:text-gray-900" href="" onClick={logout_user}>
                   Cerrar Sesion
                 </a>
@@ -281,7 +310,7 @@ export const Navbar = () => {
                     }}
                       id="search"
                       name="search"
-                      className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:bg-gray-800 focus:text-white sm:text-sm transition duration-150 ease-in-out"
+                      className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 bg-gray-300 text-black placeholder-black focus:outline-none focus:bg-gray-300 focus:text-black sm:text-sm transition duration-150 ease-in-out"
                       placeholder="Search"
                       type="search"
                     />

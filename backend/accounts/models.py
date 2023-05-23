@@ -49,7 +49,16 @@ class Profile(models.Model):
     amigos = models.ManyToManyField(UserAccount, blank=True, related_name='user_friends')
     logros = ArrayField(models.CharField(max_length=100), blank=True)
     imagen = models.ImageField(default='descarga.png', blank=True, null=True)
+    parques_calistenia = models.ManyToManyField('ParqueCalistenia', blank=True, related_name='usuarios_inscritos')
 
+    def __str__(self):
+        return self.descripcion
+
+    def get_imagen_url(self):
+        if self.imagen:
+            return self.imagen.url
+        else:
+            return ''
     def __str__(self):
         return self.descripcion
 
@@ -68,6 +77,32 @@ class Publicacion(models.Model):
 
     def __str__(self):
         return f'{self.autor.user.name}: {self.descripcion}'
+    
+
+class ParqueCalistenia(models.Model):
+    nombre = models.CharField(max_length=255)
+    ubicacion = models.CharField(max_length=255)
+    descripcion = models.TextField(blank=True)
+    imagen = models.ImageField(blank=True, null=True)
+
+    def __str__(self):
+        return self.nombre
+
+    def get_imagen_url(self):
+        if self.imagen:
+            return self.imagen.url
+        else:
+            return ''
+
+
+class Reserva(models.Model):
+    usuario = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    parque = models.ForeignKey(ParqueCalistenia, on_delete=models.CASCADE)
+    fecha = models.DateField()
+    hora = models.TimeField()
+
+    def __str__(self):
+        return f"{self.usuario.user.name} - {self.parque.nombre} - {self.fecha} - {self.hora}"
     
 # class Post(models.Model):
 #     author = models.ForeignKey(Profile, on_delete=models.CASCADE)

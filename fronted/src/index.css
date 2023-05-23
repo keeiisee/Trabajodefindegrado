@@ -8,19 +8,19 @@
 
 @keyframes border-animation {
   0% {
-    border-color: red;
+    border-color: rgb(164, 136, 136);
   }
   25% {
-    border-color: red;
+    border-color: rgb(90, 76, 76);
   }
   50% {
-    border-color: red;
+    border-color: rgb(167, 148, 148);
   }
   75% {
-    border-color: red;
+    border-color: rgb(102, 88, 88);
   }
   100% {
-    border-color: red;
+    border-color: rgb(133, 119, 119);
   }
 }
 /*:root {

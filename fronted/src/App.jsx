@@ -18,6 +18,7 @@ import { Error403 } from './Error403';
 import Layout from './hocs/Layout';
 import { useSelector } from 'react-redux';
 import { Navbarhome } from './containers/Home/Navbarhome';
+import { NotiRecibidas } from './containers/Notificaciones/NotiRecibidas';
 
 export const PrivateRoute = ({ children }) => {
       //const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
@@ -51,6 +52,7 @@ const App = () => {
                                           <Route path='/perfil/:id' element={<PrivateRoute><PerfilDeOtro /></PrivateRoute>}></Route>
                                           <Route path='/crear-post' element={<PrivateRoute><NewPost /></PrivateRoute>}></Route>
                                           <Route path='/mispublicaciones' element={<PrivateRoute><MisPublicaciones /></PrivateRoute>}></Route>
+                                          <Route path='/notificaciones-recibidas' element={<PrivateRoute><NotiRecibidas /></PrivateRoute>}></Route>
                                     </Routes>
                               </Layout>
                         </Router>

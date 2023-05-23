@@ -39,6 +39,7 @@ export const Navbar = () => {
 
     fetchData();
   }, []);
+  
   function PalabrasList({ palabras }) {
     return (
       <div className="position-relative">

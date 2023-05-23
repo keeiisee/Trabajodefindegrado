@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 export const ConPerfil = () => {
   const [profile, setProfile] = useState("");
   const [post, setPost] = useState([]);
-  const user = useSelector(state => state.auth.user);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,17 +33,11 @@ export const ConPerfil = () => {
     fetchData();
   }, []);
 
-  const url = useMemo(() => {
-    if (profile) {
-      return profile[0].imagen;
-    }
-    return '';
-  }, [profile]);
 
   return (
     <>
-
-      <Navbarperfil imagen={url} />
+  
+      <Navbarperfil/>
 
       {/* <div className="col-md-8">
             <br />

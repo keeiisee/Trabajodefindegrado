@@ -41,6 +41,40 @@ export const load_personas = (palabra) => async dispatch => {
 
     }
 }
+export const añadir_amigos = (idProfile, idUsuario, amigos, solicitudRecibida) => async dispatch => {
+    if (idUsuario){
+        var user = idUsuario
+    }
+    const body = JSON.stringify({ user, amigos, solicitudRecibida});
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `JWT ${localStorage.getItem('access')}`,
+        }
+    };
+    try {        
+        await axios.put(`http://localhost:8000/accounts/profiles/profiles/${idProfile}/`, body, config);
+    } catch (error) {
+        console.log(error);
+    }
+}
+export const añadir_amigos_enviados = (idProfile, idUsuario, amigos, solicitudEnviada) => async dispatch => {
+    if (idUsuario){
+        var user = idUsuario
+    }
+    const body = JSON.stringify({ user, amigos, solicitudEnviada});
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `JWT ${localStorage.getItem('access')}`,
+        }
+    };
+    try {        
+        await axios.put(`http://localhost:8000/accounts/profiles/profiles/${idProfile}/`, body, config);
+    } catch (error) {
+        console.log(error);
+    }
+}
 export const modificar_perfil = (imagen, descripcion, logros ,user1, idPerfil) => async dispatch => {
     if (user1){
         var user = user1.id

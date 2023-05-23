@@ -47,6 +47,8 @@ class Profile(models.Model):
     user = models.OneToOneField(UserAccount, on_delete=models.CASCADE)
     descripcion = models.TextField(blank=True)
     amigos = models.ManyToManyField(UserAccount, blank=True, related_name='user_friends')
+    solicitudEnviada = models.ManyToManyField(UserAccount, blank=True, related_name='sen_solicitud_firend')
+    solicitudRecibida = models.ManyToManyField(UserAccount, blank=True, related_name='recieve_solicitud_firend')
     logros = ArrayField(models.CharField(max_length=100), blank=True)
     imagen = models.ImageField(default='descarga.png', blank=True, null=True)
     parques_calistenia = models.ManyToManyField('ParqueCalistenia', blank=True, related_name='usuarios_inscritos')

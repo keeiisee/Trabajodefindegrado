@@ -1,10 +1,12 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
+from .views import ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
 
 router = routers.DefaultRouter()
 router.register(r'profiles/profiles', ProfileList)
 router.register(r'publicacion/create', PublicacionList)
+router.register(r'parqueCalis/view', ParqueCalisteniaList)
+router.register(r'reserva/view', ReservaCalisteniaList)
 urlpatterns = [
     #url que saca el perfil de todos los usuarios o del id del perfil que le pases
     #path('profiles/', include(router.urls)),

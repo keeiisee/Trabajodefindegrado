@@ -4,6 +4,7 @@ import Navbar from '../../components/Navbar';
 import { load_Idprofile, modificar_perfil } from '../../actions/auth';
 import { connect } from 'react-redux';
 import Navbarperfil from './Navbarperfil';
+import { NavbarSuperPerfil } from '../../components/NavbarSuperPerfil';
 
 function ActualizarPerfil({ load_Idprofile, modificar_perfil, user }) {
     const [imagen, setImagen] = useState('');
@@ -55,12 +56,11 @@ function ActualizarPerfil({ load_Idprofile, modificar_perfil, user }) {
     }, [profile]); 
 
     return (
+        <>
+        <NavbarSuperPerfil/>
         <div>
             <div className="container-fluid vh-100 h-md-50">
                 <div className="row h-100">
-                    
-                    <Navbarperfil  imagen={url}/>
-                    
                     <div className="col-md-8">
                         <br />
                     <h2 className="mb-4">Modificar Perfil</h2>
@@ -93,6 +93,8 @@ function ActualizarPerfil({ load_Idprofile, modificar_perfil, user }) {
             </div>
         </div>
         </div>
+        </>
+        
     )
 }
 const mapStateToProps = state => ({

@@ -8,18 +8,7 @@ import { UserContext } from '../../provider/UserContext'
 
 export const Navbarhome = () => {
     const { isOpenR, openReg, isOpenL, openLog } = useContext(UserContext)
-    //   const [isOpenR, setIsOpenR] = useState(false);
-    // const openLog = () => {
-    //     setIsOpenL(true);
-    // };
-
-    // const closeLog = () => {
-    //     setIsOpenL(false);
-    // };
-
-    // const closeReg = () => {
-    //     setIsOpenR(false);
-    // };
+   
     const [imagenActual, setImagenActual] = useState(0);
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -75,7 +64,8 @@ export const Navbarhome = () => {
             </nav>
 
             {/* Contenido con imágenes que cambian cada 3 segundos */}
-            <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 mt-10 nav-border border-4 ">
+           
+            <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 mt-10 ">
                 {/* Agregamos la clase "mt-8" para agregar un margen superior */}
                 <div className="flex flex-col md:flex-row">
                     <div className="md:w-1/2 p-4">
@@ -96,7 +86,7 @@ export const Navbarhome = () => {
                     </div>
                 </div>
             </div>
-
+         
 
             <footer className="bg-gray-200 py-4 fixed bottom-0 left-0 right-0">
                 <div className="container mx-auto px-4">

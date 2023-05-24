@@ -5,7 +5,9 @@ import { useDispatch } from 'react-redux';
 import { UserContext } from '../provider/UserContext';
 import { useSelector } from 'react-redux';
 import NewPost from '../containers/Post/NewPost';
-import { LogOut, User, Upload } from 'react-feather';
+import { LogOut, User, Upload, Filter } from 'react-feather';
+import { Button } from 'bootstrap';
+
 
 export const Navbar = () => {
   const { palabras, setPalabras, isOpenP, openPos } = useContext(UserContext)
@@ -16,7 +18,6 @@ export const Navbar = () => {
     setIsOpen(!isOpen);
   }
   const [profileI, setProfile] = useState("");
-  const [post, setPost] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,7 +32,7 @@ export const Navbar = () => {
         const responseProfile = await fetch('http://localhost:8000/accounts/profile/', config);
         const dataProfile = await responseProfile.json();
         setProfile(dataProfile)
-  
+
       } catch (error) {
         console.log(error);
       }
@@ -39,7 +40,7 @@ export const Navbar = () => {
 
     fetchData();
   }, []);
-  
+
   function PalabrasList({ palabras }) {
     return (
       <div className="position-relative">
@@ -59,11 +60,6 @@ export const Navbar = () => {
       </div>
     );
   }
-  const [showSearch, setShowSearch] = useState(false);
-
-  const toggleSearch = () => {
-    setShowSearch(!showSearch);
-  };
 
   const navigate = useNavigate()
   const [letras, setLetras] = useState('')
@@ -86,9 +82,9 @@ export const Navbar = () => {
       setPalabras([])
     }
   }
-const url = useMemo(() => {
+  const url = useMemo(() => {
     if (profileI) {
-        return profileI[0].imagen; 
+      return profileI[0].imagen;
     }
     return '';
   }, [profileI]);
@@ -101,145 +97,169 @@ const url = useMemo(() => {
         )}
       </div>
       <nav className="bg-marron max-w-7 mx-4 mt-4 mb-4 px-2 sm:px-6 lg:px-8 nav-border border-4">
-          <div className="max-w-8 mx-auto px-4 mt-4 mb-4 px-2 sm:px-6 lg:px-8">
-            <div className="relative flex items-center justify-between h-16 ">
-              <Link to="/paginadeinicio" className="text-3xl font-bold tracking-wide font-sans hover:BlinkMacSystemFont">
-                Cal<span className="text-white">istenia</span>
-              </Link>
-              
-              <div className="absolute inset-y-0 right-0 flex items-center sm:hidden">
-                
-                <button
-                  onClick={toggleMenu}
-                  type="button"
-                  className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white transition duration-150 ease-in-out"
-                  aria-label="Main menu"
-                  aria-expanded="false"
+        <div className="max-w-8 mx-auto px-4 mt-4 mb-4 px-2 sm:px-6 lg:px-8">
+          <div className="relative flex items-center justify-between h-16 ">
+            <Link to="/paginadeinicio" className="text-3xl font-bold tracking-wide font-sans hover:BlinkMacSystemFont">
+              Cal<span className="text-white">istenia</span>
+            </Link>
+
+            <div className="absolute inset-y-0 right-0 flex items-center sm:hidden">
+
+              <button
+                onClick={toggleMenu}
+                type="button"
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white transition duration-150 ease-in-out"
+                aria-label="Main menu"
+                aria-expanded="false"
+              >
+                <svg
+                  className={`${isOpen ? 'hidden' : 'block'} h-6 w-6`}
+                  stroke="currentColor"
+                  fill="none"
+                  viewBox="0 0 24 24"
                 >
-                  <svg
-                    className={`${isOpen ? 'hidden' : 'block'} h-6 w-6`}
-                    stroke="currentColor"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
-                  </svg>
-                  <svg
-                    className={`${isOpen ? 'block' : 'hidden'} h-6 w-6`}
-                    stroke="currentColor"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-                
-              </div>
-              <div className="hidden sm:block sm:ml-6">
-                <div className="flex">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+                <svg
+                  className={`${isOpen ? 'block' : 'hidden'} h-6 w-6`}
+                  stroke="currentColor"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+
+            </div>
+            <div className="hidden sm:block sm:ml-6">
+              <div className="flex">
                 <div className="flex-1 flex justify-center px-2 lg:ml-6 lg:justify-end">
-                <div className="max-w-md w-full lg:max-w-xs mb:w-10">
-                  <label htmlFor="search" className="sr-only">
-                    Search
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg
-                        className="h-5 w-5 text-gray-500"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M7.5 13A5.5 5.5 0 1113 7.5a5.51 5.51 0 01-5.5 5.5zm0-1a4.5 4.5 0 100-9 4.5 4.5 0 000 9z"
-                        />
-                      </svg>
+                  <div className="max-w-md w-full lg:max-w-xs mb:w-10">
+                    <label htmlFor="search" className="sr-only">
+                      Search
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg
+                          className="h-5 w-5 text-gray-500"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M7.5 13A5.5 5.5 0 1113 7.5a5.51 5.51 0 01-5.5 5.5zm0-1a4.5 4.5 0 100-9 4.5 4.5 0 000 9z"
+                          />
+                        </svg>
+                      </div>
+
+                      <input
+                        onChange={e => onChange(e)}
+                        value={letras}
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                          }
+                        }}
+                        id="search"
+                        name="search"
+                        className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 bg-gray-300 text-black placeholder-black focus:outline-none focus:bg-gray-300 focus:text-black sm:text-sm transition duration-150 ease-in-out"
+                        placeholder="Search"
+                        type="search"
+                      />
+                      <PalabrasList palabras={palabras} />
                     </div>
-                   
-                    <input
-                    onChange={e => onChange(e)}
-                    value={letras}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                      }
-                    }}
-                      id="search"
-                      name="search"
-                      className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 bg-gray-300 text-black placeholder-black focus:outline-none focus:bg-gray-300 focus:text-black sm:text-sm transition duration-150 ease-in-out"
-                      placeholder="Search"
-                      type="search"
-                    />
-                     <PalabrasList palabras={palabras} />
                   </div>
                 </div>
-              </div>
-                  <ul className="ml-3 flex items-center space-x-6 space-y-0 md:space-y-0 md:space-x-6 ">
-                    {profile && (
-                      <>
-                        <li className="text-lg  font-medium group">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              openPos();
-                              setIsOpen(false);
-                            }}
-                          >
-                            <Upload size={18} className="inline-block mr-1" />
-                          </button>
-                          <div
-                            className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
-                          />
-                        </li>
-                        <li className="text-lg font-medium group">
-                          <Link onClick={() => setIsOpen(false)} to="/profile">
+                <ul className="ml-3 flex items-center space-x-6 space-y-0 md:space-y-0 md:space-x-6 ">
+                  {profile && (
+                    <>
+                      <li className="text-lg  font-medium group">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            openPos();
+                            setIsOpen(false);
+                          }}
+                        >
+                          <Upload size={18} className="inline-block mr-1" />
+                        </button>
+                        <div
+                          className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
+                        />
+                      </li>
+                      <li className="text-lg  font-medium group">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            openPos();
+                            setIsOpen(false);
+                          }}
+                        >
+                          <Filter size={18} className="inline-block mr-1" />
+                        </button>
+                        <div
+                          className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
+                        />
+                      </li>
+                      <li className="text-lg font-medium group">
+                        <Link onClick={() => setIsOpen(false)} to="/profile">
                           <img className="w-10 h-10 rounded inline-block mr-1" src={url} alt="Foto de Perfil" />
-                          </Link>
-                          <div
-                            className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
-                          />
-                        </li>
-                      </>
-                    )}
-                    {!profile && (
-                      <>
-                        <li className="text-lg  font-medium group">
-                          <Link onClick={() => setIsOpen(false)} to="/crear-perfil">
-                            <User size={18} className="inline-block mr-1" />
-                          </Link>
-                          <div
-                            className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
-                          />
-                        </li>
-                      </>
-                    )}
-                    <li className="text-lg lg:text-lg font-medium group">
-                      <button type="button" onClick={logout_user}>
-                        <LogOut size={18} className="inline-block mr-1" />
-                      </button>
-                      <div
-                        className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
-                      />
-                    </li>
-                  </ul>
-                </div>
+                        </Link>
+                        <div
+                          className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
+                        />
+                      </li>
+                    </>
+                  )}
+                  {!profile && (
+                    <>
+                      <li className="text-lg  font-medium group">
+                        <Link onClick={() => setIsOpen(false)} to="/crear-perfil">
+                          <User size={18} className="inline-block mr-1" />
+                        </Link>
+                        <div
+                          className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
+                        />
+                      </li>
+                      <li className="text-lg lg:text-lg font-medium group">
+                        <button type="button" onClick={logout_user}>
+                          <LogOut size={18} className="inline-block mr-1" />
+                        </button>
+                        <div
+                          className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
+                        />
+                      </li>
+                    </>
+
+                  )}
+                  <li className="text-lg lg:text-lg font-medium group">
+                    <button type="button" onClick={() => navigate('/buscarParques')} >
+                      <Upload size={18} className="inline-block mr-1" />
+                    </button>
+                    <div
+                      className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
+                    />
+                  </li>
+
+                </ul>
               </div>
             </div>
           </div>
-        
+        </div>
+
         <div className={`${isOpen ? 'block' : 'hidden'} sm:hidden`}>
-          
+
           <div className="px-2 pt-2 pb-3">
             <ul className="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-6 lg:md:-x-8">
               {profile &&
@@ -251,7 +271,7 @@ const url = useMemo(() => {
                       className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out">
                     </div>
                   </li>
-                  <li className="text-lg md:text-base lg:text-lg font-medium group text-white">             
+                  <li className="text-lg md:text-base lg:text-lg font-medium group text-white">
                     <Link to="/profile">
                       Perfil
                     </Link>
@@ -302,20 +322,20 @@ const url = useMemo(() => {
                       </svg>
                     </div>
                     <input
-                    onChange={e => onChange(e)}
-                    value={letras}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                      }
-                    }}
+                      onChange={e => onChange(e)}
+                      value={letras}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                        }
+                      }}
                       id="search"
                       name="search"
                       className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 bg-gray-300 text-black placeholder-black focus:outline-none focus:bg-gray-300 focus:text-black sm:text-sm transition duration-150 ease-in-out"
                       placeholder="Search"
                       type="search"
                     />
-                     <PalabrasList palabras={palabras} />
+                    <PalabrasList palabras={palabras} />
                   </div>
                 </div>
               </div>

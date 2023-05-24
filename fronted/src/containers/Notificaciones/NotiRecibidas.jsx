@@ -3,6 +3,7 @@ import Navbarperfil from '../Perfil/Navbarperfil'
 import { añadir_amigos, añadir_amigos_enviados } from '../../actions/auth';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { NavbarSuperPerfil } from '../../components/NavbarSuperPerfil';
 
 export const NotiRecibidas = () => {
     const dispatch = useDispatch()
@@ -87,7 +88,8 @@ export const NotiRecibidas = () => {
     };
     return (
         <>
-            <Navbarperfil></Navbarperfil>
+        <NavbarSuperPerfil/>
+            <Navbarperfil />
             <div className="sm:ml-64 mr-6">
                 <div className="p-4 ml-6 sm:ml-14 border-4 nav-border bg-marron rounded-lg dark:border-gray-700">
 
@@ -103,7 +105,7 @@ export const NotiRecibidas = () => {
                                     <br />
                                     <div className="flex justify-between">
                                         <button
-                                            onClick={() => aceptarSolicitud(tarjeta.id, tarjeta.solicitudEnviada, tarjeta.profileId, tarjeta.amigos)}
+                                            onClick={() => aceptarSolicitud(tarjeta.id, tarjeta.solicitudEnviada, tarjeta.profileId, tarjeta.amigos, tarjeta.solicitudRecibida)}
                                             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                                         >
                                             Aceptar

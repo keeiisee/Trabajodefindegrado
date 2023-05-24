@@ -1,7 +1,7 @@
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 #from .models import Post, Comment
-from .models import Profile, Publicacion
+from .models import Profile, Publicacion, ParqueCalistenia, Reserva
 from rest_framework import serializers
 
 User = get_user_model()
@@ -25,7 +25,18 @@ class PublicacionCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publicacion
         fields = '__all__'
-        
+
+class ParqueCalisteniaCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ParqueCalistenia
+        fields = '__all__'  
+
+class ReservaCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reserva
+        fields = '__all__' 
+
+
 # class PostSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Post

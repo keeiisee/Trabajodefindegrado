@@ -2,11 +2,18 @@ import React, { useEffect, useMemo, useState } from 'react'
 import Navbar from '../../components/Navbar'
 import Navbarperfil from './Navbarperfil';
 import { useSelector } from 'react-redux';
+import { NavbarSuperPerfil } from '../../components/NavbarSuperPerfil';
 
 export const ConPerfil = () => {
   const [profile, setProfile] = useState("");
   const [post, setPost] = useState([]);
-
+  const user = {
+    name: 'Juan Pérez',
+    email: 'juanperez@example.com',
+    phone: '+1234567890',
+    city: 'Madrid',
+    country: 'España',
+  };
   useEffect(() => {
     const fetchData = async () => {
       const config = {
@@ -37,7 +44,7 @@ export const ConPerfil = () => {
   return (
     <>
   
-      <Navbarperfil/>
+      <NavbarSuperPerfil/>
 
       {/* <div className="col-md-8">
             <br />
@@ -92,6 +99,7 @@ export const ConPerfil = () => {
 
         </div>
       </div>
+      
     </>
   )
 };

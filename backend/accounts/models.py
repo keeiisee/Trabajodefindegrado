@@ -83,7 +83,7 @@ class Publicacion(models.Model):
 
 class ParqueCalistenia(models.Model):
     nombre = models.CharField(max_length=255)
-    ubicacion = models.CharField(max_length=255)
+    placeId = models.CharField(max_length=255)
     descripcion = models.TextField(blank=True)
     imagen = models.ImageField(blank=True, null=True)
 

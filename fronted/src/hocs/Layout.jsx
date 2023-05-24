@@ -5,20 +5,24 @@ import Navbar from "../components/Navbar";
 import { useSelector } from 'react-redux';
 import { useLocation } from "react-router-dom";
 import { Navbarhome } from "../containers/Home/Navbarhome";
-const Layout = ({children }) => {
+import OtroNavbarPerfil from "../containers/Perfil/OtroNavbarPerfil";
+
+const Layout = ({ children }) => {
     const dispatch = useDispatch();
     const location = useLocation()
-    const navBarHome  = location.pathname === "/";
+    const navBarHome = location.pathname === "/";
+    const navBarPerfil = location.pathname.includes("/profile");
 
     useEffect(() => {
         dispatch(checkAuthenticated());
         dispatch(load_user());
     }, []);
 
-    
+
     return (
         <div>
-            {!navBarHome && <Navbar/>}
+            {!navBarHome && !navBarPerfil ? <Navbar /> : null}
+            
             {children}
         </div>
     );

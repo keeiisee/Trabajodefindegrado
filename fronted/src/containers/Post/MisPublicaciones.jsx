@@ -1,21 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import Navbarperfil from '../Perfil/Navbarperfil';
 import Navbar from '../../components/Navbar';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ImagenInicio from '../../Inicio/ImagenInicio';
-
+import { NavbarSuperPerfil } from '../../components/NavbarSuperPerfil';
+import MediaQuery from 'react-responsive';
 
 export const MisPublicaciones = () => {
-    const [profile, setProfile] = useState("");
     const [post, setPost] = useState([]);
-
-    const handleClick = (imagen) => {
-        setPopupImagen(imagen);
-    };
-
-    const handleClosePopup = () => {
-        setPopupImagen(null);
-    };
+    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         const fetchData = async () => {
             const config = {
@@ -27,7 +20,7 @@ export const MisPublicaciones = () => {
             try {
                 const responseProfile = await fetch('http://localhost:8000/accounts/profile/', config);
                 const dataProfile = await responseProfile.json();
-                setProfile(dataProfile)
+
                 if (dataProfile) {
                     const responsePost = await fetch(`http://localhost:8000/accounts/publicaciones/${dataProfile[0].id}/`, config);
                     const dataPost = await responsePost.json()
@@ -41,39 +34,106 @@ export const MisPublicaciones = () => {
         fetchData();
     }, []);
 
-    const url = useMemo(() => {
-        if (profile) {
-            return profile[0].imagen;
-        }
-        return '';
-    }, [profile]);
-
     return (
 
         <>
-            <Navbarperfil/>
-            <div className="sm:ml-64 mr-6">
-                <div className="p-4 ml-6 sm:ml-14 border-4 nav-border bg-marron rounded-lg dark:border-gray-700">
 
-                    <div className="col">
+            <NavbarSuperPerfil />
+            <MediaQuery minDeviceWidth={1095}>
+                <div className="sm:ml-64 mr-6">
+                    <div className="p-4 ml-6 sm:ml-14 border-4 nav-border bg-marron rounded-lg dark:border-gray-700">
 
-                        <div className="container mx-auto max-w-screen-lg px-2 py-2">
-                            {post.length <= 0 && (
-                                <div className="mt-20 ml-20 mr-20 mb-20 text-center animate-bounce">
-                                    <h1 className="text-4xl font-bold text-gray-700 animate-pulse">No hay publicaciones que ver</h1>
-                                    <p className="mt-4 text-gray-500">Lo sentimos, no hay contenido disponible en este momento.</p>
+                        <div className="col">
+                            <div className="container mx-auto max-w-screen-lg px-2 py-2">
+                                {post.length <= 0 && (
+                                    <div className="mt-20 ml-20 mr-20 mb-20 text-center animate-bounce">
+                                        <h1 className="text-4xl font-bold text-gray-700 animate-pulse">No hay publicaciones que ver</h1>
+                                        <p className="mt-4 text-gray-500">Lo sentimos, no hay contenido disponible en este momento.</p>
+                                    </div>
+                                )}
+                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-cols-min">
+                                    {post.map((imagen) => (
+                                        <ImagenInicio key={imagen.id} imagen={imagen} user={user} />
+                                    ))}
                                 </div>
-                            )}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 auto-cols-min">
-                                {post.map((imagen) => (
-                                    <ImagenInicio key={imagen.id} imagen={imagen} onClick={handleClick} />
-                                ))}
                             </div>
-                             
                         </div>
                     </div>
                 </div>
-            </div>
+            </MediaQuery>
+            <MediaQuery maxWidth={1094}>
+                <MediaQuery minDeviceWidth={898}>
+                    <div className="sm:ml-64 mr-6">
+                        <div className="p-4 ml-6 sm:ml-14 border-4 nav-border bg-marron rounded-lg dark:border-gray-700">
+
+                            <div className="col">
+                                <div className="container mx-auto max-w-screen-lg px-2 py-2">
+                                    {post.length <= 0 && (
+                                        <div className="mt-20 ml-20 mr-20 mb-20 text-center animate-bounce">
+                                            <h1 className="text-4xl font-bold text-gray-700 animate-pulse">No hay publicaciones que ver</h1>
+                                            <p className="mt-4 text-gray-500">Lo sentimos, no hay contenido disponible en este momento.</p>
+                                        </div>
+                                    )}
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 auto-cols-min">
+                                        {post.map((imagen) => (
+                                            <ImagenInicio key={imagen.id} imagen={imagen} user={user} />
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </MediaQuery>
+                <MediaQuery maxWidth={897}>
+
+                    <MediaQuery minDeviceWidth={771}>
+                        <div className="sm:ml-64 mr-6">
+                            <div className="p-4 ml-6 sm:ml-14 border-4 nav-border bg-marron rounded-lg dark:border-gray-700">
+
+                                <div className="col">
+                                    <div className="container mx-auto max-w-screen-lg px-2 py-2">
+                                        {post.length <= 0 && (
+                                            <div className="mt-20 ml-20 mr-20 mb-20 text-center animate-bounce">
+                                                <h1 className="text-4xl font-bold text-gray-700 animate-pulse">No hay publicaciones que ver</h1>
+                                                <p className="mt-4 text-gray-500">Lo sentimos, no hay contenido disponible en este momento.</p>
+                                            </div>
+                                        )}
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 auto-cols-min">
+                                            {post.map((imagen) => (
+                                                <ImagenInicio key={imagen.id} imagen={imagen} user={user} />
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </MediaQuery>
+                    <MediaQuery maxWidth={770}>
+
+                        <div className="sm:ml-64 mr-6">
+                            <div className="p-4 ml-6 sm:ml-14 border-4 nav-border bg-marron rounded-lg dark:border-gray-700">
+
+                                <div className="col">
+                                    <div className="container mx-auto max-w-screen-lg px-2 py-2">
+                                        {post.length <= 0 && (
+                                            <div className="mt-20 ml-20 mr-20 mb-20 text-center animate-bounce">
+                                                <h1 className="text-4xl font-bold text-gray-700 animate-pulse">No hay publicaciones que ver</h1>
+                                                <p className="mt-4 text-gray-500">Lo sentimos, no hay contenido disponible en este momento.</p>
+                                            </div>
+                                        )}
+                                        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 gap-4 auto-cols-min">
+                                            {post.map((imagen) => (
+                                                <ImagenInicio key={imagen.id} imagen={imagen} user={user} />
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </MediaQuery>
+                </MediaQuery>
+            </MediaQuery>
+
             {/* <div className="col">
                         <div className="container mx-auto max-w-screen-lg px-2 py-2">
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 auto-cols-min">

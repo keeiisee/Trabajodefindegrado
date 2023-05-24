@@ -1,7 +1,16 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, viewsets
-from .models import Profile, UserAccount, Publicacion
-from .serializers import ProfileCreateSerializer, UserCreateSerializerView, PublicacionCreateSerializer
+from .models import Profile, UserAccount, Publicacion, ParqueCalistenia, Reserva
+from .serializers import ReservaCreateSerializer, ProfileCreateSerializer, UserCreateSerializerView, PublicacionCreateSerializer, ParqueCalisteniaCreateSerializer
+
+
+class ReservaCalisteniaList(viewsets.ModelViewSet):
+    queryset = Reserva.objects.all()
+    serializer_class = ReservaCreateSerializer
+
+class ParqueCalisteniaList(viewsets.ModelViewSet):
+    queryset = ParqueCalistenia.objects.all()
+    serializer_class = ParqueCalisteniaCreateSerializer
 
 class PublicacionList(viewsets.ModelViewSet):
     queryset = Publicacion.objects.all()

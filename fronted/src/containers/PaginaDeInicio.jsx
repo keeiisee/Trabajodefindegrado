@@ -2,20 +2,15 @@ import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar';
 import ImagenInicio from '../Inicio/ImagenInicio';
 import { Parques } from '../parque/Parques';
+import { publicaionesAmigos } from '../actions/auth';
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
 
 export const PaginaDeInicio = () => {
   const [popupImagen, setPopupImagen] = useState(null);
-
-  const handleClick = (imagen) => {
-    setPopupImagen(imagen);
-  };
-
-  const handleClosePopup = () => {
-    setPopupImagen(null);
-  };
-
   const [profile, setProfile] = useState("");
   const [post, setPost] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,22 +18,42 @@ export const PaginaDeInicio = () => {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `JWT ${localStorage.getItem('access')}`,
-        }
+        },
       };
-      try {
 
+      try {
         const responseProfile = await fetch('http://localhost:8000/accounts/profile/', config);
         const dataProfile = await responseProfile.json();
-        setProfile(dataProfile)
+        setProfile(dataProfile);
+
         if (dataProfile && dataProfile.length > 0) {
-          const responsePost = await fetch(`http://localhost:8000/accounts/publicaciones/${dataProfile[0].id}/`, config);
-          const dataPost = await responsePost.json()
-          setPost(dataPost)
+          const amigosArray = dataProfile[0].amigos;
+            const postsPromises = amigosArray.map(async (amigo) => {
+              const body = {
+                user_id: amigo,
+              };
+
+              try {
+                const response = await axios.post('http://localhost:8000/accounts/ultima_publi/', body, config);
+                if (response.data){
+                  return response.data;
+                }
+                
+              } catch (error) {
+                console.error(`Error fetching data for friend ${amigo}:`, error);
+              }
+            });
+
+            Promise.all(postsPromises).then((fetchedPosts) => {
+              const validPosts = fetchedPosts.filter((post) => post !== undefined);
+              setPost(validPosts);
+            });
+       
         }
       } catch (error) {
         console.log(error);
       }
-    }
+    };
 
     fetchData();
   }, []);

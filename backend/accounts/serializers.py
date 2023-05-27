@@ -6,12 +6,19 @@ from rest_framework import serializers
 
 User = get_user_model()
 
+class PublicacionSerializer(serializers.ModelSerializer):
+    #autor = serializers.StringRelatedField()
+    class Meta:
+        model = Publicacion
+        fields = ['autor', 'imagen', 'descripcion', 'fecha_publicacion', 'like']
+
 class UserCreateSerializer(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         model = User
         fields = ('id', 'email', 'name', 'password')
 
 class ProfileCreateSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField()
     class Meta:
         model = Profile
         fields = '__all__'

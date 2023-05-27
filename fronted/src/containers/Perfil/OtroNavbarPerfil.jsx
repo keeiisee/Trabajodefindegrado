@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { sendFriend } from '../../actions/auth';
 
 export const OtroNavbarPerfil = () => {
     const userR = useSelector(state => state.auth.user);
@@ -30,7 +31,11 @@ export const OtroNavbarPerfil = () => {
         }
         fetchData();
     }, [routeParams.id]);
-
+    const dispatch = useDispatch()
+    function enviarAmistad(){
+        dispatch(sendFriend(routeParams.id))
+        window.location.reload();
+    }
     function susPost() {
         navigate(`/suspublicaciones/${routeParams.id}`)
     }
@@ -40,13 +45,20 @@ export const OtroNavbarPerfil = () => {
     }
     const [esAmigo, setEsAmigo] = useState(false)
     const [soliRec, setSoliRec] = useState(false)
+    const [soliEnv, setSoliEnv] = useState(false) 
     useEffect(() => {
         // Verifica si profile tiene datos y si tiene al menos un amigo
         if (profile && profile.length > 0 && profile[0].amigos) {
             // Guarda los amigos en un nuevo array
             const amigosArray = profile[0].amigos;
             const recibidosArray = profile[0].solicitudRecibida
+            const enviadosArray = profile[0].solicitudEnviada
 
+            if (enviadosArray.includes(userR.id)) {
+                setSoliEnv(true)
+            } else {
+                setSoliEnv(false)
+            }
             if (recibidosArray.includes(userR.id)) {
                 setSoliRec(true)
             } else {
@@ -93,7 +105,7 @@ export const OtroNavbarPerfil = () => {
                             </a>
                         </li>
 
-                        {esAmigo && !soliRec && (
+                        {esAmigo &&
                             <>
                                 <li>
                                     <a className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -115,7 +127,7 @@ export const OtroNavbarPerfil = () => {
                                     </a>
                                 </li>
                             </>
-                        )}
+                        }
                         {soliRec && 
                             <>
                                 <li>
@@ -139,7 +151,30 @@ export const OtroNavbarPerfil = () => {
                                 </li>
                             </>
                         }
-                        {!esAmigo && !soliRec && (
+                        {soliEnv && 
+                            <>
+                                <li>
+                                    <a className="flex items-center p-2 text-yellow-500 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-6 w-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M16 15c1.657 0 3-1.343 3-3V8a3 3 0 00-3-3H8a3 3 0 00-3 3v4c0 1.657 1.343 3 3 3h1m0 0l2 2m-2-2L9 15m7-6a4 4 0 11-8 0 4 4 0 018 0z"
+                                            />
+                                        </svg>
+                                        <span  className="flex-1 ml-3 whitespace-nowrap">Te ha enviado amistad</span>
+                                    </a>
+                                </li>
+                            </>
+                        }
+                        {!soliEnv && !esAmigo && !soliRec ? (
                         <>
                             <li>
                                 <a className="flex items-center p-2 text-green-500 rounded-lg dark:text-white hover:bg-green-100 dark:hover:bg-green-700">
@@ -157,12 +192,12 @@ export const OtroNavbarPerfil = () => {
                                             d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
                                         />
                                     </svg>
-                                    <span onClick={susPost} className="flex-1 ml-3 whitespace-nowrap">Enviar amistad</span>
+                                    <span onClick={enviarAmistad} className="flex-1 ml-3 whitespace-nowrap">Enviar amistad</span>
                                 </a>
                             </li>
 
 
-                        </>)}
+                        </>) : null}
                     </ul>
                 </div>
             </aside>

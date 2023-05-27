@@ -41,7 +41,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
         return self.name
     
     def __str__(self):
-        return self.email
+        return self.name
     
 class Profile(models.Model):
     user = models.OneToOneField(UserAccount, on_delete=models.CASCADE)
@@ -49,10 +49,10 @@ class Profile(models.Model):
     amigos = models.ManyToManyField(UserAccount, blank=True, related_name='user_friends')
     solicitudEnviada = models.ManyToManyField(UserAccount, blank=True, related_name='sen_solicitud_firend')
     solicitudRecibida = models.ManyToManyField(UserAccount, blank=True, related_name='recieve_solicitud_firend')
-    logros = ArrayField(models.CharField(max_length=100), blank=True)
+    logros = models.ManyToManyField('Logro', blank=True, related_name='usuarios_con_logro')
     imagen = models.ImageField(default='descarga.png', blank=True, null=True)
     parques_calistenia = models.ManyToManyField('ParqueCalistenia', blank=True, related_name='usuarios_inscritos')
-
+    
     def __str__(self):
         return self.descripcion
 
@@ -61,15 +61,14 @@ class Profile(models.Model):
             return self.imagen.url
         else:
             return ''
-    def __str__(self):
-        return self.descripcion
 
-    def get_imagen_url(self):
-        if self.imagen:
-            return self.imagen.url
-        else:
-            return ''
-        
+class Logro(models.Model):
+    nombre = models.CharField(max_length=100)
+    descripcion = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
 class Publicacion(models.Model):
     autor = models.ForeignKey(Profile, on_delete=models.CASCADE)
     imagen = models.ImageField(default='descarga.png', blank=True, null=True)
@@ -79,7 +78,6 @@ class Publicacion(models.Model):
 
     def __str__(self):
         return f'{self.autor.user.name}: {self.descripcion}'
-    
 
 class ParqueCalistenia(models.Model):
     nombre = models.CharField(max_length=255)

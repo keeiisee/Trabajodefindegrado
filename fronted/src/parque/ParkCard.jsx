@@ -17,6 +17,7 @@ export const ParkCard = ({ park }) => {
             try {
                 const parques = await fetch('http://localhost:8000/accounts/parqueCalis/view/', config);
                 const dataParque= await parques.json();
+                console.log(dataParque)
                 const idArray = dataParque.map(item => item.placeId);
                 const isIdPresent = idArray.includes(park.place_id);
                 setShowDiv(isIdPresent);

@@ -21,6 +21,73 @@ import {
     PROFILE_LOADED_FAIL,
 } from './types';
 
+export const publicaionesAmigos = () => async dispatch => {
+   
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `JWT ${localStorage.getItem('access')}`,
+            'Accept': 'application/json'
+        }
+    }
+    try {
+        const res = await axios.get(`http://localhost:8000/accounts/last_friend_posts/`, config);
+        if (res.data != []){
+            return res.data
+        } else {
+            return []
+        }
+    } catch (err) {
+
+    }
+}
+export const addFriend = (user_id) => async dispatch => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `JWT ${localStorage.getItem('access')}`,
+        }
+    };
+    const body = JSON.stringify({ user_id: user_id });
+    try {
+        await axios.post(`http://localhost:8000/accounts/add_friend/`, body, config);
+
+    } catch (err) {
+        console.log(err)
+    }
+  }
+  export const sendFriend = (user_id) => async dispatch => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `JWT ${localStorage.getItem('access')}`,
+        }
+    };
+    const body = JSON.stringify({ user_id: user_id });
+    try {
+        await axios.post(`http://localhost:8000/accounts/send_friend/`, body, config);
+
+    } catch (err) {
+        console.log(err)
+    }
+  }
+
+  export const rejectFriend = (user_id) => async dispatch => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `JWT ${localStorage.getItem('access')}`,
+        }
+    };
+    const body = JSON.stringify({ user_id: user_id });
+    try {
+        await axios.post(`http://localhost:8000/accounts/reject_friend/`, body, config);
+
+    } catch (err) {
+        console.log(err)
+    }
+  }
+
 export const load_personas = (palabra) => async dispatch => {
    
     const config = {
@@ -41,40 +108,7 @@ export const load_personas = (palabra) => async dispatch => {
 
     }
 }
-export const añadir_amigos = (idProfile, idUsuario, amigos, solicitudRecibida) => async dispatch => {
-    if (idUsuario){
-        var user = idUsuario
-    }
-    const body = JSON.stringify({ user, amigos, solicitudRecibida});
-    const config = {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `JWT ${localStorage.getItem('access')}`,
-        }
-    };
-    try {        
-        await axios.put(`http://localhost:8000/accounts/profiles/profiles/${idProfile}/`, body, config);
-    } catch (error) {
-        console.log(error);
-    }
-}
-export const añadir_amigos_enviados = (idProfile, idUsuario, amigos, solicitudEnviada) => async dispatch => {
-    if (idUsuario){
-        var user = idUsuario
-    }
-    const body = JSON.stringify({ user, amigos, solicitudEnviada});
-    const config = {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `JWT ${localStorage.getItem('access')}`,
-        }
-    };
-    try {        
-        await axios.put(`http://localhost:8000/accounts/profiles/profiles/${idProfile}/`, body, config);
-    } catch (error) {
-        console.log(error);
-    }
-}
+
 export const modificar_perfil = (imagen, descripcion, logros ,user1, idPerfil) => async dispatch => {
     if (user1){
         var user = user1.id

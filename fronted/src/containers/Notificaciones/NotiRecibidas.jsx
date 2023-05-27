@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import Navbarperfil from '../Perfil/Navbarperfil'
-import { añadir_amigos, añadir_amigos_enviados } from '../../actions/auth';
+import { addFriend, rejectFriend } from '../../actions/auth';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { NavbarSuperPerfil } from '../../components/NavbarSuperPerfil';
@@ -37,9 +37,6 @@ export const NotiRecibidas = () => {
                             id: userData.id,
                             name: userData.name,
                             url: profileData[0].imagen,
-                            profileId: profileData[0].id,
-                            notiEnviada: profileData[0].solicitudEnviada,
-                            amigos: profileData[0].amigos
                         };
                         setUsuariosQueSolicitan((prevUsuarios) => ({
                             ...prevUsuarios,
@@ -57,7 +54,7 @@ export const NotiRecibidas = () => {
         fetchData();
     }, []);
 
-    const solicitudRecibida1 = useMemo(() => {
+    const solicitudRecibida = useMemo(() => {
         if (profile && profile.length > 0) {
             const userIds = profile[0].solicitudRecibida;
             const usuarios = userIds.map((userId) => usuariosQueSolicitan[userId]);
@@ -67,25 +64,16 @@ export const NotiRecibidas = () => {
     }, [profile, usuariosQueSolicitan]);
 
 
-    const aceptarSolicitud = (id, solicitudEnviada = [], profileId, amigos = []) => {
-        const soliRe = profile[0].solicitudRecibida.filter((numero) => numero !== id);
-        // Lógica para aceptar la solicitud de amistad
-
-        const arrayIdR = profile[0].amigos
-        arrayIdR.push(id)
-        dispatch(añadir_amigos(profile[0].id, profile[0].user, arrayIdR, soliRe))
-
-        const soliEn = solicitudEnviada.filter((numero) => numero !== profile[0].user);
-        const arrayIdE = amigos
-        arrayIdE.push(profile[0].user)
-        dispatch(añadir_amigos_enviados(profileId, id, arrayIdE, solicitudEnviada, soliEn))
+    const aceptarSolicitud = (id) => {
+        dispatch(addFriend(id))
         window.location.reload();
     };
 
     const denegarSolicitud = (id) => {
-        // Lógica para denegar la solicitud de amistad
-        console.log(`Solicitud denegada para el amigo con ID ${id}`);
+        dispatch(rejectFriend(id))
+        window.location.reload();
     };
+    
     return (
         <>
         <NavbarSuperPerfil/>
@@ -94,7 +82,7 @@ export const NotiRecibidas = () => {
                 <div className="p-4 ml-6 sm:ml-14 border-4 nav-border bg-marron rounded-lg dark:border-gray-700">
 
                     <div className="flex flex-wrap justify-center">
-                        {solicitudRecibida1 && solicitudRecibida1.map((tarjeta, index) => (
+                        {solicitudRecibida && solicitudRecibida.map((tarjeta, index) => (
 
                             <div key={index} className="max-w-sm rounded overflow-hidden shadow-lg m-4">
 
@@ -105,7 +93,7 @@ export const NotiRecibidas = () => {
                                     <br />
                                     <div className="flex justify-between">
                                         <button
-                                            onClick={() => aceptarSolicitud(tarjeta.id, tarjeta.solicitudEnviada, tarjeta.profileId, tarjeta.amigos, tarjeta.solicitudRecibida)}
+                                            onClick={() => aceptarSolicitud(tarjeta.id)}
                                             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                                         >
                                             Aceptar

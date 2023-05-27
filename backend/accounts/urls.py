@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
+from .views import UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
 
 router = routers.DefaultRouter()
 router.register(r'profiles/profiles', ProfileList)
@@ -24,4 +24,9 @@ urlpatterns = [
 
     #para ver las publicaciones de profile con la id que le pasemos
     path('publicaciones/<int:pk>/', PublicacionListForUser.as_view({'get': 'list'}), name='publicacion-detail'),
+    path('add_friend/', AddFriendView.as_view(), name='add_friend'),
+    path('reject_friend/', RejectFriendRequestView.as_view(), name='add_friend'),
+    path('send_friend/', SendFriendRequestView.as_view(), name='add_friend'),
+    path('ultima_publi/', UltimaPublicacionView.as_view(), name='add_friend'),
+    
 ]

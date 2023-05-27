@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar';
 import ImagenInicio from '../Inicio/ImagenInicio';
-import { Dos } from './probar/Dos';
-import Tres from './probar/Tres';
-import { Parques } from './probar/Parques';
+import { Parques } from '../parque/Parques';
 
 export const PaginaDeInicio = () => {
   const [popupImagen, setPopupImagen] = useState(null);
@@ -70,22 +68,11 @@ export const PaginaDeInicio = () => {
         </>
       )}
 
-
-      <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
         {post.map((imagen) => (
           <ImagenInicio key={imagen.id} imagen={imagen} />
         ))}
       </div>
-
-
-      {/* <div className="App">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
-          {post.map((imagen) => (
-            <ImagenInicio key={imagen.id} imagen={imagen} onClick={handleClick} />
-          ))}
-        </div>
-        {popupImagen && <PopupInicio imagen={popupImagen} onClose={handleClosePopup} />}
-      </div> */}
     </>
   )
 }

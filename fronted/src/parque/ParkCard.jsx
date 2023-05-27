@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { PhotoModal } from './PhotoModal';
-
+//si
 export const ParkCard = ({ park }) => {
     const { name, vicinity, photos } = park;
     const photoUrl = photos ? photos[0].getUrl({ maxWidth: 300, maxHeight: 200 }) : '';

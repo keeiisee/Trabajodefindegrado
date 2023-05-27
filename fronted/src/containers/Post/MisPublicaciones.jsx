@@ -39,7 +39,16 @@ export const MisPublicaciones = () => {
         <>
 
             <NavbarSuperPerfil />
-            <MediaQuery minDeviceWidth={1095}>
+            <div className="sm:ml-64 mr-6">
+                <div className="p-4 ml-6 sm:ml-14 border-4 nav-border bg-marron rounded-lg dark:border-gray-700">
+                    <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4">
+                        {post.map((imagen) => (
+                            <ImagenInicio key={imagen.id} imagen={imagen} />
+                        ))}
+                    </div>
+                </div>
+            </div>
+            {/* <MediaQuery minDeviceWidth={1095}>
                 <div className="sm:ml-64 mr-6">
                     <div className="p-4 ml-6 sm:ml-14 border-4 nav-border bg-marron rounded-lg dark:border-gray-700">
 
@@ -132,7 +141,7 @@ export const MisPublicaciones = () => {
                         </div>
                     </MediaQuery>
                 </MediaQuery>
-            </MediaQuery>
+            </MediaQuery> */}
 
             {/* <div className="col">
                         <div className="container mx-auto max-w-screen-lg px-2 py-2">

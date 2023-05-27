@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DateTimeForm } from './DateTimeForm';
 import { AchievementForm } from './AchievementForm';
-
+//si
 export const PhotoModal = ({ show, onClose, photoUrl, name }) => {
     if (!show) return null;
     const achievements = ["perimer logro", "segun", "tercer"]

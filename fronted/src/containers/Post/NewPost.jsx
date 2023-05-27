@@ -33,40 +33,7 @@ function NewPostForm({ load_Idprofile, crear_post }) {
   }, [])
 
   return (
-    // <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
-    //   <div className="mb-4">
-    //     <label htmlFor="imagen" className="block text-gray-700 font-bold mb-2">
-    //       Imagen
-    //     </label>
-    //     <input
-    //       type="file"
-    //       onChange={(event) => setImagen(event.target.files[0])}
-    //       id="imagen"
-    //       name="imagen"
-    //       accept="image/*"
-    //       className="border-2 border-gray-400 p-2 w-full rounded-md"
-    //     />
-    //   </div>
-    //   <div className="mb-4">
-    //     <label htmlFor="descripcion" className="block text-gray-700 font-bold mb-2">
-    //       Descripción
-    //     </label>
-    //     <textarea
-    //       id="descripcion"
-    //       name="descripcion"
-    //       value={descripcion}
-    //       onChange={(event) => setDescripcion(event.target.value)}
-    //       rows="4"
-    //       className="border-2 border-gray-400 p-2 w-full rounded-md"
-    //     ></textarea>
-    //   </div>
-    //   <button
-    //     type="submit"
-    //     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    //   >
-    //     Publicar
-    //   </button>
-    // </form>
+    
     <>
       <div
         className="fixed z-50 top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-gray-900 bg-opacity-50"

@@ -7,17 +7,38 @@ import { useSelector } from 'react-redux';
 import NewPost from '../containers/Post/NewPost';
 import { LogOut, User, Upload, Filter } from 'react-feather';
 import { Button } from 'bootstrap';
+const PalabrasList = ({ palabras, setPalabras }) => (
+  <div className="position-relative">
+    <ul className="list-group position-absolute top-100 start-0">
+      {palabras.map((palabra, index) => (
+        <li className="list-group-item" key={index}>
+          {palabra.id ? (
+            <a
+              style={{ whiteSpace: 'nowrap', fontSize: '12px' }}
+              onClick={() => setPalabras([])}
+              href={`/perfil/${palabra.id}`}
+            >
+              {palabra.name}
+            </a>
+          ) : (
+            <p style={{ whiteSpace: 'nowrap', fontSize: '12px' }}>{palabra.name}</p>
+          )}
+        </li>
+      ))}
+    </ul>
+  </div>
+);
 
 
 export const Navbar = () => {
-  const { palabras, setPalabras, isOpenP, openPos } = useContext(UserContext)
+  const { palabras, setPalabras, isOpenP, openPos } = useContext(UserContext);
   const dispatch = useDispatch();
   const profile = useSelector(state => state.auth.profile);
   const [isOpen, setIsOpen] = useState(false);
-  function toggleMenu() {
-    setIsOpen(!isOpen);
-  }
-  const [profileI, setProfile] = useState("");
+  const toggleMenu = () => setIsOpen(!isOpen);
+  const [profileI, setProfile] = useState('');
+  const navigate = useNavigate();
+  const [letras, setLetras] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,69 +46,43 @@ export const Navbar = () => {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `JWT ${localStorage.getItem('access')}`,
-        }
+        },
       };
-      try {
 
+      try {
         const responseProfile = await fetch('http://localhost:8000/accounts/profile/', config);
         const dataProfile = await responseProfile.json();
-        setProfile(dataProfile)
-
+        setProfile(dataProfile);
       } catch (error) {
         console.log(error);
       }
-    }
+    };
 
     fetchData();
   }, []);
 
-  function PalabrasList({ palabras }) {
-    return (
-      <div className="position-relative">
-        <ul className="list-group position-absolute top-100 start-0">
-          {palabras.map((palabra, index) => (
-            <li className="list-group-item" key={index}>
-              {!palabra.id &&
-                <p style={{ whiteSpace: 'nowrap', fontSize: '12px' }}>{palabra.name}</p>
-              }
-              {palabra.id &&
-                <a style={{ whiteSpace: 'nowrap', fontSize: '12px' }} onClick={() => { setPalabras([]) }} href={`/perfil/${palabra.id}`}>{palabra.name}</a>
-              }
-
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
-
-  const navigate = useNavigate()
-  const [letras, setLetras] = useState('')
   const logout_user = () => {
     dispatch(logout());
-    navigate('/')
+    navigate('/');
   };
+
+  const explorar = () => {
+    navigate('/buscarParques');
+    window.location.reload();
+  };
+
   const onChange = async (e) => {
     setLetras(e.target.value);
 
     if (e.target.value !== '') {
       const personas = await dispatch(load_personas(e.target.value));
-      if (personas.length !== 0) {
-        setPalabras(personas)
-      } else {
-        setPalabras([{ 'name': 'No se ha encontrado resultado' }])
-      }
-
+      setPalabras(personas.length !== 0 ? personas : [{ name: 'No se ha encontrado resultado' }]);
     } else {
-      setPalabras([])
+      setPalabras([]);
     }
-  }
-  const url = useMemo(() => {
-    if (profileI) {
-      return profileI[0].imagen;
-    }
-    return '';
-  }, [profileI]);
+  };
+
+  const url = useMemo(() => (profileI.length > 0 ? profileI[0].imagen : ''), [profileI]);
 
   return (
     <>
@@ -244,7 +239,7 @@ export const Navbar = () => {
 
                   )}
                   <li className="text-lg lg:text-lg font-medium group">
-                    <button type="button" onClick={() => navigate('/buscarParques')} >
+                    <button type="button" onClick={logout_user} >
                       <Upload size={18} className="inline-block mr-1" />
                     </button>
                     <div

@@ -9,7 +9,7 @@ export const AchievementForm = ({ show, onClose }) => {
     console.log('Logro seleccionado');
     onClose();
   };
-
+//si
   return (
     <form onSubmit={handleSubmit} className="space-y-4 mt-4">
       <div>

@@ -20,7 +20,7 @@ import { useSelector } from 'react-redux';
 import { Navbarhome } from './containers/Home/Navbarhome';
 import { NotiRecibidas } from './containers/Notificaciones/NotiRecibidas';
 import { PublicacionDeOtro } from './containers/Post/PublicacionDeOtro';
-import { Parques } from './containers/probar/Parques';
+import { Parques } from './parque/Parques';
 
 export const PrivateRoute = ({ children }) => {
       //const isAuthenticated = useSelector(state => state.auth.isAuthenticated);

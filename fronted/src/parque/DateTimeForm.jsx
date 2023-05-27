@@ -9,7 +9,7 @@ export const DateTimeForm = ({ show, onClose }) => {
     console.log('Fecha y hora seleccionadas');
     onClose();
   };
-
+//si
   return (
     <form onSubmit={handleSubmit} className="space-y-4 mt-4">
       <div>

@@ -1,36 +1,43 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar';
 import { load_Idprofile } from '../../actions/auth';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { crear_post } from '../../actions/post';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../provider/UserContext';
 
-function NewPostForm({ load_Idprofile, crear_post }) {
-  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+function NewPostForm() {
+  const onChange = e => {
+    if (e.target.type === 'file') {
+      setFormData({ ...formData, [e.target.name]: e.target.files[0] });
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
+  };
+  const dispatch = useDispatch()
   const [profile, setProfile] = useState('');
-  const navigate = useNavigate()
-  const {closePos} = useContext(UserContext)
+  const navigate = useNavigate();
+  const { closePos } = useContext(UserContext);
   const [formData, setFormData] = useState({
     descripcion: '',
-    imagen: ''
+    imagen: null
   });
   const { descripcion, imagen } = formData;
-  const onSubmit = (event) => {
-    event.preventDefault();
-    crear_post(descripcion, profile[0].id, '', '')
-    closePos()
-    navigate('/profile')
-  };
 
+  const onSubmit = event => {
+    event.preventDefault();
+    dispatch(crear_post(descripcion, profile[0].id, imagen, ''))
+    closePos();
+    navigate('/profile');
+  };
 
   useEffect(() => {
     const fechData = async () => {
-      const datosProfile = await load_Idprofile()
-      setProfile(datosProfile)
-    }
-    fechData()
-  }, [])
+      const datosProfile = await dispatch(load_Idprofile());
+      setProfile(datosProfile);
+    };
+    fechData();
+  }, []);
 
   return (
     
@@ -55,7 +62,6 @@ function NewPostForm({ load_Idprofile, crear_post }) {
                 type="file"
                 accept="image/*"
                 name="imagen"
-                value={imagen}
                 onChange={(e) => onChange(e)}
                 required
               />
@@ -101,4 +107,4 @@ function NewPostForm({ load_Idprofile, crear_post }) {
   );
 }
 
-export default connect(null, { load_Idprofile, crear_post })(NewPostForm);
+export default NewPostForm;

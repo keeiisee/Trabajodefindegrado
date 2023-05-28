@@ -70,7 +70,7 @@ class Logro(models.Model):
         return self.nombre
 
 class Publicacion(models.Model):
-    autor = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    autor = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='publicaciones')
     imagen = models.ImageField(default='descarga.png', blank=True, null=True)
     descripcion = models.TextField(max_length=1000)
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
@@ -84,6 +84,7 @@ class ParqueCalistenia(models.Model):
     placeId = models.CharField(max_length=255)
     descripcion = models.TextField(blank=True)
     imagen = models.ImageField(blank=True, null=True)
+    materiales = models.ManyToManyField('Material', blank=True)
 
     def __str__(self):
         return self.nombre
@@ -94,6 +95,11 @@ class ParqueCalistenia(models.Model):
         else:
             return ''
 
+class Material(models.Model):
+    usuario = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    nombre = models.CharField(max_length=255, null=True)
+    def __str__(self):
+        return f"{self.usuario.user.name}-{self.nombre}"
 
 class Reserva(models.Model):
     usuario = models.ForeignKey(Profile, on_delete=models.CASCADE)

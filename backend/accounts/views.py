@@ -4,7 +4,45 @@ from rest_framework.response import Response
 from .models import Profile, UserAccount, Publicacion, ParqueCalistenia, Reserva
 from .serializers import PublicacionSerializer, ReservaCreateSerializer, ProfileCreateSerializer, UserCreateSerializerView, PublicacionCreateSerializer, ParqueCalisteniaCreateSerializer
 from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser
+from rest_framework.generics import ListAPIView
+from datetime import date
 
+class ReservasPorParque(ListAPIView):
+    serializer_class = ReservaCreateSerializer
+
+    def get_queryset(self):
+        parque_id = self.kwargs['pk']
+        return Reserva.objects.filter(parque=parque_id, fecha=date.today())
+    
+class RemoveFriendView(APIView):
+    def post(self, request):
+        friend_id = request.data.get('friend_id')
+        if friend_id is None:
+            return Response({'error': 'ID de amigo no proporcionado'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            friend = UserAccount.objects.get(pk=friend_id)
+        except UserAccount.DoesNotExist:
+            return Response({'error': 'Amigo no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+        user_profile = request.user.profile
+        friend_profile = friend.profile
+
+        # Comprobar si son amigos
+        if friend not in user_profile.amigos.all():
+            return Response({'error': 'El usuario no es tu amigo'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Eliminar la amistad: quitar al amigo del campo amigos en ambos perfiles
+        user_profile.amigos.remove(friend)
+        friend_profile.amigos.remove(request.user)
+
+        user_profile.save()
+        friend_profile.save()
+
+        serializer = ProfileCreateSerializer(user_profile)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
 class UltimaPublicacionView(generics.GenericAPIView):
     queryset = Publicacion.objects.all()
     serializer_class = PublicacionSerializer
@@ -119,6 +157,27 @@ class ReservaCalisteniaList(viewsets.ModelViewSet):
     queryset = Reserva.objects.all()
     serializer_class = ReservaCreateSerializer
 
+    def create(self, request, *args, **kwargs):
+        parque = request.data.get('parque')
+        fecha = request.data.get('fecha')
+        hora = request.data.get('hora')
+        
+        if not (parque and fecha and hora):
+            return Response({'error': 'Por favor, proporcione todos los campos requeridos (parque, fecha, hora).'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        parque1 = ParqueCalistenia.objects.filter(placeId = parque)
+        print(parque)
+        reserva = Reserva(
+            parque=parque1[0],
+            fecha=fecha,
+            hora=hora,
+            usuario=request.user.profile
+        )
+        reserva.save()
+
+        serializer = self.get_serializer(reserva)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
 class ParqueCalisteniaList(viewsets.ModelViewSet):
     queryset = ParqueCalistenia.objects.all()
     serializer_class = ParqueCalisteniaCreateSerializer
@@ -132,7 +191,7 @@ class PublicacionListForUser(viewsets.ModelViewSet):
     serializer_class = PublicacionCreateSerializer
     def get_queryset(self): 
         perfil = Profile.objects.get(id=self.kwargs['pk'])
-        return self.queryset.filter(autor=perfil)
+        return self.queryset.filter(autor=perfil).order_by('-fecha_publicacion')
     
 class ProfileList(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
@@ -165,3 +224,15 @@ class UserListLeter(viewsets.ModelViewSet):
         letter = self.kwargs['pk']
         return self.queryset.filter(name__icontains=letter, is_active=True).exclude(pk=self.request.user.pk)
             
+class CrearPublicacionView(APIView):
+    parser_classes = [MultiPartParser]
+
+    def post(self, request, *args, **kwargs):
+        print(request.data)
+        serializer = PublicacionSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

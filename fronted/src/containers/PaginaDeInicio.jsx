@@ -5,6 +5,7 @@ import { Parques } from '../parque/Parques';
 import { publicaionesAmigos } from '../actions/auth';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import BottomNavbar from './probar/BottomNavbar';
 
 export const PaginaDeInicio = () => {
   const [popupImagen, setPopupImagen] = useState(null);
@@ -88,7 +89,9 @@ export const PaginaDeInicio = () => {
           <ImagenInicio key={imagen.id} imagen={imagen} />
         ))}
       </div>
+      {/* <BottomNavbar></BottomNavbar> */}
     </>
+    
   )
 }
 export default PaginaDeInicio;

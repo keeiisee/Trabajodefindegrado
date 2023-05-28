@@ -1,18 +1,26 @@
 import axios from 'axios';
 
-export const crear_post = (descripcion, autor, imagen, logros) => async dispatch => {
+export const crear_post = (descripcion, autor, imagen, logros) => async (dispatch) => {
+    const formData = new FormData();
+    formData.append('autor', autor);
+    formData.append('descripcion', descripcion);
+    formData.append('imagen', imagen);
+  
     const config = {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `JWT ${localStorage.getItem('access')}`,
-        }
-    }
-    const body = JSON.stringify({ autor, descripcion });
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `JWT ${localStorage.getItem('access')}`,
+      },
+    };
+  
     try {
-        await axios.post(`http://localhost:8000/accounts/publicacion/create/`, body, config);
-        
+      await axios.post(
+        'http://localhost:8000/accounts/crear/publicacion/',
+        formData,
+        config
+      );
     } catch (err) {
-    
+      console.error('Error al crear el post:', err);
     }
 }
 

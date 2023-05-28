@@ -37,7 +37,7 @@ export const PerfilDeOtro = () => {
                             <span className="badge bg-primary">Logros: {profile && profile[0].logros.length}</span>
                         </div>
                         <div className="border-4 flex border-black border-dashed items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-                            <span className="badge bg-primary">Publicaciones: {profile && profile[0].amigos.length}</span>
+                            <span className="badge bg-primary">Publicaciones: {profile && profile[0].user_publicaciones.length}</span>
                         </div>
                         <div className="border-4 border-marron border-dashed flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
                             <span className="badge bg-primary">Amigos: {profile && profile[0].amigos.length}</span>

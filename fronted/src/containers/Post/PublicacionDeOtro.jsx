@@ -7,11 +7,9 @@ export const PublicacionDeOtro = () => {
 
     const [post, setPost] = useState([]);
     const routeParams = useParams()
-    const [user, setUser] = useState("");
     useEffect(() => {
         const fetchData = async () => {
           const profileUrl = `http://localhost:8000/accounts/profile/${routeParams.id}/`;
-          const userUrl = `http://localhost:8000/accounts/usuarios/${routeParams.id}/`;
           const config = {
             headers: {
               'Content-Type': 'application/json',
@@ -20,15 +18,11 @@ export const PublicacionDeOtro = () => {
           };
       
           try {
-            const [responseProfile, responseUser] = await Promise.all([
+            const [responseProfile] = await Promise.all([
               fetch(profileUrl, config),
-              fetch(userUrl, config)
             ]);
             
             const dataProfile = await responseProfile.json();
-            const dataUser = await responseUser.json();
-            
-            setUser(dataUser);
             
             if (dataProfile.length > 0) {
               const postUrl = `http://localhost:8000/accounts/publicaciones/${dataProfile[0].id}/`;
@@ -62,7 +56,7 @@ export const PublicacionDeOtro = () => {
                             )}
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 auto-cols-min">
                                 {post.map((imagen) => (
-                                    <ImagenInicio key={imagen.id} imagen={imagen} user={user}/>
+                                    <ImagenInicio key={imagen.id} imagen={imagen}/>
                                 ))}
                             </div>
 

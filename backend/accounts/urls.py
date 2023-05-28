@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
+from .views import CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
 
 router = routers.DefaultRouter()
 router.register(r'profiles/profiles', ProfileList)
@@ -24,9 +24,14 @@ urlpatterns = [
 
     #para ver las publicaciones de profile con la id que le pasemos
     path('publicaciones/<int:pk>/', PublicacionListForUser.as_view({'get': 'list'}), name='publicacion-detail'),
+    path('crear/publicacion/', CrearPublicacionView.as_view(), name='create_publi'),
+    
     path('add_friend/', AddFriendView.as_view(), name='add_friend'),
-    path('reject_friend/', RejectFriendRequestView.as_view(), name='add_friend'),
-    path('send_friend/', SendFriendRequestView.as_view(), name='add_friend'),
-    path('ultima_publi/', UltimaPublicacionView.as_view(), name='add_friend'),
+    path('reject_friend/', RejectFriendRequestView.as_view(), name='reject_friend'),
+    path('send_friend/', SendFriendRequestView.as_view(), name='send_friend'),
+    path('ultima_publi/', UltimaPublicacionView.as_view(), name='last_post'),
+    path('remove_friend/', RemoveFriendView.as_view(), name='remove_friend'),
+
+    path('reservas/parque/<int:pk>/', ReservasPorParque.as_view(), name='reservas_por_parque'),
     
 ]

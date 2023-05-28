@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DateTimeForm } from './DateTimeForm';
 import { AchievementForm } from './AchievementForm';
 //si
-export const PhotoModal = ({ show, onClose, photoUrl, name }) => {
+export const PhotoModal = ({ show, onClose, photoUrl, name , park, id}) => {
     if (!show) return null;
     const achievements = ["perimer logro", "segun", "tercer"]
     const attendees = ["perimer logro", "segun", "tercer"]
     const [showDateTimeForm, setShowDateTimeForm] = useState(false);
     const [showAchievementForm, setShowAchievementForm] = useState(false);
-
+    const [reserva, setReserva] = useState([])
     const handleOpenDateTimeForm = () => {
         setShowDateTimeForm(true);
     };
@@ -24,6 +24,28 @@ export const PhotoModal = ({ show, onClose, photoUrl, name }) => {
     const handleCloseAchievementForm = () => {
         setShowAchievementForm(false);
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `JWT ${localStorage.getItem('access')}`,
+                }
+            };
+            
+            try {
+                const reservas = await fetch(`http://localhost:8000/accounts/reservas/parque/${id}/`, config);
+                const dataReserva= await reservas.json();
+                setReserva(dataReserva);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        fetchData();
+    }, [])
+
     return (
         <div className="fixed z-10 inset-0 overflow-y-auto">
             <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -51,7 +73,7 @@ export const PhotoModal = ({ show, onClose, photoUrl, name }) => {
                             </button>
                         </div>
 
-                        <DateTimeForm show={showDateTimeForm} onClose={handleCloseDateTimeForm} />
+                        <DateTimeForm show={showDateTimeForm} onClose={handleCloseDateTimeForm} place_id={park.place_id}/>
                         <AchievementForm show={showAchievementForm} onClose={handleCloseAchievementForm} />
                         <h2 className="text-2xl font-bold mb-2">{name}</h2>
                         <h3 className="text-xl font-semibold">Logros:</h3>
@@ -62,8 +84,13 @@ export const PhotoModal = ({ show, onClose, photoUrl, name }) => {
                         </ul>
                         <h3 className="text-xl font-semibold">Personas apuntadas:</h3>
                         <ul className="list-disc ml-6">
-                            {attendees.map((attendee, index) => (
-                                <li key={index}>{attendee.name} - {attendee.time}</li>
+                            
+                            {reserva.length > 0 && reserva.map((res, index) => (
+                                <>
+                                 <li key={index}>{res.usuario_name} - {res.fecha}</li>
+                                 
+                                </>
+                               
                             ))}
                         </ul>
                     </div>

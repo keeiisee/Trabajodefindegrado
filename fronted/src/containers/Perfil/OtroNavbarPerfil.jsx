@@ -5,7 +5,6 @@ import { sendFriend } from '../../actions/auth';
 
 export const OtroNavbarPerfil = () => {
     const userR = useSelector(state => state.auth.user);
-    const [user, setUser] = useState("");
     const [profile, setProfile] = useState("");
     const routeParams = useParams()
     const navigate = useNavigate()
@@ -22,9 +21,6 @@ export const OtroNavbarPerfil = () => {
                 const responseProfile = await fetch(`http://localhost:8000/accounts/profile/${routeParams.id}/`, config);
                 const dataProfile = await responseProfile.json();
                 setProfile(dataProfile)
-                const responseUser = await fetch(`http://localhost:8000/accounts/usuarios/${routeParams.id}/`, config);
-                const dataUser = await responseUser.json()
-                setUser(dataUser);
             } catch (error) {
                 console.log(error);
             }
@@ -71,7 +67,7 @@ export const OtroNavbarPerfil = () => {
                 setEsAmigo(false)
             }
         }
-    }, [profile, user]);
+    }, [profile]);
 
     const url = useMemo(() => {
         if (profile) {
@@ -90,7 +86,7 @@ export const OtroNavbarPerfil = () => {
                             <img onClick={infoPerfil} className="w-50 h-50 rounded" src={url} alt="Foto de Perfil" width="150" />
 
                         </div>
-                        <p className='d-flex justify-content-center align-items-center flex-column mt-4 mb-4'>{user.name}</p>
+                        <p className='d-flex justify-content-center align-items-center flex-column mt-4 mb-4'>{profile && profile[0].user_name}</p>
 
                         {/* <li>
                             <a className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">

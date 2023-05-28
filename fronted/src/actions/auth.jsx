@@ -21,6 +21,21 @@ import {
     PROFILE_LOADED_FAIL,
 } from './types';
 
+export const removeFriend = (user_id) => async dispatch => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `JWT ${localStorage.getItem('access')}`,
+        }
+    };
+    const body = JSON.stringify({ friend_id: user_id });
+    try {
+        await axios.post(`http://localhost:8000/accounts/remove_friend/`, body, config);
+
+    } catch (err) {
+        console.log(err)
+    }
+  }
 export const publicaionesAmigos = () => async dispatch => {
    
     const config = {
@@ -56,6 +71,7 @@ export const addFriend = (user_id) => async dispatch => {
         console.log(err)
     }
   }
+  
   export const sendFriend = (user_id) => async dispatch => {
     const config = {
         headers: {

@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { crear_reserva } from '../actions/reserva';
 
-export const DateTimeForm = ({ show, onClose }) => {
+export const DateTimeForm = ({ show, onClose, place_id }) => {
   if (!show) return null;
+  const user = useSelector(state => state.auth.user);
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
 
+  const handleDateChange = (event) => {
+    setDate(event.target.value);
+  };
+
+  const handleTimeChange = (event) => {
+    setTime(event.target.value);
+  };
+
+  const dispatch = useDispatch()
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Aquí puedes agregar la lógica para manejar la hora y fecha seleccionadas
-    console.log('Fecha y hora seleccionadas');
+    dispatch(crear_reserva(place_id, date, time ))
     onClose();
   };
 //si
@@ -17,20 +30,24 @@ export const DateTimeForm = ({ show, onClose }) => {
           Fecha
         </label>
         <input
-          type="date"
-          id="date"
-          className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-        />
+        type="date"
+        id="date"
+        value={date}
+        onChange={handleDateChange}
+        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+      />
       </div>
       <div>
         <label htmlFor="time" className="block text-sm font-medium text-gray-700">
           Hora
         </label>
         <input
-          type="time"
-          id="time"
-          className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-        />
+        type="time"
+        id="time"
+        value={time}
+        onChange={handleTimeChange}
+        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+      />
       </div>
       <button
         type="submit"

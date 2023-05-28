@@ -22,6 +22,7 @@ import { NotiRecibidas } from './containers/Notificaciones/NotiRecibidas';
 import { PublicacionDeOtro } from './containers/Post/PublicacionDeOtro';
 import { Parques } from './parque/Parques';
 import { MisAmigos } from './containers/Perfil/MisAmigos';
+import LocationForm from './parque/LocationForm';
 
 export const PrivateRoute = ({ children }) => {
       //const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
@@ -57,8 +58,10 @@ const App = () => {
                                           <Route path='/profile/mispublicaciones' element={<PrivateRoute><MisPublicaciones /></PrivateRoute>}></Route>
                                           <Route path='/suspublicaciones/:id' element={<PrivateRoute><PublicacionDeOtro /></PrivateRoute>}></Route>
                                           <Route path='/profile/notificaciones-recibidas' element={<PrivateRoute><NotiRecibidas /></PrivateRoute>}></Route>
-                                          <Route path='/buscarParques' element={<Parques />}></Route>
+                                          <Route path='/parques' element={<Parques />}></Route>
+                                          <Route path='/FiltroParques' element={<LocationForm />}></Route>
                                           <Route path='/misAmigos' element={<MisAmigos />}></Route>
+
                                     </Routes>
                               </Layout>
                         </Router>

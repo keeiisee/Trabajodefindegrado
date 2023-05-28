@@ -5,10 +5,10 @@ import { useSelector } from 'react-redux';
 import ImagenInicio from '../../Inicio/ImagenInicio';
 import { NavbarSuperPerfil } from '../../components/NavbarSuperPerfil';
 import MediaQuery from 'react-responsive';
+import BottomNavbar from '../probar/BottomNavbar';
 
 export const MisPublicaciones = () => {
     const [post, setPost] = useState([]);
-    const user = useSelector(state => state.auth.user);
     useEffect(() => {
         const fetchData = async () => {
             const config = {
@@ -153,7 +153,7 @@ export const MisPublicaciones = () => {
                             {popupImagen && <PopupInicio imagen={popupImagen} onClose={handleClosePopup} />}
                         </div>
                     </div> */}
-
+{/* <BottomNavbar></BottomNavbar> */}
         </>
     )
 }

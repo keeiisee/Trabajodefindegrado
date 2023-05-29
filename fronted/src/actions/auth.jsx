@@ -71,7 +71,7 @@ export const addFriend = (user_id) => async dispatch => {
         console.log(err)
     }
   }
-  
+
   export const sendFriend = (user_id) => async dispatch => {
     const config = {
         headers: {
@@ -154,7 +154,9 @@ export const crear_perfil = (imagen, descripcion, logros ,user1) => async dispat
             'Authorization': `JWT ${localStorage.getItem('access')}`,
         }
     }
+    
     const body = JSON.stringify({ user, descripcion, logros });
+    console.log(body)
     try {
         await axios.post(`http://localhost:8000/accounts/profiles/profiles/`, body, config);
         dispatch({

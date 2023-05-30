@@ -35,9 +35,9 @@ export const removeFriend = (user_id) => async dispatch => {
     } catch (err) {
         console.log(err)
     }
-  }
+}
 export const publicaionesAmigos = () => async dispatch => {
-   
+
     const config = {
         headers: {
             'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ export const publicaionesAmigos = () => async dispatch => {
     }
     try {
         const res = await axios.get(`http://localhost:8000/accounts/last_friend_posts/`, config);
-        if (res.data != []){
+        if (res.data != []) {
             return res.data
         } else {
             return []
@@ -70,9 +70,9 @@ export const addFriend = (user_id) => async dispatch => {
     } catch (err) {
         console.log(err)
     }
-  }
+}
 
-  export const sendFriend = (user_id) => async dispatch => {
+export const sendFriend = (user_id) => async dispatch => {
     const config = {
         headers: {
             'Content-Type': 'application/json',
@@ -86,9 +86,9 @@ export const addFriend = (user_id) => async dispatch => {
     } catch (err) {
         console.log(err)
     }
-  }
+}
 
-  export const rejectFriend = (user_id) => async dispatch => {
+export const rejectFriend = (user_id) => async dispatch => {
     const config = {
         headers: {
             'Content-Type': 'application/json',
@@ -102,10 +102,10 @@ export const addFriend = (user_id) => async dispatch => {
     } catch (err) {
         console.log(err)
     }
-  }
+}
 
 export const load_personas = (palabra) => async dispatch => {
-   
+
     const config = {
         headers: {
             'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ export const load_personas = (palabra) => async dispatch => {
     }
     try {
         const res = await axios.get(`http://localhost:8000/accounts/users/${palabra}/`, config);
-        if (res.data != []){
+        if (res.data != []) {
             return res.data
         } else {
             return []
@@ -125,40 +125,58 @@ export const load_personas = (palabra) => async dispatch => {
     }
 }
 
-export const modificar_perfil = (imagen, descripcion, logros ,user1, idPerfil) => async dispatch => {
-    if (user1){
-        var user = user1.id
+// export const modificar_perfil = (imagen, descripcion, logros ,user1, idPerfil) => async dispatch => {
+//     if (user1){
+//         var user = user1.id
+//     }
+//     const body = JSON.stringify({ user, descripcion, logros });
+//     const config = {
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'Authorization': `JWT ${localStorage.getItem('access')}`,
+//         }
+//     };
+//     try {        
+//         await axios.put(`http://localhost:8000/accounts/profiles/profiles/${idPerfil}/`, body, config);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+export const modificar_perfil = (imagen, descripcion, user) => async dispatch => {
+    const formData = new FormData();
+    formData.append('user_id', user.id);
+    formData.append('descripcion', descripcion);
+    if (imagen !== null) {
+        formData.append('imagen', imagen);
     }
-    const body = JSON.stringify({ user, descripcion, logros });
+
     const config = {
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'multipart/form-data',
             'Authorization': `JWT ${localStorage.getItem('access')}`,
         }
     };
-    try {        
-        await axios.put(`http://localhost:8000/accounts/profiles/profiles/${idPerfil}/`, body, config);
+    try {
+        await axios.put(`http://localhost:8000/accounts/modificar/perfil/`, formData, config);
     } catch (error) {
         console.log(error);
     }
 }
+export const crear_perfil = (imagen, descripcion, logros, user) => async dispatch => {
 
-export const crear_perfil = (imagen, descripcion, logros ,user1) => async dispatch => {
-    if (user1){
-        var user = user1.id
-    }
+    const formData = new FormData();
+    formData.append('user', user.id);
+    formData.append('descripcion', descripcion);
+    formData.append('imagen', imagen);
 
     const config = {
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `JWT ${localStorage.getItem('access')}`,
+            'Content-Type': 'multipart/form-data',
+            Authorization: `JWT ${localStorage.getItem('access')}`,
         }
-    }
-    
-    const body = JSON.stringify({ user, descripcion, logros });
-    console.log(body)
+    };
     try {
-        await axios.post(`http://localhost:8000/accounts/profiles/profiles/`, body, config);
+        await axios.post(`http://localhost:8000/accounts/crear/perfil/`, formData, config);
         dispatch({
             type: PROFILE_CREATE_SUCCES
         });
@@ -169,6 +187,31 @@ export const crear_perfil = (imagen, descripcion, logros ,user1) => async dispat
         });
     }
 }
+// export const crear_perfil = (imagen, descripcion, logros ,user1) => async dispatch => {
+//     if (user1){
+//         var user = user1.id
+//     }
+
+//     const config = {
+//         headers: {
+//             'Content-Type': 'application/json',
+//             'Authorization': `JWT ${localStorage.getItem('access')}`,
+//         }
+//     }
+
+//     const body = JSON.stringify({ user, descripcion, logros });
+//     try {
+//         await axios.post(`http://localhost:8000/accounts/profiles/profiles/`, body, config);
+//         dispatch({
+//             type: PROFILE_CREATE_SUCCES
+//         });
+
+//     } catch (err) {
+//         dispatch({
+//             type: PROFILE_CREATE_FAIL
+//         });
+//     }
+// }
 export const reset_password_confirm = (uid, token, new_password, re_new_password) => async dispatch => {
     const config = {
         headers: {
@@ -269,13 +312,13 @@ export const checkAuthenticated = () => async dispatch => {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
             }
-        }; 
+        };
 
         const body = JSON.stringify({ token: localStorage.getItem('access') });
 
         try {
             const res = await axios.post(`http://127.0.0.1:8000/auth/jwt/verify`, body, config)
-            
+
             if (res.data.code !== 'token_not_valid') {
                 load_profile()
                 dispatch({
@@ -347,6 +390,24 @@ export const load_user = () => async dispatch => {
         });
     }
 };
+export const deleted_user = () => async dispatch => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `JWT ${localStorage.getItem('access')}`,
+        }
+    }
+   
+    try {
+        await axios.post(`http://localhost:8000/accounts/delete/user/`, null, config);
+        dispatch({
+            type: LOGOUT
+        });
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 export const load_Idprofile = () => async dispatch => {
     const config = {
         headers: {
@@ -358,7 +419,7 @@ export const load_Idprofile = () => async dispatch => {
         const res = await axios.get(`http://localhost:8000/accounts/profile/`, config);
         if (res.data.length !== 0) {
             return res.data
-        } 
+        }
     } catch (err) {
         console.log(err)
     }
@@ -372,7 +433,7 @@ export const load_profile = () => async dispatch => {
     }
     try {
         const res = await axios.get(`http://localhost:8000/accounts/profile/`, config);
-        
+
         if (res.data.length !== 0) {
             dispatch({
                 type: PROFILE_LOADED_SUCCES,
@@ -411,14 +472,19 @@ export const login = (email, password) => async dispatch => {
             dispatch(load_profile())
         } else {
             dispatch({
-                type: LOGIN_FAIL
+                type: LOGIN_FAIL,
+                payload: "Las credenciales proporcionadas no corresponden a ningún usuario."
             });
         }
     } catch (err) {
-        console.error(err);
-        dispatch({
-            type: LOGIN_FAIL
-        });
+
+        const errors = err.response.data;
+        if (errors) {
+            dispatch({
+                type: LOGIN_FAIL,
+                payload: "Las credenciales proporcionadas no corresponden a ningún usuario."
+            });
+        }
     }
 };
 

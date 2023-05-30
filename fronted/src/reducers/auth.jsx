@@ -26,12 +26,18 @@ const initialState = {
     isAuthenticated: null,
     user: null,
     profile: localStorage.getItem('profile'),
+    error: null
 };
 
 export default function(state = initialState, action) {
     const { type, payload } = action;
 
     switch(type) {
+        case 'CLEAR_ERROR':
+            return {
+                ...state,
+                error: null
+            };
         case AUTHENTICATED_SUCCESS:
             return {
                 ...state,
@@ -44,24 +50,28 @@ export default function(state = initialState, action) {
                 ...state,
                 isAuthenticated: true,
                 access: payload.access,
-                refresh: payload.refresh
+                refresh: payload.refresh,
+                error: null
             }
         case SIGNUP_SUCCESS:
             return {
                 ...state,
-                isAuthenticated: false
+                isAuthenticated: false,
+                error: null
             }
         case USER_LOADED_SUCCESS:
                 return {
                 ...state,
-                user: payload
+                user: payload,
+                error: null
             }
         case PROFILE_LOADED_SUCCES:
         case PROFILE_CREATE_SUCCES:
             localStorage.setItem('profile', true);
             return{
                 ...state,
-                profile: true
+                profile: true,
+                error: null
             }
         case PROFILE_LOADED_FAIL:
         case PROFILE_CREATE_FAIL:
@@ -86,6 +96,18 @@ export default function(state = initialState, action) {
             }
         case LOGIN_FAIL:
         case SIGNUP_FAIL:
+            localStorage.removeItem('access');
+            localStorage.removeItem('refresh');
+            localStorage.removeItem('profile');
+            return {
+                ...state,
+                access: null,
+                refresh: null,
+                isAuthenticated: false,
+                user: null,
+                profile: null,
+                error: action.payload // Agrega esta línea
+            };
         case LOGOUT:
             localStorage.removeItem('access');
             localStorage.removeItem('refresh');
@@ -96,7 +118,8 @@ export default function(state = initialState, action) {
                 refresh: null,
                 isAuthenticated: false,
                 user: null,
-                profile:null
+                profile:null,
+                error: null
             }
         case PASSWORD_RESET_SUCCESS:
         case PASSWORD_RESET_FAIL:

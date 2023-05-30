@@ -5,7 +5,18 @@
   border: 2px solid;
   animation: border-animation 3s infinite;
 }
+@keyframes like {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
 
+.animate-like {
+  animation: like 0.3s ease-in-out;
+}
 @keyframes border-animation {
   0% {
     border-color: rgb(164, 136, 136);

@@ -8,6 +8,13 @@ export const UserProvider = ({ children }) => {
   const [isOpenP, setIsOpenP] = useState(false);
   const [isOpenL, setIsOpenL] = useState(false);
   const [isOpenR, setIsOpenR] = useState(false);
+  const [isOpenParque, setIsOpenParque] = useState(false)
+  const openPar = () => {
+    setIsOpenParque(true);
+  };
+  const closePar = () => {
+    setIsOpenParque(false);
+  };
   const openPos = () => {
     setIsOpenP(true);
   };
@@ -28,7 +35,7 @@ export const UserProvider = ({ children }) => {
     setIsOpenR(false);
   };
   return (
-    <UserContext.Provider value={{ isOpenP, setIsOpenP, openPos, closePos,seccion, setSeccion, palabras, setPalabras, isOpenL, setIsOpenL, isOpenR, setIsOpenR, openLog, closeLog, openReg, closeReg }}>{/* //cualquier hijo del userProvider puede acceder al value */}
+    <UserContext.Provider value={{ isOpenParque, setIsOpenParque, openPar, closePar, isOpenP, setIsOpenP, openPos, closePos, seccion, setSeccion, palabras, setPalabras, isOpenL, setIsOpenL, isOpenR, setIsOpenR, openLog, closeLog, openReg, closeReg }}>{/* //cualquier hijo del userProvider puede acceder al value */}
       {children}
     </UserContext.Provider>
   )

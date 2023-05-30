@@ -5,8 +5,10 @@ import { useDispatch } from 'react-redux';
 import { UserContext } from '../provider/UserContext';
 import { useSelector } from 'react-redux';
 import NewPost from '../containers/Post/NewPost';
-import { LogOut, User, Upload, Filter } from 'react-feather';
-import { Button } from 'bootstrap';
+import { User } from 'react-feather';
+
+import { LogoutIcon, PhotographIcon, SearchIcon, UploadIcon, ViewBoardsIcon } from '@heroicons/react/solid';
+import LocationForm from '../parque/LocationForm';
 const PalabrasList = ({ palabras, setPalabras }) => (
   <div className="position-relative">
     <ul className="list-group position-absolute top-100 start-0">
@@ -31,7 +33,7 @@ const PalabrasList = ({ palabras, setPalabras }) => (
 
 
 export const Navbar = () => {
-  const { palabras, setPalabras, isOpenP, openPos } = useContext(UserContext);
+  const { palabras, setPalabras, isOpenP, openPos, openPar, isOpenParque } = useContext(UserContext);
   const dispatch = useDispatch();
   const profile = useSelector(state => state.auth.profile);
   const [isOpen, setIsOpen] = useState(false);
@@ -67,8 +69,7 @@ export const Navbar = () => {
   };
 
   const explorar = () => {
-    navigate('/buscarParques');
-    window.location.reload();
+    openPar()
   };
 
   const onChange = async (e) => {
@@ -87,11 +88,16 @@ export const Navbar = () => {
   return (
     <>
       <div className="relative">
+        {isOpenParque && (
+          <LocationForm />
+        )}
+      </div>
+      <div className="relative">
         {isOpenP && (
           <NewPost />
         )}
       </div>
-      <nav className="bg-marron max-w-7 mx-4 mt-4 mb-4 px-2 sm:px-6 lg:px-8 nav-border border-4">
+      <nav className="bg-marron max-w-7 mx-4 mt-4 mb-4 px-2 sm:px-6 lg:px-8">
         <div className="max-w-8 mx-auto px-4 mt-4 mb-4 px-2 sm:px-6 lg:px-8">
           <div className="relative flex items-center justify-between h-16 ">
             <Link to="/paginadeinicio" className="text-3xl font-bold tracking-wide font-sans hover:BlinkMacSystemFont">
@@ -141,21 +147,12 @@ export const Navbar = () => {
                 <div className="flex-1 flex justify-center px-2 lg:ml-6 lg:justify-end">
                   <div className="max-w-md w-full lg:max-w-xs mb:w-10">
                     <label htmlFor="search" className="sr-only">
-                      Search
+                      Buscar Usuarios
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg
-                          className="h-5 w-5 text-gray-500"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M7.5 13A5.5 5.5 0 1113 7.5a5.51 5.51 0 01-5.5 5.5zm0-1a4.5 4.5 0 100-9 4.5 4.5 0 000 9z"
-                          />
-                        </svg>
+                        <SearchIcon className="h-5 w-5" />
+
                       </div>
 
                       <input
@@ -169,7 +166,7 @@ export const Navbar = () => {
                         id="search"
                         name="search"
                         className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 bg-gray-300 text-black placeholder-black focus:outline-none focus:bg-gray-300 focus:text-black sm:text-sm transition duration-150 ease-in-out"
-                        placeholder="Search"
+                        placeholder="Buscar Usuarios"
                         type="search"
                       />
                       <PalabrasList palabras={palabras} />
@@ -187,7 +184,7 @@ export const Navbar = () => {
                             setIsOpen(false);
                           }}
                         >
-                          <Upload size={18} className="inline-block mr-1" />
+                          <UploadIcon className="h-6 w-6" />
                         </button>
                         <div
                           className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
@@ -197,11 +194,10 @@ export const Navbar = () => {
                         <button
                           type="button"
                           onClick={() => {
-                            openPos();
-                            setIsOpen(false);
+                            explorar();
                           }}
                         >
-                          <Filter size={18} className="inline-block mr-1" />
+                          <img src="http://localhost:8000/static/barraIcons.png" alt="Custom Icon" className="h-6 w-6" />
                         </button>
                         <div
                           className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
@@ -229,7 +225,7 @@ export const Navbar = () => {
                       </li>
                       <li className="text-lg lg:text-lg font-medium group">
                         <button type="button" onClick={logout_user}>
-                          <LogOut size={18} className="inline-block mr-1" />
+                          <LogoutIcon className="h-5 w-5" />
                         </button>
                         <div
                           className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
@@ -240,7 +236,7 @@ export const Navbar = () => {
                   )}
                   <li className="text-lg lg:text-lg font-medium group">
                     <button type="button" onClick={logout_user} >
-                      <Upload size={18} className="inline-block mr-1" />
+                      <LogoutIcon className="h-5 w-5" />
                     </button>
                     <div
                       className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
@@ -300,21 +296,11 @@ export const Navbar = () => {
               <div className="flex-1 flex justify-center px-2 lg:ml-6 lg:justify-end">
                 <div className="max-w-md w-full lg:max-w-xs mb:w-10">
                   <label htmlFor="search" className="sr-only">
-                    Search
+                    Buscar Usuarios
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg
-                        className="h-5 w-5 text-gray-500"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M7.5 13A5.5 5.5 0 1113 7.5a5.51 5.51 0 01-5.5 5.5zm0-1a4.5 4.5 0 100-9 4.5 4.5 0 000 9z"
-                        />
-                      </svg>
+                      <SearchIcon className="h-5 w-5" />
                     </div>
                     <input
                       onChange={e => onChange(e)}
@@ -327,7 +313,7 @@ export const Navbar = () => {
                       id="search"
                       name="search"
                       className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 bg-gray-300 text-black placeholder-black focus:outline-none focus:bg-gray-300 focus:text-black sm:text-sm transition duration-150 ease-in-out"
-                      placeholder="Search"
+                      placeholder="Buscar Usuarios"
                       type="search"
                     />
                     <PalabrasList palabras={palabras} />

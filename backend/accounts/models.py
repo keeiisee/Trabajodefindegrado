@@ -52,7 +52,8 @@ class Profile(models.Model):
     logros = models.ManyToManyField('Logro', blank=True, related_name='usuarios_con_logro')
     imagen = models.ImageField(default='descarga.png', blank=True, null=True)
     parques_calistenia = models.ManyToManyField('ParqueCalistenia', blank=True, related_name='usuarios_inscritos')
-    
+    misMeGustan = models.ManyToManyField('Publicacion', blank=True, related_name='mis_mg')
+
     def __str__(self):
         return self.descripcion
 

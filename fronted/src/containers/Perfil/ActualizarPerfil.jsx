@@ -1,81 +1,84 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
-import { load_Idprofile, modificar_perfil } from '../../actions/auth';
-import { connect } from 'react-redux';
+import { deleted_user, load_Idprofile, modificar_perfil } from '../../actions/auth';
+import { useDispatch, useSelector } from 'react-redux';
 import Navbarperfil from './Navbarperfil';
 import { NavbarSuperPerfil } from '../../components/NavbarSuperPerfil';
 
-function ActualizarPerfil({ load_Idprofile, modificar_perfil, user }) {
-    const [imagen, setImagen] = useState('');
+function ActualizarPerfil() {
+    const user = useSelector(state => state.auth.user);
     const [logros, setLogros] = useState([]);
     const [profile, setProfile] = useState('');
-    const [descripcion, setDescripcion] = useState('');
     const opcionesLogros = ['primer logro', 'segundo logro', 'tercer  logro']
     const navigate = useNavigate();
-
-    function handleLogrosChange(e) {
-        const options = e.target.options;
-        const selectedValues = [];
-        for (let i = 0; i < options.length; i++) {
-            if (options[i].selected) {
-                selectedValues.push(options[i].value);
-            }
-        }
-        setLogros(selectedValues);
-    }
+    const dispatch = useDispatch()
+    // function handleLogrosChange(e) {
+    //     const options = e.target.options;
+    //     const selectedValues = [];
+    //     for (let i = 0; i < options.length; i++) {
+    //         if (options[i].selected) {
+    //             selectedValues.push(options[i].value);
+    //         }
+    //     }
+    //     setLogros(selectedValues);
+    // }
     
-    const handleDescripcionChange = (event) => {
-        setDescripcion(event.target.value);
-    };
-
-    function handleImagenChange(event) {
-        setImagen(event.target.files[0].name);
-    }
-
+    const onChange = e => {
+        if (e.target.type === 'file') {
+          setFormData({ ...formData, [e.target.name]: e.target.files[0] });
+        } else {
+          setFormData({ ...formData, [e.target.name]: e.target.value });
+        }
+      };
+      const [formData, setFormData] = useState({
+        descripcion: '',
+        imagen: null
+      });
+      const { descripcion, imagen } = formData;
     useEffect(() => {
         const fechData = async () => {
-            const datosProfile = await load_Idprofile()
+            const datosProfile = await dispatch(load_Idprofile())
             setProfile(datosProfile)
-            setDescripcion(datosProfile[0].descripcion)
+            setFormData({...formData, ["descripcion"]:datosProfile[0].descripcion})
         }
         fechData()
     }, [])
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        modificar_perfil(imagen, descripcion, logros, user, profile[0].id)
+        dispatch(modificar_perfil(imagen, descripcion, user))
         navigate('/profile')
     };
 
-    const url = useMemo(() => {
-        if (profile) {
-            return profile[0].imagen;
-        }
-        return '';
-    }, [profile]); 
+    function sacarAvisoEliminar(e){
+        e.preventDefault()
+        console.log("er")
+        dispatch(deleted_user())
+        navigate('/')
+    }
 
     return (
         <>
         <NavbarSuperPerfil/>
         <div>
-            <div className="container-fluid vh-100 h-md-50">
-                <div className="row h-100">
+        <div className="sm:ml-64 mr-6">
+                <div className="p-4 ml-6 sm:ml-14 border-4 nav-border bg-marron rounded-lg dark:border-gray-700">
                     <div className="col-md-8">
                         <br />
                     <h2 className="mb-4">Modificar Perfil</h2>
-                    <form action="#" method="POST" encType="multipart/form-data">
+                    <form>
                         <div className="mb-3">
                             <label htmlFor="imagen" className="form-label">Imagen:</label>
-                            <input type="file" className="form-control" onChange={handleImagenChange} id="imagen" name="imagen" placeholder='ejemplo uno' />
+                            <input type="file" className="form-control" onChange={(e) => onChange(e)} id="imagen" name="imagen" placeholder='ejemplo uno' />
                         </div>
                         <div className="mb-3">
                             <label htmlFor="descripcion" className="form-label">Descripción:</label>
-                            <textarea type="text" className="form-control" onChange={handleDescripcionChange} id="descripcion" name="descripcion" value={descripcion} rows="3"></textarea>
+                            <textarea type="text" className="form-control" onChange={(e) => onChange(e)} id="descripcion" name="descripcion" value={descripcion} rows="3"></textarea>
                         </div>
                         <div className="mb-3">
                             <label className="form-label">Logros:</label>
-                            <select className="form-select" onChange={handleLogrosChange} name="logros" multiple>
+                            <select className="form-select" onChange={(e) => onChange(e)} name="logros" multiple>
                                 {opcionesLogros && opcionesLogros.map((logro, key) => {
                                     if (profile && profile[0].logros.includes(logro)) {
                                         return <option key={key} value={logro} selected>{logro}</option>
@@ -87,8 +90,12 @@ function ActualizarPerfil({ load_Idprofile, modificar_perfil, user }) {
                             </select>
                         </div>
 
-                        <button type="submit" onClick={handleSubmit} className="btn btn-primary">Guardar</button>
+                        <button type="submit" onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-200 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">Guardar</button>
                     </form>
+                    <button
+                className="mt-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-200 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
+                onClick={(e) => { sacarAvisoEliminar(e) }}
+              >Eliminar Cuenta</button>
                 </div>
             </div>
         </div>
@@ -97,8 +104,5 @@ function ActualizarPerfil({ load_Idprofile, modificar_perfil, user }) {
         
     )
 }
-const mapStateToProps = state => ({
-    user: state.auth.user
-});
 
-export default connect(mapStateToProps, { modificar_perfil, load_Idprofile })(ActualizarPerfil);
+export default ActualizarPerfil;

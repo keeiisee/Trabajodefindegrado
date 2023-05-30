@@ -1,5 +1,26 @@
 import axios from 'axios';
 
+export const post_like = (publicacion_id, like) => async (dispatch) => {
+  const body = JSON.stringify({ publicacion_id, like });
+
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `JWT ${localStorage.getItem('access')}`,
+    },
+  };
+
+  try {
+    await axios.post(
+      'http://localhost:8000/accounts/like/publicacion/',
+      body,
+      config
+    );
+  } catch (err) {
+    console.error('Error al crear el post:', err);
+  }
+}
+
 export const crear_post = (descripcion, autor, imagen, logros) => async (dispatch) => {
     const formData = new FormData();
     formData.append('autor', autor);

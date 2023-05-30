@@ -1,12 +1,116 @@
+import random
+from django.db.models import Q
+from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, viewsets, status
 from rest_framework.response import Response
 from .models import Profile, UserAccount, Publicacion, ParqueCalistenia, Reserva
-from .serializers import PublicacionSerializer, ReservaCreateSerializer, ProfileCreateSerializer, UserCreateSerializerView, PublicacionCreateSerializer, ParqueCalisteniaCreateSerializer
+from .serializers import ProfileUpdateSerializer, PublicacionSerializer, ReservaCreateSerializer, ProfileCreateSerializer, UserCreateSerializerView, PublicacionCreateSerializer, ParqueCalisteniaCreateSerializer
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.generics import ListAPIView
 from datetime import date
+
+class DeleteUserView(APIView):
+    def post(self, request):
+        print("Dddddddddddd")
+        user = request.user
+        user.delete()
+        return Response({'status': 'success', 'message': 'User account deleted successfully'}, status=status.HTTP_200_OK)
+
+class UltimasPublicacionesNoAmigosView(generics.GenericAPIView):
+    queryset = Publicacion.objects.all()
+    serializer_class = PublicacionSerializer
+
+    def get(self, request, *args, **kwargs):
+        user = UserAccount.objects.get(email=request.user.email)
+        profile = Profile.objects.get(user=user)
+        amigos = profile.amigos.all()
+
+        no_amigos = UserAccount.objects.exclude(Q(id__in=amigos) | Q(id=user.id))
+        
+        no_amigos_profiles = []
+        for no_amigo in no_amigos:
+            no_amigos_profiles.append(Profile.objects.get(user=no_amigo))
+
+        # Si hay menos de 5 usuarios no amigos, selecciona todos
+        if len(no_amigos_profiles) <= 5:
+            seleccionados = no_amigos_profiles
+        else:
+            # Si hay más de 5 usuarios no amigos, selecciona 5 de manera aleatoria
+            seleccionados = random.sample(no_amigos_profiles, 5)
+
+        ultimas_publicaciones = []
+        for perfil_seleccionado in seleccionados:
+            try:
+                ultima_publicacion = Publicacion.objects.filter(autor=perfil_seleccionado).latest('fecha_publicacion')
+                ultimas_publicaciones.append(ultima_publicacion)
+            except Publicacion.DoesNotExist:
+                pass
+
+        serializer = self.get_serializer(ultimas_publicaciones, many=True)
+        return Response(serializer.data)
+    
+class UltimaPublicacionView(generics.GenericAPIView):
+    queryset = Publicacion.objects.all()
+    serializer_class = PublicacionSerializer
+
+    def get(self, request, *args, **kwargs):
+        user = UserAccount.objects.get(email=request.user.email)
+        profile = Profile.objects.get(user=user)
+        amigos = profile.amigos.all()
+
+        ultimas_publicaciones = []
+        for amigo in amigos:
+            amigo_profile = Profile.objects.get(user=amigo)
+            try:
+                ultima_publicacion = Publicacion.objects.filter(autor=amigo_profile).latest('fecha_publicacion')
+                ultimas_publicaciones.append(ultima_publicacion)
+            except Publicacion.DoesNotExist:
+                pass
+        
+        serializer = self.get_serializer(ultimas_publicaciones, many=True)
+        return Response(serializer.data)
+        
+class PublicacionesFavoritas(APIView):
+
+    def get(self, request):
+        user = UserAccount.objects.get(email=request.user.email)
+        profile = Profile.objects.get(user=user)
+        publicaciones = profile.misMeGustan.all()
+
+        serializer = PublicacionSerializer(publicaciones, many=True, context={'request': request})
+        return Response(serializer.data)
+
+class LikePublicacionView(generics.GenericAPIView):
+    
+    def post(self, request, *args, **kwargs):
+        publicacion_id = request.data.get("publicacion_id")
+        like = request.data.get("like")
+
+        if publicacion_id is None or like is None:
+            return Response({"error": "Faltan datos en la solicitud."}, status=400)
+
+        try:
+            publicacion = Publicacion.objects.get(pk=publicacion_id)
+            profile = request.user.profile
+
+            if like:
+                profile.misMeGustan.add(publicacion)
+                publicacion.like.add(profile)
+            else:
+                profile.misMeGustan.remove(publicacion)
+                publicacion.like.remove(profile)
+
+            publicacion.save()
+            profile.save()
+
+            return JsonResponse({"success": True})
+
+        except Publicacion.DoesNotExist:
+            return Response({"error": "No se encontró la publicación con el ID proporcionado."}, status=404)
+        except Exception as e:
+            return Response({"error": f"Error al procesar la solicitud: {str(e)}"}, status=500)
 
 class ReservasPorParque(ListAPIView):
     serializer_class = ReservaCreateSerializer
@@ -43,26 +147,8 @@ class RemoveFriendView(APIView):
         serializer = ProfileCreateSerializer(user_profile)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-class UltimaPublicacionView(generics.GenericAPIView):
-    queryset = Publicacion.objects.all()
-    serializer_class = PublicacionSerializer
 
-    def post(self, request, *args, **kwargs):
-        user_id = request.data.get('user_id')
-        if user_id is None:
-            return Response({"error": "No se proporcionó un ID de usuario."}, status=400)
-
-        try:
-            user = UserAccount.objects.get(pk=user_id)
-            profile = user.profile
-            ultima_publicacion = Publicacion.objects.filter(autor=profile).latest('fecha_publicacion')
-            serializer = self.get_serializer(ultima_publicacion)
-            return Response(serializer.data)
-        except UserAccount.DoesNotExist:
-            return Response({"error": "No se encontró un usuario con ese ID."}, status=404)
-        except Publicacion.DoesNotExist:
-            return Response({"error": "El usuario no tiene publicaciones."}, status=404)
-
+        
 class AddFriendView(APIView):
     def post(self, request):
         user_id = request.data.get('user_id')
@@ -224,11 +310,11 @@ class UserListLeter(viewsets.ModelViewSet):
         letter = self.kwargs['pk']
         return self.queryset.filter(name__icontains=letter, is_active=True).exclude(pk=self.request.user.pk)
             
+
 class CrearPublicacionView(APIView):
     parser_classes = [MultiPartParser]
 
     def post(self, request, *args, **kwargs):
-        print(request.data)
         serializer = PublicacionSerializer(data=request.data)
         
         if serializer.is_valid():
@@ -236,3 +322,31 @@ class CrearPublicacionView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class CrearProfileView(APIView):
+    parser_classes = [MultiPartParser]
+
+    def post(self, request, *args, **kwargs):
+        serializer = ProfileCreateSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UpdateProfileImageView(APIView):
+    def put(self, request, *args, **kwargs):
+        user_id = request.data.get('user_id')
+        if not user_id:
+            return Response({"error": "Debe proporcionar un user_id."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = get_object_or_404(UserAccount, id=user_id)
+        profile = user.profile
+
+        serializer = ProfileUpdateSerializer(profile, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

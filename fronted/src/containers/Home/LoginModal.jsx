@@ -6,12 +6,24 @@ import { useNavigate } from 'react-router-dom';
 import { login } from '../../actions/auth';
 
 export const LoginModal = () => {
+    const dispatch = useDispatch();
     const { closeLog } = useContext(UserContext)
+    const [errorMessage, setErrorMessage] = useState(null);
+    const error = useSelector(state => state.auth.error);
+    useEffect(() => {
+        setErrorMessage(error);
+    }, [error]);
+
+    const onCancel = () => {
+        dispatch({ type: 'CLEAR_ERROR' });
+        closeLog();
+    };
+
     const [formData, setFormData] = useState({
         email: '',
         password: ''
     });
-    const dispatch = useDispatch();
+   
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
     const { email, password } = formData;
 
@@ -20,15 +32,15 @@ export const LoginModal = () => {
     const onSubmit = e => {
         e.preventDefault();
 
-        dispatch(login(email, password));;
+        dispatch(login(email, password));
     };
 
     useEffect(() => {
-
         if (isAuthenticated) {
+            closeLog();
             navigate('/paginadeinicio');
         }
-    }, [isAuthenticated, navigate]);
+    }, [isAuthenticated, navigate, closeLog]);
 
     return (
         <>
@@ -75,11 +87,16 @@ export const LoginModal = () => {
                                 required
                             />
                         </div>
+                        {errorMessage && (
+                            <div className=" bg-yellow-500 bg-opacity-50 text-white px-4 py-2 mb-4 rounded border-4 border-yellow-500">
+                            {errorMessage}
+                        </div>
+                        )}
                         <div className="flex items-center justify-between">
                             <button
                                 className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                 type="button"
-                                onClick={closeLog}
+                                onClick={onCancel}
                             >
                                 Cancelar
                             </button>
@@ -90,6 +107,7 @@ export const LoginModal = () => {
                                 Iniciar sesión
                             </button>
                         </div>
+                        
                     </form>
                 </div>
             </div>

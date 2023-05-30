@@ -29,15 +29,16 @@ const Map = ({ radius, region, geoEnabled }) => {
     if (!window.google || !center) {
       return;
     }
-
+    
     const map = new window.google.maps.Map(document.createElement('div'));
     const service = new window.google.maps.places.PlacesService(map);
-    console.log(radius)
+    
     service.nearbySearch(
       {
         location: center,
-        radius: radius,
+        radius: radius * 1000,
         keyword: 'parque de calistenia',
+         maxResults: 20,
       },
       (results, status) => {
         if (status === window.google.maps.places.PlacesServiceStatus.OK) {
@@ -89,7 +90,7 @@ const Map = ({ radius, region, geoEnabled }) => {
 
   return (
     <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <LocationForm></LocationForm>
+      
       {parks.map((park) => (
         <ParkCard key={park.place_id} park={park} />
       ))}

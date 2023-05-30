@@ -23,6 +23,7 @@ import { PublicacionDeOtro } from './containers/Post/PublicacionDeOtro';
 import { Parques } from './parque/Parques';
 import { MisAmigos } from './containers/Perfil/MisAmigos';
 import LocationForm from './parque/LocationForm';
+import MisMeGusta from './containers/Post/MisMeGusta';
 
 export const PrivateRoute = ({ children }) => {
       //const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
@@ -61,6 +62,7 @@ const App = () => {
                                           <Route path='/parques' element={<Parques />}></Route>
                                           <Route path='/FiltroParques' element={<LocationForm />}></Route>
                                           <Route path='/misAmigos' element={<MisAmigos />}></Route>
+                                          <Route path='/profile/misMeGusta' element={<MisMeGusta />}></Route>
 
                                     </Routes>
                               </Layout>

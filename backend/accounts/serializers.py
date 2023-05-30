@@ -1,13 +1,21 @@
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 #from .models import Post, Comment
-from .models import Profile, Publicacion, ParqueCalistenia, Reserva
+from .models import Profile, Publicacion, ParqueCalistenia, Reserva, Logro
 from rest_framework import serializers
 
 User = get_user_model()
-
+class ImagenUrlField(serializers.ImageField):
+    def to_representation(self, value):
+        if value:
+            request = self.context.get('request')
+            return request.build_absolute_uri(value.url)
+        else:
+            return ''
+        
 class PublicacionSerializer(serializers.ModelSerializer):
     #autor = serializers.StringRelatedField()
+    imagen = ImagenUrlField()
     class Meta:
         model = Publicacion
         fields = ['id','autor', 'imagen', 'descripcion', 'fecha_publicacion', 'like']
@@ -46,7 +54,32 @@ class ReservaCreateSerializer(serializers.ModelSerializer):
         model = Reserva
         fields = ('usuario', 'parque', 'fecha', 'hora', 'usuario_name')
 
+class ProfileUpdateSerializer(serializers.ModelSerializer):
 
+    logros = serializers.PrimaryKeyRelatedField(many=True, queryset=Logro.objects.all(), required=False)
+    
+    class Meta:
+        model = Profile
+        fields = [
+            'descripcion',
+            'logros',
+            'imagen',
+        ]
+        extra_kwargs = {
+            'descripcion': {'required': False},
+            'imagen': {'required': False},
+        }
+
+    def update(self, instance, validated_data):
+        instance.descripcion = validated_data.get('descripcion', instance.descripcion)
+        instance.logros.set(validated_data.get('logros', instance.logros.all()))
+  
+        if 'imagen' in validated_data:
+            instance.imagen = validated_data['imagen']
+
+        instance.save()
+        return instance
+    
 # class PostSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Post

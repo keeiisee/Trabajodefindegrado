@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from datetime import timedelta
 from pathlib import Path
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -104,16 +105,20 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'auth_system',
-        'USER': 'postgres',
-        'PASSWORD': '2203',
-        'HOST': os.getenv('DB_HOST', 'localhost')
-    }
+    'default': dj_database_url.config(
+        default=f"postgres://postgres:2203@{os.getenv('DB_HOST', 'localhost')}/auth_system"
+    )
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'auth_system',
+#         'USER': 'postgres',
+#         'PASSWORD': '2203',
+#         'HOST': os.getenv('DB_HOST', 'localhost')
+#     }
+# }
 
 
 # Password validation

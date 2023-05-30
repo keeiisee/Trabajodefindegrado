@@ -223,14 +223,6 @@ export const Navbar = () => {
                           className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
                         />
                       </li>
-                      <li className="text-lg lg:text-lg font-medium group">
-                        <button type="button" onClick={logout_user}>
-                          <LogoutIcon className="h-5 w-5" />
-                        </button>
-                        <div
-                          className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
-                        />
-                      </li>
                     </>
 
                   )}

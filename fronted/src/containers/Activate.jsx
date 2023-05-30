@@ -19,7 +19,7 @@ const Activate = ({ verify }) => {
 
     useEffect(() => {
         if (verified) {
-            navigate('/login');
+            navigate('/');
         }
     }, [verified, navigate]);
 

@@ -8,7 +8,7 @@ export const OtroNavbarPerfil = () => {
     const [profile, setProfile] = useState("");
     const routeParams = useParams()
     const navigate = useNavigate()
-
+    const miProfile = useSelector(state => state.auth.profile);
     useEffect(() => {
         const fetchData = async () => {
             const config = {
@@ -100,7 +100,8 @@ export const OtroNavbarPerfil = () => {
                                 <span onClick={susPost} className="flex-1 ml-3 whitespace-nowrap">Publicaciones</span>
                             </a>
                         </li>
-
+                        {miProfile && 
+                        <>
                         {esAmigo &&
                             <>
                                 <li>
@@ -194,6 +195,9 @@ export const OtroNavbarPerfil = () => {
 
 
                         </>) : null}
+                        </>
+                        }
+                        
                     </ul>
                 </div>
             </aside>

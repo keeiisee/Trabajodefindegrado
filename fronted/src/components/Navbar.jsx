@@ -4,11 +4,12 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { UserContext } from '../provider/UserContext';
 import { useSelector } from 'react-redux';
-import NewPost from '../containers/Post/NewPost';
+
 import { User } from 'react-feather';
 
 import { LogoutIcon, PhotographIcon, SearchIcon, UploadIcon, ViewBoardsIcon } from '@heroicons/react/solid';
 import LocationForm from '../parque/LocationForm';
+import NewPostForm from '../containers/Post/NewPostForm';
 const PalabrasList = ({ palabras, setPalabras }) => (
   <div className="position-relative">
     <ul className="list-group position-absolute top-100 start-0">
@@ -94,9 +95,10 @@ export const Navbar = () => {
       </div>
       <div className="relative">
         {isOpenP && (
-          <NewPost />
+          <NewPostForm />
         )}
       </div>
+      
       <nav className="bg-marron max-w-7 mx-4 mt-4 mb-4 px-2 sm:px-6 lg:px-8">
         <div className="max-w-8 mx-auto px-4 mt-4 mb-4 px-2 sm:px-6 lg:px-8">
           <div className="relative flex items-center justify-between h-16 ">

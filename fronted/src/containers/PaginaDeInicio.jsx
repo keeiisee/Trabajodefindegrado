@@ -83,34 +83,34 @@ export const PaginaDeInicio = () => {
         <Dos />
         <Tres />
       </div> */}
-      {profile && 
-      <div className="mb-4 flex items-center justify-center">
-        <label htmlFor="filtro" className="mr-2 text-lg font-medium text-gray-700">
-          Filtro:
-        </label>
-        <div className="relative">
-          <select
-            id="filtro"
-            value={filtro}
-            onChange={handleFiltroChange}
-            className="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
-          >
-            <option value="amigos" defaultChecked>Amigos</option>
-            <option value="mis_megusta">Mis me gusta</option>
-            <option value="sin_seguir">Sin seguir</option>
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-            <svg
-              className="fill-current h-4 w-4"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
+      {profile &&
+        <div className="mb-4 flex items-center justify-center">
+          <label htmlFor="filtro" className="mr-2 text-lg font-medium text-gray-700">
+            Filtro:
+          </label>
+          <div className="relative">
+            <select
+              id="filtro"
+              value={filtro}
+              onChange={handleFiltroChange}
+              className="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
             >
-              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-            </svg>
+              <option value="amigos" defaultChecked>Amigos</option>
+              <option value="mis_megusta">Mis me gusta</option>
+              <option value="sin_seguir">Sin seguir</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <svg
+                className="fill-current h-4 w-4"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+              </svg>
+            </div>
           </div>
-        </div>
-      </div>}
-      
+        </div>}
+
       {post.length <= 0 && (
         <>
           {!profile ? (
@@ -126,13 +126,23 @@ export const PaginaDeInicio = () => {
           )}
         </>
       )}
-      
-      <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+      <section className="text-gray-600 body-font">
+        <div className="container px-5 py-24 mx-auto">
+          <div className="flex flex-wrap -m-4">
+            
+              {post.map((imagen) => (
+                <ImagenInicio key={imagen.id} imagen={imagen} />
+              ))}
+          
+          </div>
+        </div>
+      </section>
+      {/* <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
 
         {post.map((imagen) => (
           <ImagenInicio key={imagen.id} imagen={imagen} />
         ))}
-      </div>
+      </div> */}
       {/* <BottomNavbar></BottomNavbar> */}
     </>
 

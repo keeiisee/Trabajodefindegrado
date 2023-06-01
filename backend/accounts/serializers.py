@@ -13,6 +13,13 @@ class ImagenUrlField(serializers.ImageField):
         else:
             return ''
         
+# class PublicacionCreateSerializer(serializers.ModelSerializer):
+#     #autor = serializers.StringRelatedField()
+#     #imagen = ImagenUrlField()
+#     class Meta:
+#         model = Publicacion
+#         fields = ['id','autor', 'imagen', 'descripcion', 'fecha_publicacion', 'like']
+
 class PublicacionSerializer(serializers.ModelSerializer):
     #autor = serializers.StringRelatedField()
     imagen = ImagenUrlField()

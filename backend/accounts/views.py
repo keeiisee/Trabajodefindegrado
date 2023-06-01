@@ -11,9 +11,43 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.generics import ListAPIView
 from datetime import date
 
+class EliminarPublicacionView(APIView):
+    def post(self, request, *args, **kwargs):
+        # Obtener el ID de la publicación a eliminar del cuerpo de la solicitud
+        publicacion_id = request.data.get("publicacion_id")
+        
+        # Verificar que se proporcionó un ID válido
+        if not publicacion_id:
+            return Response({'error': 'Debe proporcionar un ID de publicación'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Obtener la publicación correspondiente y eliminarla
+        try:
+            publicacion = Publicacion.objects.get(id=publicacion_id)
+            publicacion.delete()
+            return Response({'success': 'Publicación eliminada correctamente'}, status=status.HTTP_200_OK)
+        except Publicacion.DoesNotExist:
+            return Response({'error': 'La publicación especificada no existe'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class UpdatePostDescriptionView(APIView):
+    def post(self, request, *args, **kwargs):
+        publicacion_id = request.data.get("publicacion_id")
+
+        if not publicacion_id:
+            return Response({"error": "Debe proporcionar un publicacion_id."}, status=status.HTTP_400_BAD_REQUEST)
+
+        publicacion = get_object_or_404(Publicacion, id=publicacion_id)
+
+        serializer = PublicacionCreateSerializer(publicacion, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 class DeleteUserView(APIView):
     def post(self, request):
-        print("Dddddddddddd")
         user = request.user
         user.delete()
         return Response({'status': 'success', 'message': 'User account deleted successfully'}, status=status.HTTP_200_OK)
@@ -315,7 +349,8 @@ class CrearPublicacionView(APIView):
     parser_classes = [MultiPartParser]
 
     def post(self, request, *args, **kwargs):
-        serializer = PublicacionSerializer(data=request.data)
+        print(request.data)
+        serializer = PublicacionCreateSerializer(data=request.data)
         
         if serializer.is_valid():
             serializer.save()

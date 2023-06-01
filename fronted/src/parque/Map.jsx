@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import ParkCard from './ParkCard';
-import LocationForm from './LocationForm';
 
 const Map = ({ radius, region, geoEnabled }) => {
   const [parks, setParks] = useState([]);
@@ -38,7 +37,6 @@ const Map = ({ radius, region, geoEnabled }) => {
         location: center,
         radius: radius * 1000,
         keyword: 'parque de calistenia',
-         maxResults: 20,
       },
       (results, status) => {
         if (status === window.google.maps.places.PlacesServiceStatus.OK) {

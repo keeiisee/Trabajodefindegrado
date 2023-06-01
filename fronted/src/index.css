@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 .nav-border {
   border: 2px solid;
   animation: border-animation 3s infinite;

@@ -1,5 +1,45 @@
 import axios from 'axios';
 
+export const eliminar_post = (publicacion_id) => async (dispatch) => {
+  const body = JSON.stringify({ publicacion_id });
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `JWT ${localStorage.getItem('access')}`,
+    },
+  };
+  
+  try {
+    await axios.post(
+      'http://localhost:8000/accounts/publicacion/delete/',
+      body,
+      config
+    );
+  } catch (err) {
+    console.error('Error al crear el post:', err);
+  }
+}
+
+export const modificar_post = (publicacion_id, descripcion) => async (dispatch) => {
+  const body = JSON.stringify({ publicacion_id, descripcion });
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `JWT ${localStorage.getItem('access')}`,
+    },
+  };
+  
+  try {
+    await axios.post(
+      'http://localhost:8000/accounts/modificar/publicacion/',
+      body,
+      config
+    );
+  } catch (err) {
+    console.error('Error al crear el post:', err);
+  }
+}
+
 export const post_like = (publicacion_id, like) => async (dispatch) => {
   const body = JSON.stringify({ publicacion_id, like });
 
@@ -21,16 +61,15 @@ export const post_like = (publicacion_id, like) => async (dispatch) => {
   }
 }
 
-export const crear_post = (descripcion, autor, imagen, logros) => async (dispatch) => {
+export const crear_post = (descripcion, autor, imagen) => async (dispatch) => {
     const formData = new FormData();
     formData.append('autor', autor);
     formData.append('descripcion', descripcion);
     formData.append('imagen', imagen);
-  
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: `JWT ${localStorage.getItem('access')}`,
+        'Authorization': `JWT ${localStorage.getItem('access')}`,
       },
     };
   

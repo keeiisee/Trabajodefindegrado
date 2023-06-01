@@ -9,8 +9,7 @@ export const Parques = () => {
   const [radius, setRadius] = useState(1000);
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [geoEnabled, setGeoEnabled] = useState(false);
- 
-
+  
   const location = useLocation();
   const searchParams = location.state;
 

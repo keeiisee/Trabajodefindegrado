@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import DeleteUserView, PublicacionesFavoritas, UltimasPublicacionesNoAmigosView,LikePublicacionView, UpdateProfileImageView, CrearProfileView, CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
+from .views import UpdatePostDescriptionView, EliminarPublicacionView, DeleteUserView, PublicacionesFavoritas, UltimasPublicacionesNoAmigosView,LikePublicacionView, UpdateProfileImageView, CrearProfileView, CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
 
 router = routers.DefaultRouter()
 router.register(r'profiles/profiles', ProfileList)
@@ -29,6 +29,8 @@ urlpatterns = [
     path('crear/publicacion/', CrearPublicacionView.as_view(), name='create_publi'),
     path('like/publicacion/', LikePublicacionView.as_view(), name='like_publi'),
     path('publicaciones/favoritas/', PublicacionesFavoritas.as_view(), name='publicaciones_favoritas'),
+    path('publicacion/delete/', EliminarPublicacionView.as_view(), name='eliminar_publicacion'),
+    path('modificar/publicacion/', UpdatePostDescriptionView.as_view(), name='eliminar_update'),
 
     path('add_friend/', AddFriendView.as_view(), name='add_friend'),
     path('reject_friend/', RejectFriendRequestView.as_view(), name='reject_friend'),
@@ -36,6 +38,7 @@ urlpatterns = [
     path('ultima_publi/', UltimaPublicacionView.as_view(), name='last_post'),
     path('utlima_publiNoFriend/', UltimasPublicacionesNoAmigosView.as_view(), name='last_post_noFriend'),
     path('remove_friend/', RemoveFriendView.as_view(), name='remove_friend'),
+
 
     path('reservas/parque/<int:pk>/', ReservasPorParque.as_view(), name='reservas_por_parque'),
     

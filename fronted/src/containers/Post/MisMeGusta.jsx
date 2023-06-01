@@ -3,27 +3,27 @@ import { NavbarSuperPerfil } from '../../components/NavbarSuperPerfil';
 import ImagenInicio from '../../Inicio/ImagenInicio';
 
 const MisMeGusta = () => {
- 
+
     const [publicacionesFavoritas, setPublicacionesFavoritas] = useState([]);
 
     useEffect(() => {
-      const obtenerPublicacionesFavoritas = async () => {
-        try {
-          const response = await fetch('http://localhost:8000/accounts/publicaciones/favoritas/', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `JWT ${localStorage.getItem('access')}`,
+        const obtenerPublicacionesFavoritas = async () => {
+            try {
+                const response = await fetch('http://localhost:8000/accounts/publicaciones/favoritas/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `JWT ${localStorage.getItem('access')}`,
+                    }
+                });
+                const publicacionesJson = await response.json();
+                setPublicacionesFavoritas(publicacionesJson);
+            } catch (error) {
+                console.error('Error al obtener las publicaciones favoritas:', error);
             }
-          });
-          const publicacionesJson = await response.json();
-          setPublicacionesFavoritas(publicacionesJson);
-        } catch (error) {
-          console.error('Error al obtener las publicaciones favoritas:', error);
-        }
-      };
-  
-      obtenerPublicacionesFavoritas();
+        };
+
+        obtenerPublicacionesFavoritas();
     }, []);
     return (
 
@@ -38,12 +38,22 @@ const MisMeGusta = () => {
                             <p className="mt-4 text-gray-500">Lo sentimos, no hay contenido disponible en este momento.</p>
                         </div>
                     )}
-                 
-                    <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4">
+                    <section className="text-gray-600 body-font">
+                        <div className="container px- py-24 mx-auto">
+                            <div className="flex flex-wrap -m-5">
+
+                                {publicacionesFavoritas.map((imagen) => (
+                                    <ImagenInicio key={imagen.id} imagen={imagen} />
+                                ))}
+
+                            </div>
+                        </div>
+                    </section>
+                    {/* <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4">
                         {publicacionesFavoritas.map((imagen) => (
                             <ImagenInicio key={imagen.id} imagen={imagen} />
                         ))}
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </>

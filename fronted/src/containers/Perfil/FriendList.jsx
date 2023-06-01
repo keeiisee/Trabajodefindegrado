@@ -22,26 +22,20 @@ const FriendList = ({ friends }) => {
       <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4">
 
         {friends.map((friend) => (
-          <>
-
-            <div key={friend[0].id} className="bg-white border-2 border-gray-200 p-4 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 ease-in-out">
-              <img
-
-                className="w-full h-64 object-cover mb-4 rounded-lg"
-                src={friend[0].imagen}
-                alt={`${friend[0].user}'s avatar`}
-              />
-              <a href={`/perfil/${friend[0].user_id}`} className="text-xl font-semibold">{friend[0].user_name}</a>
-              <button
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-200 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
-                onClick={(e) => { perfil(e, friend[0].user_id) }}
-              >
-                Eliminar Amigo
-              </button>
-            </div>
-          </>
-
-
+          <div key={friend[0].user_id} className="bg-white border-2 border-gray-200 p-4 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 ease-in-out">
+            <img
+              className="w-full h-64 object-cover mb-4 rounded-lg"
+              src={friend[0].imagen}
+              alt={`${friend[0].user}'s avatar`}
+            />
+            <a href={`/perfil/${friend[0].user_id}`} className="text-xlfont-semibold">{friend[0].user_name}</a>
+            <button
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-200 ease-in-out transform hover:-translate-y-1 hover:shadow-lg"
+              onClick={(e) => { perfil(e, friend[0].user_id) }}
+            >
+              Eliminar Amigo
+            </button>
+          </div>
         ))}
       </div>
     </>

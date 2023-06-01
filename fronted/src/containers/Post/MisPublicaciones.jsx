@@ -47,11 +47,18 @@ export const MisPublicaciones = () => {
                             <p className="mt-4 text-gray-500">Lo sentimos, no hay contenido disponible en este momento.</p>
                         </div>
                     )}
-                    <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4">
-                        {post.map((imagen) => (
-                            <ImagenInicio key={imagen.id} imagen={imagen} />
-                        ))}
-                    </div>
+                    <section className="text-gray-600 body-font">
+                        <div className="container px- py-24 mx-auto">
+                            <div className="flex flex-wrap -m-5">
+
+                                {post.map((imagen) => (
+                                    <ImagenInicio key={imagen.id} imagen={imagen} />
+                                ))}
+
+                            </div>
+                        </div>
+                    </section>
+
                 </div>
             </div>
             {/* <MediaQuery minDeviceWidth={1095}>

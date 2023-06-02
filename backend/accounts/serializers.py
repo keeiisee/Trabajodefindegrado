@@ -1,7 +1,7 @@
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 #from .models import Post, Comment
-from .models import Profile, Publicacion, ParqueCalistenia, Reserva, Logro
+from .models import Profile, Publicacion, ParqueCalistenia, Reserva, Logro, Material
 from rest_framework import serializers
 
 User = get_user_model()
@@ -12,7 +12,11 @@ class ImagenUrlField(serializers.ImageField):
             return request.build_absolute_uri(value.url)
         else:
             return ''
-        
+
+class MaterialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Material
+        fields = ['id', 'nombre']       
 # class PublicacionCreateSerializer(serializers.ModelSerializer):
 #     #autor = serializers.StringRelatedField()
 #     #imagen = ImagenUrlField()
@@ -57,9 +61,10 @@ class ParqueCalisteniaCreateSerializer(serializers.ModelSerializer):
 
 class ReservaCreateSerializer(serializers.ModelSerializer):
     usuario_name = serializers.CharField(source='usuario.user.name', read_only=True)
+    materiales = MaterialSerializer(many=True, read_only=True)
     class Meta:
         model = Reserva
-        fields = ('usuario', 'parque', 'fecha', 'hora', 'usuario_name')
+        fields = ('usuario', 'parque', 'fecha', 'hora', 'usuario_name', 'materiales')
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
 

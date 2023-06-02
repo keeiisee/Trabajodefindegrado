@@ -6,6 +6,7 @@ import ImagenInicio from '../../Inicio/ImagenInicio';
 import { NavbarSuperPerfil } from '../../components/NavbarSuperPerfil';
 import MediaQuery from 'react-responsive';
 import BottomNavbar from '../probar/BottomNavbar';
+import Post1 from '../probar/Post1';
 
 export const MisPublicaciones = () => {
     const [post, setPost] = useState([]);
@@ -38,16 +39,16 @@ export const MisPublicaciones = () => {
 
         <>
 
-            <NavbarSuperPerfil />
-            <div className="sm:ml-64 mr-6">
-                <div className="p-4 ml-6 sm:ml-14 border-4 nav-border bg-marron rounded-lg dark:border-gray-700">
+            {/* <NavbarSuperPerfil /> */}
+            {/* <div className="sm:ml-64 mr-6">
+                <div className="p-4 ml-6 sm:ml-14 border-4 nav-border bg-marron rounded-lg dark:border-gray-700"> */}
                     {post.length <= 0 && (
                         <div className="mt-20 ml-20 mr-20 mb-20 text-center animate-bounce">
                             <h1 className="text-4xl font-bold text-gray-700 animate-pulse">No hay publicaciones que ver</h1>
                             <p className="mt-4 text-gray-500">Lo sentimos, no hay contenido disponible en este momento.</p>
                         </div>
                     )}
-                    <section className="text-gray-600 body-font">
+                    {/* <section className="text-gray-600 body-font">
                         <div className="container px- py-24 mx-auto">
                             <div className="flex flex-wrap -m-5">
 
@@ -57,10 +58,23 @@ export const MisPublicaciones = () => {
 
                             </div>
                         </div>
-                    </section>
-
+                    </section> */}
+                    <section className="text-gray-600 body-font">
+                <div className="container px-5 py-24 mx-auto">
+                    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-8">
+                        {post.map((post) => (
+                            <div
+                                key={post.id}
+                                className="transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105"
+                            >
+                                <Post1 imagen={post} />
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            </section>
+                {/* </div>
+            </div> */}
             {/* <MediaQuery minDeviceWidth={1095}>
                 <div className="sm:ml-64 mr-6">
                     <div className="p-4 ml-6 sm:ml-14 border-4 nav-border bg-marron rounded-lg dark:border-gray-700">

@@ -85,7 +85,6 @@ class ParqueCalistenia(models.Model):
     placeId = models.CharField(max_length=255)
     descripcion = models.TextField(blank=True)
     imagen = models.ImageField(blank=True, null=True)
-    materiales = models.ManyToManyField('Material', blank=True)
 
     def __str__(self):
         return self.nombre
@@ -95,22 +94,24 @@ class ParqueCalistenia(models.Model):
             return self.imagen.url
         else:
             return ''
-
+        
 class Material(models.Model):
-    usuario = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    nombre = models.CharField(max_length=255, null=True)
-    def __str__(self):
-        return f"{self.usuario.user.name}-{self.nombre}"
+    nombre = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.nombre
+    
 class Reserva(models.Model):
     usuario = models.ForeignKey(Profile, on_delete=models.CASCADE)
     parque = models.ForeignKey(ParqueCalistenia, on_delete=models.CASCADE)
     fecha = models.DateField()
     hora = models.TimeField()
+    materiales = models.ManyToManyField(Material, blank=True)
 
     def __str__(self):
         return f"{self.usuario.user.name} - {self.parque.nombre} - {self.fecha} - {self.hora}"
-    
+
+
 # class Post(models.Model):
 #     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
 #     created_date = models.DateTimeField(default=datetime.now())

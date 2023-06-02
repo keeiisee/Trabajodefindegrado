@@ -2,12 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { DateTimeForm } from './DateTimeForm';
 import { AchievementForm } from './AchievementForm';
 //si
-export const PhotoModal = ({ show, onClose, photoUrl, name , park, id}) => {
+export const PhotoModal = ({ show, onClose, photoUrl, name, park, id }) => {
     if (!show) return null;
-    const achievements = ["perimer logro", "segun", "tercer"]
-    const attendees = ["perimer logro", "segun", "tercer"]
     const [showDateTimeForm, setShowDateTimeForm] = useState(false);
-    const [showAchievementForm, setShowAchievementForm] = useState(false);
     const [reserva, setReserva] = useState([])
     const handleOpenDateTimeForm = () => {
         setShowDateTimeForm(true);
@@ -17,13 +14,6 @@ export const PhotoModal = ({ show, onClose, photoUrl, name , park, id}) => {
         setShowDateTimeForm(false);
     };
 
-    const handleOpenAchievementForm = () => {
-        setShowAchievementForm(true);
-    };
-
-    const handleCloseAchievementForm = () => {
-        setShowAchievementForm(false);
-    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,10 +23,10 @@ export const PhotoModal = ({ show, onClose, photoUrl, name , park, id}) => {
                     'Authorization': `JWT ${localStorage.getItem('access')}`,
                 }
             };
-            
+
             try {
                 const reservas = await fetch(`http://localhost:8000/accounts/reservas/parque/${id}/`, config);
-                const dataReserva= await reservas.json();
+                const dataReserva = await reservas.json();
                 setReserva(dataReserva);
             } catch (error) {
                 console.log(error);
@@ -45,6 +35,14 @@ export const PhotoModal = ({ show, onClose, photoUrl, name , park, id}) => {
 
         fetchData();
     }, [])
+    //nuevo
+    const [materialVisibility, setMaterialVisibility] = useState([]);
+
+    const toggleMaterialVisibility = (index) => {
+        const newVisibility = [...materialVisibility];
+        newVisibility[index] = !newVisibility[index];
+        setMaterialVisibility(newVisibility);
+    };
 
     return (
         <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -60,38 +58,43 @@ export const PhotoModal = ({ show, onClose, photoUrl, name , park, id}) => {
                     <div className="p-4">
                         <div className="mt-4 flex justify-between gap-x-4">
                             <button
-                                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                className="mb-4 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                 onClick={handleOpenDateTimeForm}
                             >
                                 Apuntarse
                             </button>
-                            <button
-                                className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                                onClick={handleOpenAchievementForm}
-                            >
-                                Añadir material
-                            </button>
                         </div>
 
-                        <DateTimeForm show={showDateTimeForm} onClose={handleCloseDateTimeForm} place_id={park.place_id}/>
-                        <AchievementForm show={showAchievementForm} onClose={handleCloseAchievementForm} />
+                        <DateTimeForm show={showDateTimeForm} onClose={handleCloseDateTimeForm} place_id={park.place_id} />
+                        {/* <AchievementForm show={showAchievementForm} onClose={handleCloseAchievementForm} /> */}
                         <h2 className="text-2xl font-bold mb-2">{name}</h2>
-                        <h3 className="text-xl font-semibold">Logros:</h3>
+                        {/* <h3 className="text-xl font-semibold">Logros:</h3>
                         <ul className="list-disc ml-6 mb-4">
                             {achievements.map((achievement, index) => (
                                 <li key={index}>{achievement}</li>
                             ))}
-                        </ul>
+                        </ul> */}
                         <h3 className="text-xl font-semibold">Personas apuntadas:</h3>
                         <ul className="list-disc ml-6">
-                            
-                            {reserva.length > 0 && reserva.map((res, index) => (
-                                <>
-                                 <li key={index}>{res.usuario_name} - {res.fecha}</li>
-                                 
-                                </>
-                               
-                            ))}
+                            {reserva.length > 0 &&
+                                reserva.map((res, index) => (
+                                    <li key={index}>
+                                        {res.usuario_name} - {res.fecha}
+                                        <button
+                                            onClick={() => toggleMaterialVisibility(index)}
+                                            className="text-blue-600 underline ml-2"
+                                        >
+                                            {materialVisibility[index] ? 'Ocultar materiales' : 'Ver materiales'}
+                                        </button>
+                                        {materialVisibility[index] && res.materiales && res.materiales.length > 0 && (
+                                            <ul className="list-disc ml-6">
+                                                {res.materiales.map((material, materialIndex) => (
+                                                    <li key={materialIndex}>{material.nombre}</li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </li>
+                                ))}
                         </ul>
                     </div>
                     <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">

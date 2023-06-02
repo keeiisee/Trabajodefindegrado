@@ -4,7 +4,7 @@ from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, viewsets, status
 from rest_framework.response import Response
-from .models import Profile, UserAccount, Publicacion, ParqueCalistenia, Reserva
+from .models import Material, Profile, UserAccount, Publicacion, ParqueCalistenia, Reserva
 from .serializers import ProfileUpdateSerializer, PublicacionSerializer, ReservaCreateSerializer, ProfileCreateSerializer, UserCreateSerializerView, PublicacionCreateSerializer, ParqueCalisteniaCreateSerializer
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
@@ -272,27 +272,41 @@ class RejectFriendRequestView(APIView):
 
         serializer = ProfileCreateSerializer(user_profile)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
 class ReservaCalisteniaList(viewsets.ModelViewSet):
     queryset = Reserva.objects.all()
     serializer_class = ReservaCreateSerializer
 
     def create(self, request, *args, **kwargs):
-        parque = request.data.get('parque')
+        parque_place_id = request.data.get('parque')
         fecha = request.data.get('fecha')
         hora = request.data.get('hora')
-        
-        if not (parque and fecha and hora):
+        materiales_nombres = request.data.get('materiales', [])
+
+        if not (parque_place_id and fecha and hora):
             return Response({'error': 'Por favor, proporcione todos los campos requeridos (parque, fecha, hora).'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        parque1 = ParqueCalistenia.objects.filter(placeId = parque)
-        print(parque)
+
+        try:
+            parque = ParqueCalistenia.objects.get(placeId=parque_place_id)
+        except ParqueCalistenia.DoesNotExist:
+            return Response({'error': f'Parque no encontrado: {parque_place_id}'}, status=status.HTTP_400_BAD_REQUEST)
+
         reserva = Reserva(
-            parque=parque1[0],
+            parque=parque,
             fecha=fecha,
             hora=hora,
             usuario=request.user.profile
         )
+        reserva.save()
+
+        for material_nombre in materiales_nombres:
+            try:
+                material = Material.objects.get(nombre=material_nombre)
+                reserva.materiales.add(material)
+            except Material.DoesNotExist:
+                reserva.delete()
+                return Response({'error': f'Material no encontrado: {material_nombre}'}, status=status.HTTP_400_BAD_REQUEST)
+
         reserva.save()
 
         serializer = self.get_serializer(reserva)

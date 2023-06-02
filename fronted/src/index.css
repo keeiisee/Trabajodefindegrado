@@ -1,7 +1,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.fade-appear,
+.fade-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
 
+.fade-appear-active,
+.fade-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 1000ms, transform 1000ms;
+}
+.example-enter {
+  opacity: 0;
+}
+
+.example-enter-active {
+  opacity: 1;
+  transition: opacity 300ms;
+}
+
+.example-exit {
+  opacity: 1;
+}
+
+.example-exit-active {
+  opacity: 0;
+ transition: opacity 300ms;
+}
+.fade-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1000ms, transform 1000ms;
+}
 .nav-border {
   border: 2px solid;
   animation: border-animation 3s infinite;

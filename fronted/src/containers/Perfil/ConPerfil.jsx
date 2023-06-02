@@ -3,6 +3,7 @@ import Navbar from '../../components/Navbar'
 import Navbarperfil from './Navbarperfil';
 import { useSelector } from 'react-redux';
 import { NavbarSuperPerfil } from '../../components/NavbarSuperPerfil';
+import Profile1 from '../probar/Profile1';
 
 export const ConPerfil = () => {
   const [profile, setProfile] = useState("");
@@ -43,35 +44,17 @@ export const ConPerfil = () => {
 
   return (
     <>
-  
-      <NavbarSuperPerfil/>
+    
+    {profile && 
+    <>
+    <NavbarSuperPerfil></NavbarSuperPerfil>
+      <Profile1 datas={profile[0]}/>
+    </>
+    
+    }
+      
 
-      {/* <div className="col-md-8">
-            <br />
-            <h2 >Perfil de {user && user.name}</h2>
-            <div className="d-flex justify-content-between align-items-center mt-3">
-
-              <span className="badge bg-primary">Logros: {profile && profile[0].logros.length}</span>
-              <span className="badge bg-primary">Publicaciones: {post.length}</span>
-              <span className="badge bg-primary">Amigos: {profile && profile[0].amigos.length}</span>
-            </div>
-            <br />
-            <label htmlFor="bio" className="form-label">Biografía:</label>
-            <div className="card">
-              <div className="card-body">
-
-                <p className="mt-3">{profile && profile[0].descripcion}</p>
-              </div>
-            </div>
-            <h4 className="mt-4">Logros:</h4>
-            <ul className="list-group">
-              {profile.length > 0 ? profile[0].logros.map((logro, key) => {
-                return <li key={key} className="list-group-item">{logro}</li>
-              }) : null}
-            </ul>
-          </div> */}
-
-      <div className="sm:ml-64 mr-6">
+      {/* <div className="sm:ml-64 mr-6">
         <div className="p-4 ml-6 sm:ml-14 border-4 nav-border bg-marron rounded-lg dark:border-gray-700">
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div className="border-4 border-marron border-dashed flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
@@ -98,7 +81,7 @@ export const ConPerfil = () => {
           </div>
 
         </div>
-      </div>
+      </div> */}
       
     </>
   )

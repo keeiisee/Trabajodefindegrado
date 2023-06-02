@@ -14,7 +14,6 @@ export const UserProvider = ({ children }) => {
     setIsOpenPM(true);
   };
   const closePostM = () => {
-    console.log("werer")
     setIsOpenPM(false);
   };
   const openPar = () => {

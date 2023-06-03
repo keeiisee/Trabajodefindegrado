@@ -203,8 +203,8 @@ SIMPLE_JWT = {
         'rest_framework_simplejwt.tokens.AccessToken',
     )
 }
-DOMAIN = ('localhost:5173') 
-SITE_NAME = ('CalistenicsApp') 
+# DOMAIN = ('localhost:5173') 
+# SITE_NAME = ('CalistenicsApp') 
 DJOSER = {
     'LOGIN_FIELD': 'email',
     'USER_CREATE_PASSWORD_RETYPE': True,

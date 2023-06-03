@@ -23,12 +23,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-s)52u-e6l1=t3r2^yla^o^!uj$#$tuhll3gov(of@70j^#_@&z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['trabajodefindegrado-bvl5.vercel.app',]
+ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:5173',
-    'https://trabajodefindegrado.vercel.app/',
 ]
 
 CORS_ALLOW_METHODS = [
@@ -119,7 +118,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
   'default': {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'ENGINE': 'django.db.backends.postgresql',
     'NAME': 'neondb',
     'USER': 'spotifypremiumbrigita',
     'PASSWORD': 'dRamEwK05bYL',
@@ -127,6 +126,7 @@ DATABASES = {
     'PORT': '5432',
   }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -169,6 +169,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+STATIC_ROOT = BASE_DIR / "staticfiles_build" / "static"
 STATIC_URL = '/static/'
 CORS_ORIGIN_ALLOW_ALL = True
 MEDIA_URL = 'media/'
@@ -179,7 +180,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'build/static')
 ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -203,8 +204,8 @@ SIMPLE_JWT = {
         'rest_framework_simplejwt.tokens.AccessToken',
     )
 }
-DOMAIN = ('https://trabajodefindegrado.vercel.app/') 
-# SITE_NAME = ('CalistenicsApp') 
+DOMAIN = ('localhost:5173') 
+SITE_NAME = ('CalistenicsApp') 
 DJOSER = {
     'LOGIN_FIELD': 'email',
     'USER_CREATE_PASSWORD_RETYPE': True,

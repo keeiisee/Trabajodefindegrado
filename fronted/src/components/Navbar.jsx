@@ -131,7 +131,7 @@ export const Navbar = () => {
                         <div className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out" />
                       </li>
                       <li className="text-lg font-medium group">
-                        <Link onClick={() => setIsOpen(false)} to="/profile"><img className="w-10 h-10 rounded inline-block mr-1" src={url} alt="Foto de Perfil" /></Link>
+                        <Link onClick={() => setIsOpen(false)} to="/profile"><img className="w-10 h-10 object-contain " src={url} alt="Foto de Perfil" /></Link>
                         <div className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out" />
                       </li>
                     </>

@@ -25,6 +25,7 @@ import LocationForm from './parque/LocationForm';
 import MisMeGusta from './containers/Post/MisMeGusta';
 import NewPostForm from './containers/Post/NewPostForm';
 import PaginaDeInicio1 from './containers/probar/PaginaDeInicio1';
+import PerfilDeOtro1 from './containers/probar/PerfilDeOtro1';
 
 export const PrivateRoute = ({ children }) => {
       //const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
@@ -55,7 +56,7 @@ const App = () => {
                                           <Route path='/profile' element={<PrivateRoute><ConPerfil /></PrivateRoute>}></Route>
                                           <Route path='/crear-perfil' element={<PrivateRoute><CrearPerfil /></PrivateRoute>}></Route>
                                           <Route path='/profile/modificar-perfil' element={<PrivateRoute><ActualizarPerfil /></PrivateRoute>}></Route>
-                                          <Route path='/perfil/:id' element={<PrivateRoute><PerfilDeOtro /></PrivateRoute>}></Route>
+                                          <Route path='/perfil/:id' element={<PrivateRoute><PerfilDeOtro1 /></PrivateRoute>}></Route>
                                           <Route path='/profile/crear-post' element={<PrivateRoute><NewPostForm /></PrivateRoute>}></Route>
                                           <Route path='/profile/mispublicaciones' element={<PrivateRoute><MisPublicaciones /></PrivateRoute>}></Route>
                                           <Route path='/suspublicaciones/:id' element={<PrivateRoute><PublicacionDeOtro /></PrivateRoute>}></Route>

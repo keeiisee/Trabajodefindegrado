@@ -146,6 +146,7 @@ export const modificar_perfil = (imagen, descripcion, user) => async dispatch =>
     const formData = new FormData();
     formData.append('user_id', user.id);
     formData.append('descripcion', descripcion);
+    console.log(imagen)
     if (imagen !== null) {
         formData.append('imagen', imagen);
     }

@@ -81,12 +81,6 @@ export const NotiRecibidas = () => {
             <div className="sm:ml-64 mr-6">
                 <div className="p-4 ml-6 sm:ml-14 border-4 nav-border bg-marron rounded-lg dark:border-gray-700">
 
-                {solicitudRecibida.length <= 0 && (
-                                <div className="mt-20 ml-20 mr-20 mb-20 text-center animate-bounce">
-                                    <h1 className="text-4xl font-bold text-gray-700 animate-pulse">No hay Notificaciones que ver</h1>
-                                    <p className="mt-4 text-gray-500">Lo sentimos, no hay contenido disponible en este momento.</p>
-                                </div>
-                            )}
                     <div className="flex flex-wrap justify-center">
                         {solicitudRecibida && solicitudRecibida.map((tarjeta, index) => (
 

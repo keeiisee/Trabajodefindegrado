@@ -8,6 +8,7 @@ import axios from 'axios';
 import { deleted_user, modificar_perfil } from '../../actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import TabSelectorNotis from './TabSelectorNotis';
 
 const ProfileCard = styled.div`
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -49,7 +50,7 @@ function Profile1({ datas }) {
             setFormData({
                 ...formData,
                 descripcion: datas.descripcion,
-                imagen: datas.imagen,
+                imagen: null,
                 edad: datas.edad,
                 telefono: datas.telefono,
             });
@@ -65,7 +66,7 @@ function Profile1({ datas }) {
         setFormData({
             ...formData,
             descripcion: datas.descripcion,
-            imagen: datas.imagen,
+            imagen: null,
             edad: datas.edad,
             telefono: datas.telefono,
         });
@@ -321,8 +322,8 @@ function Profile1({ datas }) {
                     </div>
                 </div>
             )}
-            {publicaciones && <TabSelector></TabSelector>}
-            {notificaciones && <TabSelector></TabSelector>}
+            {publicaciones && <TabSelector/>}
+            {notificaciones && <TabSelectorNotis/>}
             {amigos && (
                 <>
                     <ListaAmigos friends={amigosList} onClose={clickPubli} />

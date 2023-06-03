@@ -13,23 +13,7 @@
   transform: translateY(0);
   transition: opacity 1000ms, transform 1000ms;
 }
-.example-enter {
-  opacity: 0;
-}
 
-.example-enter-active {
-  opacity: 1;
-  transition: opacity 300ms;
-}
-
-.example-exit {
-  opacity: 1;
-}
-
-.example-exit-active {
-  opacity: 0;
- transition: opacity 300ms;
-}
 .fade-exit {
   opacity: 1;
   transform: translateY(0);

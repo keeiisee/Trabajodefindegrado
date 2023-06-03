@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-s)52u-e6l1=t3r2^yla^o^!uj$#$tuhll3gov(of@70j^#_@&z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://trabajodefindegrado-bvl5-x51dwemdv-1769493-murciaeduca.vercel.app/']
+ALLOWED_HOSTS = ['trabajodefindegrado-bvl5.vercel.app']
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:5173',
     'https://trabajodefindegrado.vercel.app/',

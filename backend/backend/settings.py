@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-s)52u-e6l1=t3r2^yla^o^!uj$#$tuhll3gov(of@70j^#_@&z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['trabajodefindegrado-bvl5.vercel.app']
 CORS_ORIGIN_WHITELIST = [
@@ -119,7 +119,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
   'default': {
-    'ENGINE': 'django.db.backends.postgresql',
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
     'NAME': 'neondb',
     'USER': 'spotifypremiumbrigita',
     'PASSWORD': 'dRamEwK05bYL',

@@ -88,16 +88,10 @@ class ParqueCalistenia(models.Model):
     nombre = models.CharField(max_length=255)
     placeId = models.CharField(max_length=255)
     descripcion = models.TextField(blank=True)
-    imagen = models.ImageField(blank=True, null=True)
+    imagenUrl = models.TextField(max_length=10000, blank=True, null=True)
 
     def __str__(self):
         return self.nombre
-
-    def get_imagen_url(self):
-        if self.imagen:
-            return self.imagen.url
-        else:
-            return ''
         
 class Material(models.Model):
     nombre = models.CharField(max_length=255)

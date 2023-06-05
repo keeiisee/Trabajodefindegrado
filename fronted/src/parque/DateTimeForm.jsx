@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { crear_reserva } from '../actions/reserva';
 import { Listbox } from '@headlessui/react';
 import { CheckIcon, SelectorIcon, XIcon } from '@heroicons/react/solid';
-export const DateTimeForm = ({ show, onClose, place_id }) => {
+export const DateTimeForm = ({ show, onClose, park, enBD }) => {
   if (!show) return null;
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
@@ -43,7 +43,7 @@ export const DateTimeForm = ({ show, onClose, place_id }) => {
   const dispatch = useDispatch()
   const handleSubmit = (event) => {
     event.preventDefault();
-    dispatch(crear_reserva(place_id, date, time, selectedMaterials))
+    dispatch(crear_reserva(park, date, time, selectedMaterials, enBD))
     onClose();
   };
   //si

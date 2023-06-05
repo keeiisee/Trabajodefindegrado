@@ -48,30 +48,16 @@ export const ParkCard = ({ park }) => {
   const handleCloseModal = () => {
     setShowModal(false);
   };
-//nuevo
-const [showNotification, setShowNotification] = useState(false);
 
-const handleNotification = () => {
-  setShowNotification(true);
-  setTimeout(() => {
-    setShowNotification(false);
-  }, 3000);
-};
 
 const handleClick = () => {
-  if (showDiv) {
     handleOpenModal();
-  } else {
-    handleNotification();
-  }
 };
   return (
 
 <div>
       <div
-        className={`border-2 border-gray-200 p-4 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 ease-in-out mb-4 ${
-          showDiv ? 'bg-green-400' : 'bg-red-400'
-        }`}
+        className={`border-2 border-gray-200 p-4 rounded-lg shadow-md transform hover:scale-105 transition-transform duration-300 ease-in-out mb-4 `}
       >
         <div className="relative">
           <img
@@ -81,22 +67,13 @@ const handleClick = () => {
             onError={handleImageError}
             onClick={handleClick}
           />
-          {showNotification && (
-            <div
-              className="absolute top-0 left-0 w-full h-full flex items-center justify-center p-4 text-white text-sm bg-red-500 rounded-md shadow-md animate-fade-in-down opacity-75"
-              style={{ backdropFilter: 'blur(3px)' }}
-            >
-              <div className="p-4 bg-red-500 rounded-md">
-                El parque no está disponible.
-              </div>
-            </div>
-          )}
+
         </div>
         <h3 className="text-lg font-medium">{name}</h3>
         <p>{vicinity}</p>
       </div>
 
-      <PhotoModal show={showModal} onClose={handleCloseModal} photoUrl={photoUrl} name={name} park={park} id={id} />
+      <PhotoModal show={showModal} onClose={handleCloseModal} photoUrl={photoUrl} name={name} park={park} id={id} enBD={showDiv}/>
     </div>
   );
 };

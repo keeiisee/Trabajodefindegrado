@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { DateTimeForm } from './DateTimeForm';
-import { AchievementForm } from './AchievementForm';
 //si
-export const PhotoModal = ({ show, onClose, photoUrl, name, park, id }) => {
+export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD }) => {
     if (!show) return null;
     const [showDateTimeForm, setShowDateTimeForm] = useState(false);
     const [reserva, setReserva] = useState([])
@@ -13,10 +12,10 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id }) => {
     const handleCloseDateTimeForm = () => {
         setShowDateTimeForm(false);
     };
-
-
+    
     useEffect(() => {
-        const fetchData = async () => {
+        if (enBD){
+           const fetchData = async () => {
             const config = {
                 headers: {
                     'Content-Type': 'application/json',
@@ -33,7 +32,9 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id }) => {
             }
         }
 
-        fetchData();
+        fetchData(); 
+        }
+        
     }, [])
     //nuevo
     const [materialVisibility, setMaterialVisibility] = useState([]);
@@ -65,15 +66,9 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id }) => {
                             </button>
                         </div>
 
-                        <DateTimeForm show={showDateTimeForm} onClose={handleCloseDateTimeForm} place_id={park.place_id} />
+                        <DateTimeForm show={showDateTimeForm} onClose={handleCloseDateTimeForm} park={park} enBD={enBD}/>
                         {/* <AchievementForm show={showAchievementForm} onClose={handleCloseAchievementForm} /> */}
                         <h2 className="text-2xl font-bold mb-2">{name}</h2>
-                        {/* <h3 className="text-xl font-semibold">Logros:</h3>
-                        <ul className="list-disc ml-6 mb-4">
-                            {achievements.map((achievement, index) => (
-                                <li key={index}>{achievement}</li>
-                            ))}
-                        </ul> */}
                         <h3 className="text-xl font-semibold">Personas apuntadas:</h3>
                         <ul className="list-disc ml-6">
                             {reserva.length > 0 &&

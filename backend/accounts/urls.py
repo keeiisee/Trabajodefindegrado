@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import PublicacionesDeOtroFav, UpdatePostDescriptionView, EliminarPublicacionView, DeleteUserView, PublicacionesFavoritas, UltimasPublicacionesNoAmigosView,LikePublicacionView, UpdateProfileImageView, CrearProfileView, CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
+from .views import CrearParqueCalisteniaView, PublicacionesDeOtroFav, UpdatePostDescriptionView, EliminarPublicacionView, DeleteUserView, PublicacionesFavoritas, UltimasPublicacionesNoAmigosView,LikePublicacionView, UpdateProfileImageView, CrearProfileView, CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
 
 router = routers.DefaultRouter()
 router.register(r'profiles/profiles', ProfileList)
@@ -42,5 +42,6 @@ urlpatterns = [
 
 
     path('reservas/parque/<int:pk>/', ReservasPorParque.as_view(), name='reservas_por_parque'),
+    path('parque/create/', CrearParqueCalisteniaView.as_view(), name='create_parque'),
     
 ]

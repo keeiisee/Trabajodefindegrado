@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from 'react'
+
+import { useParams } from 'react-router-dom';
 import Post1 from '../probar/Post1';
 
-
-const MisMeGusta = () => {
-
+const MeGustaDeOtro = () => {
+    const routeParams = useParams()
     const [publicacionesFavoritas, setPublicacionesFavoritas] = useState([]);
 
     useEffect(() => {
         const obtenerPublicacionesFavoritas = async () => {
-            try {
-                const response = await fetch('http://localhost:8000/accounts/publicaciones/favoritas/', {
-                    method: 'GET',
+            try {      
+                const response = await fetch('http://localhost:8000/accounts/publicacionesDeOtro/favoritas/', {
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `JWT ${localStorage.getItem('access')}`,
-                    }
+                    },
+                    body: JSON.stringify({'id': routeParams.id})
                 });
                 const publicacionesJson = await response.json();
                 setPublicacionesFavoritas(publicacionesJson);
@@ -52,26 +54,8 @@ const MisMeGusta = () => {
                     </div>
                 </div>
             </section>
-            {/* <section className="text-gray-600 body-font">
-                        <div className="container px- py-24 mx-auto">
-                            <div className="flex flex-wrap -m-5">
-
-                                {publicacionesFavoritas.map((imagen) => (
-                                    <ImagenInicio key={imagen.id} imagen={imagen} />
-                                ))}
-
-                            </div>
-                        </div>
-                    </section> */}
-            {/* <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4">
-                        {publicacionesFavoritas.map((imagen) => (
-                            <ImagenInicio key={imagen.id} imagen={imagen} />
-                        ))}
-                    </div> */}
-            {/* </div>
-            </div> */}
         </>
     )
 }
 
-export default MisMeGusta
+export default MeGustaDeOtro

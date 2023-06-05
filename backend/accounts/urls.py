@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import UpdatePostDescriptionView, EliminarPublicacionView, DeleteUserView, PublicacionesFavoritas, UltimasPublicacionesNoAmigosView,LikePublicacionView, UpdateProfileImageView, CrearProfileView, CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
+from .views import PublicacionesDeOtroFav, UpdatePostDescriptionView, EliminarPublicacionView, DeleteUserView, PublicacionesFavoritas, UltimasPublicacionesNoAmigosView,LikePublicacionView, UpdateProfileImageView, CrearProfileView, CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
 
 router = routers.DefaultRouter()
 router.register(r'profiles/profiles', ProfileList)
@@ -29,6 +29,7 @@ urlpatterns = [
     path('crear/publicacion/', CrearPublicacionView.as_view(), name='create_publi'),
     path('like/publicacion/', LikePublicacionView.as_view(), name='like_publi'),
     path('publicaciones/favoritas/', PublicacionesFavoritas.as_view(), name='publicaciones_favoritas'),
+    path('publicacionesDeOtro/favoritas/', PublicacionesDeOtroFav.as_view(), name='publicaciones_favoritas'),
     path('publicacion/delete/', EliminarPublicacionView.as_view(), name='eliminar_publicacion'),
     path('modificar/publicacion/', UpdatePostDescriptionView.as_view(), name='eliminar_update'),
 

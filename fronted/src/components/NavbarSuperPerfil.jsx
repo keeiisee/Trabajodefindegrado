@@ -1,45 +1,44 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Navbarperfil from '../containers/Perfil/Navbarperfil';
-import MediaQuery from 'react-responsive';
 
-export const NavbarSuperPerfil = () => {
+export const NavbarSuperPerfil = ({ profile: profileProp }) => {
     const [isOpen, setIsOpen] = useState(false);
     function toggleMenu() {
-        setIsOpen(!isOpen);
+      setIsOpen(!isOpen);
     }
-    const [profileI, setProfile] = useState("");
-
+    const [profile, setProfile] = useState(profileProp);
     useEffect(() => {
+      if (profileProp) {
+        setProfile(profileProp);
+      } else {
         const fetchData = async () => {
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `JWT ${localStorage.getItem('access')}`,
-                }
-            };
-            try {
-
-                const responseProfile = await fetch('http://localhost:8000/accounts/profile/', config);
-                const dataProfile = await responseProfile.json();
-                setProfile(dataProfile)
-
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
+          const config = {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `JWT ${localStorage.getItem("access")}`,
+            },
+          };
+          try {
+            const responseProfile = await fetch(
+              "http://localhost:8000/accounts/profile/",
+              config
+            );
+            const dataProfile = await responseProfile.json();
+            setProfile(dataProfile);
+          } catch (error) {
+            console.log(error);
+          }
+        };
         fetchData();
-    }, []);
-
+      }
+    }, [profileProp]);
+  
     const url = useMemo(() => {
-        if (profileI) {
-            return profileI[0].imagen;
-        }
-        return '';
-    }, [profileI]);
-
+      if (profile) {
+        return profile[0].imagen;
+      }
+      return "";
+    }, [profile]);
     return (
         <>
             <nav className="bg-gradient-to-r from-purple-600 via-indigo-500 to-blue-600 py-4 px-6 shadow-md">
@@ -142,11 +141,6 @@ export const NavbarSuperPerfil = () => {
                     </div>
                 </div>
             </nav>
-            {/* <MediaQuery minDeviceWidth={640}>
-                <Navbarperfil></Navbarperfil>
-            </MediaQuery> */}
-            {/* {!isMobile && <Navbarperfil />} */}
-
         </>
     )
 }

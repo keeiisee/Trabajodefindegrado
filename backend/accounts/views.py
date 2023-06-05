@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, viewsets, status
 from rest_framework.response import Response
 from .models import Material, Profile, UserAccount, Publicacion, ParqueCalistenia, Reserva
-from .serializers import ProfileUpdateSerializer, PublicacionSerializer, ReservaCreateSerializer, ProfileCreateSerializer, UserCreateSerializerView, PublicacionCreateSerializer, ParqueCalisteniaCreateSerializer
+from .serializers import ProfileOtherSerializer, UserSearchSerializerView, ProfileUpdateSerializer, PublicacionSerializer, ReservaCreateSerializer, ProfileCreateSerializer, UserCreateSerializerView, PublicacionCreateSerializer, ParqueCalisteniaCreateSerializer
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.generics import ListAPIView
@@ -65,7 +65,9 @@ class UltimasPublicacionesNoAmigosView(generics.GenericAPIView):
         
         no_amigos_profiles = []
         for no_amigo in no_amigos:
-            no_amigos_profiles.append(Profile.objects.get(user=no_amigo))
+            perfil_no_amigo = Profile.objects.filter(user=no_amigo, is_private=False).first()
+            if perfil_no_amigo:
+                no_amigos_profiles.append(perfil_no_amigo)
 
         # Si hay menos de 5 usuarios no amigos, selecciona todos
         if len(no_amigos_profiles) <= 5:
@@ -109,13 +111,42 @@ class UltimaPublicacionView(generics.GenericAPIView):
 class PublicacionesFavoritas(APIView):
 
     def get(self, request):
-        user = UserAccount.objects.get(email=request.user.email)
-        profile = Profile.objects.get(user=user)
+        user = get_object_or_404(UserAccount, email=request.user.email)
+        profile = get_object_or_404(Profile, user=user)
         publicaciones = profile.misMeGustan.all()
 
-        serializer = PublicacionSerializer(publicaciones, many=True, context={'request': request})
-        return Response(serializer.data)
+        # Filtrar publicaciones de usuarios que no son amigos y tienen perfiles privados
+        publicaciones_filtradas = []
+        for publicacion in publicaciones:
+            autor_profile = publicacion.autor
+            if not (autor_profile.is_private and autor_profile.user not in profile.amigos.all()):
+                publicaciones_filtradas.append(publicacion)
 
+        serializer = PublicacionSerializer(publicaciones_filtradas, many=True, context={'request': request})
+        return Response(serializer.data)
+    
+    
+class PublicacionesDeOtroFav(APIView):
+
+    def post(self, request):
+        user_id = request.data.get('id')
+        if not user_id:
+            return Response({"detail": "User ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = UserAccount.objects.get(id=user_id)
+            profile = Profile.objects.get(user=user)
+            publicaciones = profile.misMeGustan.all()
+
+            serializer = PublicacionSerializer(publicaciones, many=True, context={'request': request})
+            return Response(serializer.data)
+
+        except UserAccount.DoesNotExist:
+            return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        except Profile.DoesNotExist:
+            return Response({"detail": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
+        
 class LikePublicacionView(generics.GenericAPIView):
     
     def post(self, request, *args, **kwargs):
@@ -155,122 +186,99 @@ class ReservasPorParque(ListAPIView):
     
 class RemoveFriendView(APIView):
     def post(self, request):
-        friend_id = request.data.get('friend_id')
-        if friend_id is None:
-            return Response({'error': 'ID de amigo no proporcionado'}, status=status.HTTP_400_BAD_REQUEST)
+        user_id = request.user.id
+        friend_id = request.data.get('recipient_id')
+
+        if not friend_id:
+            return Response({"error": "No se proporcionó un ID de amigo"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            friend = UserAccount.objects.get(pk=friend_id)
-        except UserAccount.DoesNotExist:
-            return Response({'error': 'Amigo no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+            user_profile = Profile.objects.get(user__id=user_id)
+            friend_profile = Profile.objects.get(user__id=friend_id)
+        except Profile.DoesNotExist:
+            return Response({"error": "Perfil no encontrado"}, status=status.HTTP_404_NOT_FOUND)
 
-        user_profile = request.user.profile
-        friend_profile = friend.profile
-
-        # Comprobar si son amigos
-        if friend not in user_profile.amigos.all():
-            return Response({'error': 'El usuario no es tu amigo'}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Eliminar la amistad: quitar al amigo del campo amigos en ambos perfiles
-        user_profile.amigos.remove(friend)
-        friend_profile.amigos.remove(request.user)
+        user_profile.amigos.remove(friend_profile.user)
+        friend_profile.amigos.remove(user_profile.user)
 
         user_profile.save()
         friend_profile.save()
 
-        serializer = ProfileCreateSerializer(user_profile)
+        serializer = ProfileOtherSerializer(user_profile)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
         
 class AddFriendView(APIView):
     def post(self, request):
-        user_id = request.data.get('user_id')
-        if user_id is None:
-            return Response({'error': 'ID de usuario no proporcionado'}, status=status.HTTP_400_BAD_REQUEST)
+        user_id = request.user.id
+        requester_id = request.data.get('recipient_id')
+
+        if not requester_id:
+            return Response({"error": "No se proporcionó un ID de solicitante"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            friend = UserAccount.objects.get(pk=user_id)
-        except UserAccount.DoesNotExist:
-            return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+            user_profile = Profile.objects.get(user__id=user_id)
+            requester_profile = Profile.objects.get(user__id=requester_id)
+        except Profile.DoesNotExist:
+            return Response({"error": "Perfil no encontrado"}, status=status.HTTP_404_NOT_FOUND)
 
-        user_profile = request.user.profile
-        friend_profile = friend.profile
+        user_profile.solicitudRecibida.remove(requester_profile.user)
+        requester_profile.solicitudEnviada.remove(user_profile.user)
 
-        # Comprobar si la solicitud de amistad fue recibida
-        if friend not in user_profile.solicitudRecibida.all():
-            return Response({'error': 'Solicitud de amistad no recibida'}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Aceptar la solicitud de amistad: agregar al campo amigos y eliminar del campo solicitudRecibida
-        user_profile.amigos.add(friend)
-        user_profile.solicitudRecibida.remove(friend)
-
-        # Agregar al usuario que realiza la solicitud como amigo del usuario que recibe la solicitud
-        friend_profile.amigos.add(request.user)
-
-        # Eliminar la solicitud enviada del perfil del usuario que realiza la solicitud
-        friend_profile.solicitudEnviada.remove(request.user)
-
-        user_profile.save()
-        friend_profile.save()
-
-        serializer = ProfileCreateSerializer(user_profile)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-class SendFriendRequestView(APIView):
-    def post(self, request):
-        user_id = request.data.get('user_id')
-        if user_id is None:
-            return Response({'error': 'ID de usuario no proporcionado'}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            recipient = UserAccount.objects.get(pk=user_id)
-        except UserAccount.DoesNotExist:
-            return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
-
-        user_profile = request.user.profile
-        recipient_profile = recipient.profile
-
-        # Añadir al usuario con ese ID al campo solicitudEnviada del perfil del usuario que realiza la solicitud
-        user_profile.solicitudEnviada.add(recipient)
-
-        # Añadir al usuario que realiza la solicitud al campo solicitudRecibida del perfil del usuario que recibe la solicitud
-        recipient_profile.solicitudRecibida.add(request.user)
-
-        user_profile.save()
-        recipient_profile.save()
-
-        serializer = ProfileCreateSerializer(user_profile)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-class RejectFriendRequestView(APIView):
-    def post(self, request):
-        user_id = request.data.get('user_id')
-        if user_id is None:
-            return Response({'error': 'ID de usuario no proporcionado'}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            requester = UserAccount.objects.get(pk=user_id)
-        except UserAccount.DoesNotExist:
-            return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
-
-        user_profile = request.user.profile
-        requester_profile = requester.profile
-
-        # Comprobar si la solicitud de amistad fue recibida
-        if requester not in user_profile.solicitudRecibida.all():
-            return Response({'error': 'Solicitud de amistad no recibida'}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Eliminar al usuario con ese ID del campo solicitudRecibida del perfil del usuario que realiza la solicitud
-        user_profile.solicitudRecibida.remove(requester)
-
-        # Eliminar al usuario que realiza la solicitud del campo solicitudEnviada del perfil del usuario que recibió la solicitud
-        requester_profile.solicitudEnviada.remove(request.user)
+        user_profile.amigos.add(requester_profile.user)
+        requester_profile.amigos.add(user_profile.user)
 
         user_profile.save()
         requester_profile.save()
 
-        serializer = ProfileCreateSerializer(user_profile)
+        serializer = ProfileOtherSerializer(user_profile)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class SendFriendRequestView(APIView):
+    def post(self, request):
+        sender_id = request.user.id
+        recipient_id = request.data.get('recipient_id')
+
+        if not recipient_id:
+            return Response({"error": "No se proporcionó un ID de destinatario"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            sender_profile = Profile.objects.get(user__id=sender_id)
+            recipient_profile = Profile.objects.get(user__id=recipient_id)
+        except Profile.DoesNotExist:
+            return Response({"error": "Perfil no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+        sender_profile.solicitudEnviada.add(recipient_profile.user)
+        recipient_profile.solicitudRecibida.add(sender_profile.user)
+
+        sender_profile.save()
+        recipient_profile.save()
+
+        serializer = ProfileOtherSerializer(sender_profile)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class RejectFriendRequestView(APIView):
+    def post(self, request):
+        user_id = request.user.id
+        requester_id = request.data.get('recipient_id')
+
+        if not requester_id:
+            return Response({"error": "No se proporcionó un ID de solicitante"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user_profile = Profile.objects.get(user__id=user_id)
+            requester_profile = Profile.objects.get(user__id=requester_id)
+        except Profile.DoesNotExist:
+            return Response({"error": "Perfil no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+        user_profile.solicitudRecibida.remove(requester_profile.user)
+        requester_profile.solicitudEnviada.remove(user_profile.user)
+
+        user_profile.save()
+        requester_profile.save()
+
+        serializer = ProfileOtherSerializer(user_profile)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ReservaCalisteniaList(viewsets.ModelViewSet):
@@ -353,10 +361,10 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class UserListLeter(viewsets.ModelViewSet):
     queryset = UserAccount.objects.all()
-    serializer_class = UserCreateSerializerView
+    serializer_class = UserSearchSerializerView
     def get_queryset(self):
         letter = self.kwargs['pk']
-        return self.queryset.filter(name__icontains=letter, is_active=True).exclude(pk=self.request.user.pk)
+        return self.queryset.filter(name__icontains=letter, is_active=True, profile__isnull=False).exclude(pk=self.request.user.pk)
             
 
 class CrearPublicacionView(APIView):

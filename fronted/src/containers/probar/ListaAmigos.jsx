@@ -8,6 +8,9 @@ const ListaAmigos = ({ friends, onClose }) => (
     <div className=" w-full md:w-72 relative">
       <h2 className="font-bold text-xl mb-4">Amigos</h2>
       <div className="space-y-4">
+        {friends.length <= 0 &&
+          <p className="font-bold text-decoration-line: underline">No tienes amigos</p>
+        }
         {friends.map((friend, index) => (
           <Amigo key={index} name={friend[0].user_name} imageUrl={friend[0].imagen} id={friend[0].user_id}/>
         ))}

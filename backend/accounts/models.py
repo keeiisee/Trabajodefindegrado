@@ -31,7 +31,6 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    is_th = models.BooleanField(default=False)
     objects = UserAccountManager()
 
     USERNAME_FIELD = 'email'
@@ -43,6 +42,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.name
     
+
 class Profile(models.Model):
     user = models.OneToOneField(UserAccount, on_delete=models.CASCADE)
     descripcion = models.TextField(blank=True)
@@ -53,9 +53,13 @@ class Profile(models.Model):
     imagen = models.ImageField(default='descarga.png', blank=True, null=True)
     parques_calistenia = models.ManyToManyField('ParqueCalistenia', blank=True, related_name='usuarios_inscritos')
     misMeGustan = models.ManyToManyField('Publicacion', blank=True, related_name='mis_mg')
+    is_private = models.BooleanField(default=False)
+    telefono = models.CharField(max_length=20, blank=True, null=True)
+    
+    edad = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return self.descripcion
+        return self.user.name
 
     def get_imagen_url(self):
         if self.imagen:

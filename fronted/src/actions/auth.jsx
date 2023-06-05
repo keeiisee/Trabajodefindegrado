@@ -21,14 +21,14 @@ import {
     PROFILE_LOADED_FAIL,
 } from './types';
 
-export const removeFriend = (user_id) => async dispatch => {
+export const removeFriend = (recipient_id) => async dispatch => {
     const config = {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `JWT ${localStorage.getItem('access')}`,
         }
     };
-    const body = JSON.stringify({ friend_id: user_id });
+    const body = JSON.stringify({ recipient_id: recipient_id });
     try {
         await axios.post(`http://localhost:8000/accounts/remove_friend/`, body, config);
 
@@ -56,14 +56,14 @@ export const publicaionesAmigos = () => async dispatch => {
 
     }
 }
-export const addFriend = (user_id) => async dispatch => {
+export const addFriend = (recipient_id) => async dispatch => {
     const config = {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `JWT ${localStorage.getItem('access')}`,
         }
     };
-    const body = JSON.stringify({ user_id: user_id });
+    const body = JSON.stringify({ recipient_id: recipient_id });
     try {
         await axios.post(`http://localhost:8000/accounts/add_friend/`, body, config);
 
@@ -72,14 +72,15 @@ export const addFriend = (user_id) => async dispatch => {
     }
 }
 
-export const sendFriend = (user_id) => async dispatch => {
+export const sendFriend = (recipient_id) => async dispatch => {
     const config = {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `JWT ${localStorage.getItem('access')}`,
         }
     };
-    const body = JSON.stringify({ user_id: user_id });
+    
+    const body = JSON.stringify({ recipient_id: recipient_id });
     try {
         await axios.post(`http://localhost:8000/accounts/send_friend/`, body, config);
 
@@ -88,14 +89,14 @@ export const sendFriend = (user_id) => async dispatch => {
     }
 }
 
-export const rejectFriend = (user_id) => async dispatch => {
+export const rejectFriend = (recipient_id) => async dispatch => {
     const config = {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `JWT ${localStorage.getItem('access')}`,
         }
     };
-    const body = JSON.stringify({ user_id: user_id });
+    const body = JSON.stringify({ recipient_id: recipient_id });
     try {
         await axios.post(`http://localhost:8000/accounts/reject_friend/`, body, config);
 
@@ -142,11 +143,14 @@ export const load_personas = (palabra) => async dispatch => {
 //         console.log(error);
 //     }
 // }
-export const modificar_perfil = (imagen, descripcion, user) => async dispatch => {
+export const modificar_perfil = (imagen, descripcion, user,edad, telefono, privado) => async dispatch => {
     const formData = new FormData();
     formData.append('user_id', user.id);
     formData.append('descripcion', descripcion);
-    console.log(imagen)
+    formData.append('edad', edad);
+    formData.append('telefono', telefono);
+    formData.append('is_private', privado);
+
     if (imagen !== null) {
         formData.append('imagen', imagen);
     }
@@ -163,12 +167,15 @@ export const modificar_perfil = (imagen, descripcion, user) => async dispatch =>
         console.log(error);
     }
 }
-export const crear_perfil = (imagen, descripcion, logros, user) => async dispatch => {
+export const crear_perfil = (imagen, descripcion, telefono, user, edad, privado) => async dispatch => {
 
     const formData = new FormData();
     formData.append('user', user.id);
     formData.append('descripcion', descripcion);
     formData.append('imagen', imagen);
+    formData.append('edad', edad);
+    formData.append('telefono', telefono);
+    formData.append('is_private', privado);
 
     const config = {
         headers: {

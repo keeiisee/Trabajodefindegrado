@@ -25,10 +25,10 @@ SECRET_KEY = 'django-insecure-s)52u-e6l1=t3r2^yla^o^!uj$#$tuhll3gov(of@70j^#_@&z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:5173',
-]
+ALLOWED_HOSTS = ["*"]
+# CORS_ORIGIN_WHITELIST = [
+#     'http://localhost:5173',
+# ]
 
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -191,7 +191,7 @@ SIMPLE_JWT = {
         'rest_framework_simplejwt.tokens.AccessToken',
     )
 }
-DOMAIN = ('localhost:5173') 
+# DOMAIN = ('localhost:5173') 
 SITE_NAME = ('CalistenicsApp') 
 DJOSER = {
     'LOGIN_FIELD': 'email',

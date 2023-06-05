@@ -64,12 +64,12 @@ const ListaDePEtionDeAmistad = () => {
 
     const aceptarSolicitud = (id) => {
         dispatch(addFriend(id))
-        window.location.reload();
+      
     };
 
     const denegarSolicitud = (id) => {
         dispatch(rejectFriend(id))
-        window.location.reload();
+        
     };
     
 

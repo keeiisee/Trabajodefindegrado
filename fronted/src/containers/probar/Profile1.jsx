@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { MailIcon, PhoneIcon, CakeIcon } from '@heroicons/react/outline';
 import { UserGroupIcon, NewspaperIcon, CogIcon, BellIcon } from '@heroicons/react/solid';
 import styled from '@emotion/styled';
@@ -9,34 +9,26 @@ import { deleted_user, modificar_perfil } from '../../actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import TabSelectorNotis from './TabSelectorNotis';
+import ToggleButton from './ToggleButton';
+import TailwindSpinner from './TailwindSpinner';
 
 const ProfileCard = styled.div`
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
   `;
 
-function Profile1({ datas }) {
-    //nuevo
-
-
+function Profile1({ datas, onProfileUpdate }) {
+    const [privateProfile, setPrivateProfile] = useState(datas.is_private);
+    const [publicaciones, setPublicaciones] = useState(true)
+    const [amigos, setAmigos] = useState(false)
+    const [notificaciones, setNotificaciones] = useState(false)
+    const [descripcionError, setDescripcionError] = useState("");
+    const [telefonoError, setTelefonoError] = useState("");
+    const [edadError, setEdadError] = useState("");
     const [showModal, setShowModal] = useState(false);
-
-    const handleDeleteUser = (confirm) => {
-        if (confirm) {
-            dispatch(deleted_user())
-            navigate('/'); // Llamamos la función eliminar si se confirma
-        }
-        setShowModal(false); // Cerramos el modal en ambos casos (confirmar o cancelar)
-    };
-    const inputFileRef = useRef(null);
-    const user = useSelector(state => state.auth.user);
-    const onChange = e => {
-        if (e.target.type === 'file') {
-            setFormData({ ...formData, [e.target.name]: e.target.files[0] });
-        } else {
-            setFormData({ ...formData, [e.target.name]: e.target.value });
-        }
-    };
+    const [isSaving, setIsSaving] = useState(false);
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
     const [formData, setFormData] = useState({
         descripcion: '',
         imagen: null,
@@ -45,24 +37,13 @@ function Profile1({ datas }) {
 
     });
     const { descripcion, imagen, edad, telefono } = formData;
-    useEffect(() => {
-        const fetchData = async () => {
-            setFormData({
-                ...formData,
-                descripcion: datas.descripcion,
-                imagen: null,
-                edad: datas.edad,
-                telefono: datas.telefono,
-            });
-        };
-        fetchData();
-    }, [datas]);
-
     const [editMode, setEditMode] = useState(false);
-    function clickConfig() {
+
+    const clickConfig = useCallback(() => {
         setEditMode(true);
-    }
-    function cancelEdit() {
+    }, []);
+
+    const cancelEdit = useCallback(() => {
         setFormData({
             ...formData,
             descripcion: datas.descripcion,
@@ -71,37 +52,24 @@ function Profile1({ datas }) {
             telefono: datas.telefono,
         });
         setEditMode(false);
-    }
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-    // Añadir funciones para eliminar usuario y guardar modificaciones aquí
+        setPrivateProfile(datas.is_private);
+    }, [datas, formData]);
 
-    function saveChanges() {
-        
-        dispatch(modificar_perfil(imagen, descripcion, user))
-        window.location.reload()
-        // Actualizar los datos del usuario aquí
-        setEditMode(false);
-    }
-    //
-    const [publicaciones, setPublicaciones] = useState(true)
-    const [amigos, setAmigos] = useState(false)
-    const [notificaciones, setNotificaciones] = useState(false)
-    function clickPubli() {
-        setPublicaciones(true)
-        setAmigos(false)
-        setNotificaciones(false)
-    }
-    function clickAmi() {
-        setAmigos(true)
-    }
-    function clickNoti() {
-        setPublicaciones(false)
-        setAmigos(false)
-        setNotificaciones(true)
-    }
+    const handleToggle = useCallback((state) => {
+        setPrivateProfile(state);
+    }, []);
 
-    const [amigosList, setAmigosList] = useState([]);
+    // Efectos
+    useEffect(() => {
+        setFormData({
+            ...formData,
+            descripcion: datas.descripcion,
+            imagen: null,
+            edad: datas.edad,
+            telefono: datas.telefono,
+        });
+    }, [datas]);
+
     useEffect(() => {
         const fetchData = async () => {
             const config = {
@@ -119,7 +87,6 @@ function Profile1({ datas }) {
                         if (response.data) {
                             return response.data;
                         }
-
                     } catch (error) {
                         console.error(`Error fetching data for friend ${amigo}:`, error);
                     }
@@ -129,8 +96,6 @@ function Profile1({ datas }) {
                     const validAmigos = fetchAmigos.filter((amigo) => amigo !== undefined);
                     setAmigosList(validAmigos);
                 });
-
-
             } catch (error) {
                 console.log(error);
             }
@@ -138,6 +103,82 @@ function Profile1({ datas }) {
 
         fetchData();
     }, []);
+
+    const handleDeleteUser = (confirm) => {
+        if (confirm) {
+            dispatch(deleted_user())
+            navigate('/'); // Llamamos la función eliminar si se confirma
+        }
+        setShowModal(false); // Cerramos el modal en ambos casos (confirmar o cancelar)
+    };
+    const inputFileRef = useRef(null);
+    const user = useSelector(state => state.auth.user);
+    const onChange = e => {
+        if (e.target.type === 'file') {
+            setFormData({ ...formData, [e.target.name]: e.target.files[0] });
+        } else {
+            setFormData({ ...formData, [e.target.name]: e.target.value });
+        }
+    };
+
+    const saveChanges = useCallback(() => {
+        let isValid = true;
+
+        if (!descripcion) {
+            setDescripcionError("El campo de biografia es obligatorio.");
+            isValid = false;
+        } else {
+            setDescripcionError("");
+        }
+
+        if (!telefono) {
+            setTelefonoError("El campo de teléfono es obligatorio.");
+            isValid = false;
+        } else {
+            setTelefonoError("");
+        }
+
+        if (!edad) {
+            setEdadError("El campo de edad es obligatorio.");
+            isValid = false;
+        } else {
+            setEdadError("");
+        }
+
+        if (isValid) {
+            setIsSaving(true);
+            // Resto del código para enviar el formulario
+            dispatch(modificar_perfil(imagen, descripcion, user, edad, telefono, privateProfile))
+            // window.location.reload()
+            setTimeout(() => {
+                setIsSaving(false);
+                // Llamar a onProfileUpdate para notificar que el perfil ha sido actualizado
+                onProfileUpdate();
+                setEditMode(false);
+            }, 2000);
+
+            // Actualizar los datos del usuario aquí
+            
+        }
+
+    }, [dispatch, formData, privateProfile, datas.user, onProfileUpdate]);
+    //
+
+    function clickPubli() {
+        setPublicaciones(true)
+        setAmigos(false)
+        setNotificaciones(false)
+    }
+    function clickAmi() {
+        setAmigos(true)
+    }
+    function clickNoti() {
+        setPublicaciones(false)
+        setAmigos(false)
+        setNotificaciones(true)
+    }
+
+    const [amigosList, setAmigosList] = useState([]);
     return (
         <>
             <ProfileCard className="mt-10 mx-10 rounded-lg shadow-md p-6">
@@ -145,14 +186,14 @@ function Profile1({ datas }) {
 
                     {editMode ? (
                         <>
-                        <input type="file" className="form-control hidden"  ref={inputFileRef} onChange={(e) => onChange(e)} id="imagen" name="imagen" />
-                        <img
-                            src="https://logodix.com/logo/360469.png"
-                            alt="cambiarImagen"
-                            className="w-24 h-24 rounded-full object-cover cursor-pointer mt-0"
-                            onClick={() => inputFileRef.current.click()}
-                        />
-                    </>
+                            <input type="file" className="form-control hidden" ref={inputFileRef} onChange={(e) => onChange(e)} id="imagen" name="imagen" />
+                            <img
+                                src="https://logodix.com/logo/360469.png"
+                                alt="cambiarImagen"
+                                className="w-24 h-24 rounded-full object-cover cursor-pointer mt-0"
+                                onClick={() => inputFileRef.current.click()}
+                            />
+                        </>
                     ) : (
                         <img
                             src={datas.imagen}
@@ -164,12 +205,16 @@ function Profile1({ datas }) {
                     {editMode ? (
                         <>
                             <h3 htmlFor="descripcion" className="form-label font-bold">Biografia:</h3>
-                            <input type="text" className="form-control" onChange={(e) => onChange(e)} id="descripcion" name="descripcion" value={descripcion} rows="3"></input>
-                            {/* <input
-                            className="text-sm bg-white text-white focus:outline-none"
-                            value={descripcion}
-                            onChange={(e) => setDescripcion(e.target.value)}
-                        /> */}
+                            <input
+                                required
+                                type="text"
+                                className="form-control"
+                                onChange={(e) => onChange(e)}
+                                id="descripcion"
+                                name="descripcion"
+                                value={descripcion}
+                                rows="3"
+                            />
                         </>
 
                     ) : (
@@ -179,6 +224,7 @@ function Profile1({ datas }) {
                         </>
 
                     )}
+                    {descripcionError && <p className='font-bold text-orange-500'>{descripcionError}</p>}
                 </div>
                 <ul className="text-sm space-y-2 mt-4">
                     <li className="flex items-center">
@@ -190,13 +236,17 @@ function Profile1({ datas }) {
                         Teléfono: {' '}
                         {editMode ? (
                             <input
+                                required
+                                name="telefono"
                                 className="bg-white text-black focus:outline-none ml-2"
                                 value={telefono}
                                 onChange={(e) => onChange(e)}
                             />
+
                         ) : (
-                            654345417
+                            <p>{datas.telefono}</p>
                         )}
+                        {telefonoError && <p className='ml-2 font-bold text-orange-500'>{telefonoError}</p>}
                     </li>
                     <li className="flex items-center">
                         <MailIcon className="h-5 w-5 mr-2" />
@@ -207,14 +257,44 @@ function Profile1({ datas }) {
                         Edad:{' '}
                         {editMode ? (
                             <input
+                                required
+                                name="edad"
                                 className="bg-white text-black focus:outline-none ml-2"
                                 value={edad}
                                 onChange={(e) => onChange(e)}
                             />
                         ) : (
-                            24
+                            <p>{datas.edad}</p>
                         )}
+                        {edadError && <p className='ml-2 font-bold text-orange-500'>{edadError}</p>}
                     </li>
+                    <li>
+                        <label
+                            className="flex items-center"
+                            htmlFor="perfil"
+                        >
+                            Perfil Privado
+                        </label>
+                        <div className="mb-4">
+                            {privateProfile &&
+                                <ToggleButton
+                                    initialState={privateProfile}
+                                    onToggle={handleToggle}
+                                    disabled={!editMode}
+                                />
+                            }
+                            {!privateProfile &&
+                                <ToggleButton
+                                    initialState={privateProfile}
+                                    onToggle={handleToggle}
+                                    disabled={!editMode}
+                                />
+                            }
+
+
+                        </div>
+                    </li>
+
                 </ul>
                 <div className="flex flex-wrap justify-center sm:justify-start space-y-4 sm:space-y-0 sm:space-x-4 mt-6">
                     <button onClick={clickAmi} className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
@@ -234,12 +314,22 @@ function Profile1({ datas }) {
                     </button>
                     {editMode ? (
                         <>
-                            <button
-                                onClick={saveChanges}
-                                className="bg-blue-500 text-white-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto"
-                            >
-                                Guardar
-                            </button>
+                            {
+                                isSaving ? (
+                                    <div className="flex justify-center items-center">
+                                        <TailwindSpinner />
+                                    </div>
+                                ) : (
+                                    <button
+                                        onClick={saveChanges}
+                                        className="bg-blue-500 text-white-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto"
+                                    >
+                                        Guardar
+                                    </button>
+                                )
+
+                            }
+
                             <button
                                 onClick={cancelEdit}
                                 className="bg-yellow-500 text-white-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto"
@@ -322,8 +412,8 @@ function Profile1({ datas }) {
                     </div>
                 </div>
             )}
-            {publicaciones && <TabSelector/>}
-            {notificaciones && <TabSelectorNotis/>}
+            {publicaciones && <TabSelector />}
+            {notificaciones && <TabSelectorNotis />}
             {amigos && (
                 <>
                     <ListaAmigos friends={amigosList} onClose={clickPubli} />

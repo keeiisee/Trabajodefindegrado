@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import ImagenInicio from '../../Inicio/ImagenInicio';
-import OtroNavbarPerfil from '../Perfil/OtroNavbarPerfil';
 import Post1 from '../probar/Post1';
+
 
 export const PublicacionDeOtro = () => {
 

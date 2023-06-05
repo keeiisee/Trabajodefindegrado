@@ -36,18 +36,32 @@ class UserCreateSerializer(UserCreateSerializer):
         model = User
         fields = ('id', 'email', 'name', 'password')
 
+class ProfileOtherSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(source='user.id', read_only=True)
+    user_name = serializers.CharField(source='user.name', read_only=True)
+
+    class Meta:
+        model = Profile
+        fields = ('user_id', 'user_name', 'descripcion', 'amigos', 'solicitudEnviada', 'solicitudRecibida', 'logros', 'imagen', 'parques_calistenia', 'misMeGustan', 'is_private', 'telefono', 'edad')
+        
 class ProfileCreateSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source='user.id', read_only=True)
     user_name = serializers.CharField(source='user.name', read_only=True)
     user_publicaciones = PublicacionSerializer(source="publicaciones", many=True, read_only=True)
     class Meta:
         model = Profile
-        fields = ('id', 'user','user_publicaciones', 'descripcion','parques_calistenia','logros','solicitudEnviada','solicitudRecibida','amigos','imagen','user_id', 'user_name',)
+        fields = ('id', 'user','user_publicaciones', 'descripcion','parques_calistenia','logros','solicitudEnviada','solicitudRecibida','amigos','imagen','user_id', 'user_name','telefono','edad','is_private')
 
 class UserCreateSerializerView(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id','name')
+
+class UserSearchSerializerView(serializers.ModelSerializer):
+    profile = ProfileCreateSerializer()
+    class Meta:
+        model = User
+        fields = ('id','name', 'profile')
 
 class PublicacionCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -76,15 +90,24 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
             'descripcion',
             'logros',
             'imagen',
+            'telefono',
+            'edad',
+            'is_private'
         ]
         extra_kwargs = {
             'descripcion': {'required': False},
             'imagen': {'required': False},
+            'telefono': {'required': False},
+            'edad': {'required': False},
+            'is_private': {'required': False},
         }
 
     def update(self, instance, validated_data):
+        instance.telefono = validated_data.get('telefono', instance.telefono)
+        instance.edad = validated_data.get('edad', instance.edad)
         instance.descripcion = validated_data.get('descripcion', instance.descripcion)
         instance.logros.set(validated_data.get('logros', instance.logros.all()))
+        instance.is_private = validated_data.get('is_private', instance.is_private)
   
         if 'imagen' in validated_data:
             instance.imagen = validated_data['imagen']

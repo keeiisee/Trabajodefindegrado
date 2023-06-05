@@ -1,59 +1,69 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import Post1 from './Post1';
 import { IoIosArrowDropdown } from 'react-icons/io';
 import { Disclosure } from '@headlessui/react';
+import Post1 from './Post1';
+
 const PaginaDeInicio1 = () => {
     const profile = useSelector(state => state.auth.profile);
     const [posts, setPost] = useState([]);
     const [filtro, setFiltro] = useState('amigos');
     useEffect(() => {
+
         const amigos = async () => {
+            if (profile) {
+                try {
+                    const response = await axios.get('http://localhost:8000/accounts/ultima_publi/', {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `JWT ${localStorage.getItem('access')}`, // Asumiendo que el token de autenticación se guarda en localStorage
+                        },
+                    });
 
-            try {
-                const response = await axios.get('http://localhost:8000/accounts/ultima_publi/', {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `JWT ${localStorage.getItem('access')}`, // Asumiendo que el token de autenticación se guarda en localStorage
-                    },
-                });
-
-                setPost(response.data);
-            } catch (error) {
-                console.error('Error al obtener las últimas publicaciones de los amigos:', error);
+                    setPost(response.data);
+                } catch (error) {
+                    console.error('Error al obtener las últimas publicaciones de los amigos:', error);
+                }
             }
+
         };
 
         const mg = async () => {
-            try {
-                const response = await fetch('http://localhost:8000/accounts/publicaciones/favoritas/', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `JWT ${localStorage.getItem('access')}`,
-                    }
-                });
-                const publicacionesJson = await response.json();
-                setPost(publicacionesJson);
-            } catch (error) {
-                console.error('Error al obtener las publicaciones favoritas:', error);
+            if (profile) {
+                try {
+                    const response = await fetch('http://localhost:8000/accounts/publicaciones/favoritas/', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `JWT ${localStorage.getItem('access')}`,
+                        }
+                    });
+                    const publicacionesJson = await response.json();
+                    setPost(publicacionesJson);
+                } catch (error) {
+                    console.error('Error al obtener las publicaciones favoritas:', error);
+                }
             }
+
         };
 
         const noAmigos = async () => {
-            try {
-                const response = await axios.get('http://localhost:8000/accounts/utlima_publiNoFriend/', {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `JWT ${localStorage.getItem('access')}`,
-                    }
-                });
+            if (profile) {
+                try {
+                    const response = await axios.get('http://localhost:8000/accounts/utlima_publiNoFriend/', {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `JWT ${localStorage.getItem('access')}`,
+                        }
+                    });
 
-                setPost(response.data);
-            } catch (error) {
-                console.error('Error al obtener las últimas publicaciones de usuarios no amigos:', error);
+                    setPost(response.data);
+                } catch (error) {
+                    console.error('Error al obtener las últimas publicaciones de usuarios no amigos:', error);
+                }
             }
+
         };
         if (filtro === 'amigos') {
             amigos();
@@ -70,11 +80,25 @@ const PaginaDeInicio1 = () => {
     const handleFiltroChange = (event) => {
         setFiltro(event.target.value);
     };
+
+    const images = [
+        {
+          id: 1,
+          url: 'https://via.placeholder.com/300',
+          description: 'Image 1',
+        },
+        {
+          id: 2,
+          url: 'https://via.placeholder.com/300',
+          description: 'Image 2',
+        },
+        // ... Agrega más imágenes aquí
+      ];
     return (
         <>
-        
+
             {profile && (
-                
+
                 <div className="container px-5 mx-auto mb-8 mt-8">
                     <Disclosure>
                         {({ open }) => (

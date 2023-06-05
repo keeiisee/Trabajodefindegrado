@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { PublicacionDeOtro } from '../Post/PublicacionDeOtro';
 import MisMeGusta from '../Post/MisMeGusta';
+import MeGustaDeOtro from '../Post/MeGustaDeOtro';
 
 const TabSelectorOtro = () => {
     const [activeTab, setActiveTab] = useState('publications');
@@ -42,7 +43,7 @@ const TabSelectorOtro = () => {
                 </button>
             </div>
             {activeTab === 'publications' && <PublicacionDeOtro />}
-            {activeTab === 'likes' && <MisMeGusta />}
+            {activeTab === 'likes' && <MeGustaDeOtro />}
         </>
 
     );

@@ -1,6 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.input-style {
+  border: 2px solid #e2e8f0;
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  width: 100%;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.input-style:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.button-style {
+  background-color: #667eea;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.button-style:hover {
+  background-color: #5a67d8;
+}
+
+.button-style:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.5);
+}
+
 .fade-appear,
 .fade-enter {
   opacity: 0;

@@ -1,5 +1,3 @@
-import { rgbToHex } from '@mui/material';
-
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [

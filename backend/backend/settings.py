@@ -107,25 +107,25 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'auth_system',
-#         'USER': 'postgres',
-#         'PASSWORD': '2203',
-#         'HOST': os.getenv('DB_HOST', 'localhost')
-#     }
-# }
 DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'neondb',
-    'USER': 'spotifypremiumbrigita',
-    'PASSWORD': 'dRamEwK05bYL',
-    'HOST': 'ep-lively-poetry-266441.eu-central-1.aws.neon.tech',
-    'PORT': '5432',
-  }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'auth_system',
+        'USER': 'postgres',
+        'PASSWORD': '2203',
+        'HOST': os.getenv('DB_HOST', 'localhost')
+    }
 }
+# DATABASES = {
+#   'default': {
+#     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#     'NAME': 'neondb',
+#     'USER': 'spotifypremiumbrigita',
+#     'PASSWORD': 'dRamEwK05bYL',
+#     'HOST': 'ep-lively-poetry-266441.eu-central-1.aws.neon.tech',
+#     'PORT': '5432',
+#   }
+# }
 
 
 # Password validation

@@ -1,5 +1,5 @@
 import React from 'react'
-import Amigo from './Amigo';
+import Amigo from '../probar/Amigo';
 import PopUpAmigo from './PopUpAmigo';
 import { MdClose } from 'react-icons/md';
 const ListaAmigos = ({ friends, onClose }) => (

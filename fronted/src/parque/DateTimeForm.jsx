@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { crear_reserva } from '../actions/reserva';
 import { Listbox } from '@headlessui/react';
 import { CheckIcon, SelectorIcon, XIcon } from '@heroicons/react/solid';
+
 export const DateTimeForm = ({ show, onClose, park, enBD }) => {
   if (!show) return null;
   const [date, setDate] = useState('');
@@ -48,6 +49,7 @@ export const DateTimeForm = ({ show, onClose, park, enBD }) => {
   };
   //si
   return (
+    
     <form onSubmit={handleSubmit} className="space-y-4 mt-4">
       <div>
         <label htmlFor="date" className="block text-sm font-medium text-gray-700">

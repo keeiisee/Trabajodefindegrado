@@ -49,7 +49,6 @@ class Profile(models.Model):
     amigos = models.ManyToManyField(UserAccount, blank=True, related_name='user_friends')
     solicitudEnviada = models.ManyToManyField(UserAccount, blank=True, related_name='sen_solicitud_firend')
     solicitudRecibida = models.ManyToManyField(UserAccount, blank=True, related_name='recieve_solicitud_firend')
-    logros = models.ManyToManyField('Logro', blank=True, related_name='usuarios_con_logro')
     imagen = models.ImageField(default='descarga.png', blank=True, null=True)
     parques_calistenia = models.ManyToManyField('ParqueCalistenia', blank=True, related_name='usuarios_inscritos')
     misMeGustan = models.ManyToManyField('Publicacion', blank=True, related_name='mis_mg')
@@ -67,13 +66,6 @@ class Profile(models.Model):
         else:
             return ''
 
-class Logro(models.Model):
-    nombre = models.CharField(max_length=100)
-    descripcion = models.CharField(max_length=255, blank=True)
-
-    def __str__(self):
-        return self.nombre
-
 class Publicacion(models.Model):
     autor = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='publicaciones')
     imagen = models.ImageField(default='descarga.png', blank=True, null=True)
@@ -89,7 +81,9 @@ class ParqueCalistenia(models.Model):
     placeId = models.CharField(max_length=255)
     descripcion = models.TextField(blank=True)
     imagenUrl = models.TextField(max_length=10000, blank=True, null=True)
-
+    baneado = models.BooleanField(default=False)
+    likes = models.ManyToManyField(UserAccount, blank=True, related_name='parques_likes')  # Campo para 'likes'
+    dislikes = models.ManyToManyField(UserAccount, blank=True, related_name='parques_dislikes') # Campo para 'dislikes'
     def __str__(self):
         return self.nombre
         

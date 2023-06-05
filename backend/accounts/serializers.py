@@ -1,7 +1,7 @@
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 #from .models import Post, Comment
-from .models import Profile, Publicacion, ParqueCalistenia, Reserva, Logro, Material
+from .models import Profile, Publicacion, ParqueCalistenia, Reserva, Material
 from rest_framework import serializers
 
 User = get_user_model()
@@ -17,12 +17,6 @@ class MaterialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Material
         fields = ['id', 'nombre']       
-# class PublicacionCreateSerializer(serializers.ModelSerializer):
-#     #autor = serializers.StringRelatedField()
-#     #imagen = ImagenUrlField()
-#     class Meta:
-#         model = Publicacion
-#         fields = ['id','autor', 'imagen', 'descripcion', 'fecha_publicacion', 'like']
 
 class PublicacionSerializer(serializers.ModelSerializer):
     #autor = serializers.StringRelatedField()
@@ -42,15 +36,16 @@ class ProfileOtherSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('user_id', 'user_name', 'descripcion', 'amigos', 'solicitudEnviada', 'solicitudRecibida', 'logros', 'imagen', 'parques_calistenia', 'misMeGustan', 'is_private', 'telefono', 'edad')
+        fields = ('user_id', 'user_name', 'descripcion', 'amigos', 'solicitudEnviada', 'solicitudRecibida', 'imagen', 'parques_calistenia', 'misMeGustan', 'is_private', 'telefono', 'edad')
         
 class ProfileCreateSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source='user.id', read_only=True)
     user_name = serializers.CharField(source='user.name', read_only=True)
+    user_email = serializers.CharField(source='user.email', read_only=True)
     user_publicaciones = PublicacionSerializer(source="publicaciones", many=True, read_only=True)
     class Meta:
         model = Profile
-        fields = ('id', 'user','user_publicaciones', 'descripcion','parques_calistenia','logros','solicitudEnviada','solicitudRecibida','amigos','imagen','user_id', 'user_name','telefono','edad','is_private')
+        fields = ('id', 'user','user_publicaciones', 'descripcion','parques_calistenia','solicitudEnviada','solicitudRecibida','amigos','imagen','user_id', 'user_name','user_email','telefono','edad','is_private')
 
 class UserCreateSerializerView(serializers.ModelSerializer):
     class Meta:
@@ -81,14 +76,11 @@ class ReservaCreateSerializer(serializers.ModelSerializer):
         fields = ('usuario', 'parque', 'fecha', 'hora', 'usuario_name', 'materiales')
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
-
-    logros = serializers.PrimaryKeyRelatedField(many=True, queryset=Logro.objects.all(), required=False)
     
     class Meta:
         model = Profile
         fields = [
             'descripcion',
-            'logros',
             'imagen',
             'telefono',
             'edad',
@@ -106,7 +98,6 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         instance.telefono = validated_data.get('telefono', instance.telefono)
         instance.edad = validated_data.get('edad', instance.edad)
         instance.descripcion = validated_data.get('descripcion', instance.descripcion)
-        instance.logros.set(validated_data.get('logros', instance.logros.all()))
         instance.is_private = validated_data.get('is_private', instance.is_private)
   
         if 'imagen' in validated_data:
@@ -115,12 +106,3 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
     
-# class PostSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Post
-#         fields = '__all__'
-
-# class CommentSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Comment
-#         fields = '__all__'

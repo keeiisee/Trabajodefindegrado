@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-import { IoIosArrowDropdown } from 'react-icons/io';
-import { Disclosure } from '@headlessui/react';
-import Post1 from './Post1';
+import Post1 from './Post/Post1';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 const PaginaDeInicio1 = () => {
+    const [tabIndex, setTabIndex] = useState(0);
     const profile = useSelector(state => state.auth.profile);
     const [posts, setPost] = useState([]);
     const [filtro, setFiltro] = useState('amigos');
@@ -77,61 +78,39 @@ const PaginaDeInicio1 = () => {
             noAmigos();
         }
     }, [filtro]);
-    const handleFiltroChange = (event) => {
-        setFiltro(event.target.value);
+   
+    const handleTabChange = (event, newValue) => {
+        setTabIndex(newValue);
+        switch (newValue) {
+            case 0:
+                setFiltro('amigos');
+                break;
+            case 1:
+                setFiltro('mis_megusta');
+                break;
+            case 2:
+                setFiltro('sin_seguir');
+                break;
+            default:
+                setFiltro('amigos');
+        }
     };
-
-    const images = [
-        {
-          id: 1,
-          url: 'https://via.placeholder.com/300',
-          description: 'Image 1',
-        },
-        {
-          id: 2,
-          url: 'https://via.placeholder.com/300',
-          description: 'Image 2',
-        },
-        // ... Agrega más imágenes aquí
-      ];
     return (
         <>
-
             {profile && (
 
                 <div className="container px-5 mx-auto mb-8 mt-8">
-                    <Disclosure>
-                        {({ open }) => (
-                            <>
-                                <Disclosure.Button className="flex justify-center w-full py-2 mt-2 text-sm font-semibold text-white bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500">
-                                    Filtro: {filtro}{' '}
-                                    <IoIosArrowDropdown
-                                        className={`ml-2 transform ${open ? 'rotate-180' : ''
-                                            } transition-transform duration-300`}
-                                    />
-                                </Disclosure.Button>
-                                <Disclosure.Panel className="mt-4">
-                                    <div className="relative w-full max-w-xs mx-auto">
-                                        <select
-                                            id="filtro"
-                                            value={filtro}
-                                            onChange={handleFiltroChange}
-                                            className="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
-                                        >
-                                            <option value="amigos" defaultChecked>
-                                                Amigos
-                                            </option>
-                                            <option value="mis_megusta">Mis me gusta</option>
-                                            <option value="sin_seguir">Sin seguir</option>
-                                        </select>
-                                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                            <IoIosArrowDropdown className="h-4 w-4" />
-                                        </div>
-                                    </div>
-                                </Disclosure.Panel>
-                            </>
-                        )}
-                    </Disclosure>
+                    <Tabs
+                        value={tabIndex}
+                        onChange={handleTabChange}
+                        indicatorColor="primary"
+                        textColor="primary"
+                        centered
+                    >
+                        <Tab label="Amigos" />
+                        <Tab label="Explorar" />
+                        <Tab label="Rutinas" />
+                    </Tabs>
                 </div>
             )}
             {posts.length <= 0 && (

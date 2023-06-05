@@ -2,19 +2,19 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion';
 import { addFriend, rejectFriend } from '../../actions/auth';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-const ListaDePEtionDeAmistad = () => {
-    const dispatch = useDispatch()
-    const [usuariosQueSolicitan, setUsuariosQueSolicitan] = useState([]);
+
+const ListaDePEtionDeAmistad = ({ onProfileUpdate }) => {
+    const dispatch = useDispatch();
+    const [usuariosQueSolicitan, setUsuariosQueSolicitan] = useState({});
     const [profile, setProfile] = useState(null);
-    const navigate = useNavigate()
+    const [isSaving, setIsSaving] = useState(false);
     useEffect(() => {
         const fetchData = async () => {
             const config = {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `JWT ${localStorage.getItem('access')}`,
-                }
+                },
             };
 
             try {
@@ -50,7 +50,7 @@ const ListaDePEtionDeAmistad = () => {
         };
 
         fetchData();
-    }, []);
+    }, [onProfileUpdate]);
 
     const solicitudRecibida = useMemo(() => {
         if (profile && profile.length > 0) {
@@ -61,17 +61,29 @@ const ListaDePEtionDeAmistad = () => {
         return [];
     }, [profile, usuariosQueSolicitan]);
 
+    const updateSolicitudes = (id) => {
+        setProfile((prevProfile) => {
+            const updatedProfile = [...prevProfile];
+            updatedProfile[0].solicitudRecibida = updatedProfile[0].solicitudRecibida.filter((userId) => userId !== id);
+            return updatedProfile;
+        });
+    };
 
     const aceptarSolicitud = (id) => {
-        dispatch(addFriend(id))
-      
+        setIsSaving(true);
+        dispatch(addFriend(id));
+        updateSolicitudes(id);
+        setTimeout(() => {
+            setIsSaving(false);
+            // Llamar a onProfileUpdate para notificar que el perfil ha sido actualizado
+            onProfileUpdate();
+        }, 1000);
     };
 
     const denegarSolicitud = (id) => {
-        dispatch(rejectFriend(id))
-        
+        dispatch(rejectFriend(id));
+        updateSolicitudes(id);
     };
-    
 
     const itemVariants = {
         hidden: { opacity: 0, y: -20 },
@@ -81,7 +93,6 @@ const ListaDePEtionDeAmistad = () => {
 
     return (
         <div className="container mx-auto">
-            <h1 className="text-2xl font-semibold mb-4">Solicitudes de amistad</h1>
             <motion.ul
                 className="space-y-4"
                 initial="hidden"
@@ -94,18 +105,18 @@ const ListaDePEtionDeAmistad = () => {
                 }}
             >
                 {solicitudRecibida.length <= 0 && (
-                                <div className="mt-20 ml-20 mr-20 mb-20 text-center animate-bounce">
-                                    <h1 className="text-4xl font-bold text-gray-700 animate-pulse">No hay Notificaciones que ver</h1>
-                                    <p className="mt-4 text-gray-500">Lo sentimos, no hay contenido disponible en este momento.</p>
-                                </div>
-                            )}
+                    <div className="mt-20 ml-20 mr-20 mb-20 text-center animate-bounce">
+                        <h1 className="text-4xl font-bold text-gray-700 animate-pulse">No hay Notificaciones que ver</h1>
+                        <p className="mt-4 text-gray-500">Lo sentimos, no hay contenido disponible en este momento.</p>
+                    </div>
+                )}
                 {solicitudRecibida && solicitudRecibida.map((request, index) => (
                     <motion.li
                         key={index}
                         className="bg-white shadow-md rounded p-4 flex items-center justify-between space-x-4"
                         variants={itemVariants}
                     >
-                        
+
                         <div className="flex items-center space-x-4">
                             <img
                                 src={request && request.url}
@@ -115,14 +126,23 @@ const ListaDePEtionDeAmistad = () => {
                             <a href={`/perfil/${request && request.id}`} className="text-xlfont-semibold">{request && request.name}</a>
                         </div>
                         <div className="flex space-x-2">
-                            
-                            <button
-                                className="bg-green-500 text-white font-bold py-1 px-3 rounded focus:outline-none"
-                                onClick={() => aceptarSolicitud(request && request.id)}
-                                
-                            >
-                                Aceptar
-                            </button>
+                            {
+                                isSaving ? (
+                                    <div className="flex justify-center items-center">
+                                        <TailwindSpinner />
+                                    </div>
+                                ) : (
+                                    <button
+                                        className="bg-green-500 text-white font-bold py-1 px-3 rounded focus:outline-none"
+                                        onClick={() => aceptarSolicitud(request && request.id)}
+
+                                    >
+                                        Aceptar
+                                    </button>
+                                )
+
+                            }
+
                             <button
                                 className="bg-red-500 text-white font-bold py-1 px-3 rounded focus:outline-none"
                                 onClick={() => denegarSolicitud(request && request.id)}

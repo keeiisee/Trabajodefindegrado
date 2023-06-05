@@ -8,7 +8,7 @@ export const eliminar_post = (publicacion_id) => async (dispatch) => {
       Authorization: `JWT ${localStorage.getItem('access')}`,
     },
   };
-  
+
   try {
     await axios.post(
       'http://localhost:8000/accounts/publicacion/delete/',
@@ -28,7 +28,7 @@ export const modificar_post = (publicacion_id, descripcion) => async (dispatch) 
       Authorization: `JWT ${localStorage.getItem('access')}`,
     },
   };
-  
+
   try {
     await axios.post(
       'http://localhost:8000/accounts/modificar/publicacion/',
@@ -62,42 +62,83 @@ export const post_like = (publicacion_id, like) => async (dispatch) => {
 }
 
 export const crear_post = (descripcion, autor, imagen) => async (dispatch) => {
-    const formData = new FormData();
-    formData.append('autor', autor);
-    formData.append('descripcion', descripcion);
-    formData.append('imagen', imagen);
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': `JWT ${localStorage.getItem('access')}`,
-      },
-    };
-  
-    try {
-      await axios.post(
-        'http://localhost:8000/accounts/crear/publicacion/',
-        formData,
-        config
-      );
-    } catch (err) {
-      console.error('Error al crear el post:', err);
-    }
+  const formData = new FormData();
+  formData.append('autor', autor);
+  formData.append('descripcion', descripcion);
+  formData.append('imagen', imagen);
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': `JWT ${localStorage.getItem('access')}`,
+    },
+  };
+
+  try {
+    await axios.post(
+      'http://localhost:8000/accounts/crear/publicacion/',
+      formData,
+      config
+    );
+  } catch (err) {
+    console.error('Error al crear el post:', err);
+  }
 }
 
 export const ver_post_profile_por_id = (autor) => async dispatch => {
-    const config = {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `JWT ${localStorage.getItem('access')}`,
-        }
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `JWT ${localStorage.getItem('access')}`,
     }
-    try {
-        const res = await axios.post(`http://localhost:8000/accounts/publicaciones/${autor}/`, config);
-        if (res.data){
-            console.log(res)
-            return res
-        }
-    } catch (err) {
-    
+  }
+  try {
+    const res = await axios.post(`http://localhost:8000/accounts/publicaciones/${autor}/`, config);
+    if (res.data) {
+      console.log(res)
+      return res
     }
+  } catch (err) {
+
+  }
 }
+
+export const like_post = (park, enBD) => async (dispatch) => {
+  const parque = park.place_id;
+
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `JWT ${localStorage.getItem('access')}`,
+    },
+  };
+
+  if (!enBD) {
+    // Crear parque de calistenia si no existe en la base de datos
+    console.log(park)
+    const parqueData = {
+      placeId: park.place_id,
+      nombre: park.name,
+      descripcion: park.vicinity,
+      imagenUrl: park.photos[0].getUrl(),
+    };
+
+    const parqueBody = JSON.stringify(parqueData);
+    try {
+      await axios.post('http://localhost:8000/accounts/parque/create/', parqueBody, config);
+    } catch (err) {
+      console.log('Error creando parque de calistenia:', err);
+    }
+  }
+  console.log(parque)
+  const body = JSON.stringify({ parque });
+  try {
+    await axios.post(
+      `http://localhost:8000/accounts/parques/like/`,
+      body,
+      config
+    );
+  } catch (err) {
+    console.log(err);
+  }
+
+};

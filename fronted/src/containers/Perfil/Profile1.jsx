@@ -8,7 +8,7 @@ import axios from 'axios';
 import { deleted_user, modificar_perfil } from '../../actions/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import TabSelectorNotis from './TabSelectorNotis';
+import TabSelectorNotis from '../Notificaciones/TabSelectorNotis';
 import ToggleButton from './ToggleButton';
 import TailwindSpinner from './TailwindSpinner';
 
@@ -102,7 +102,7 @@ function Profile1({ datas, onProfileUpdate }) {
         };
 
         fetchData();
-    }, []);
+    }, [onProfileUpdate]);
 
     const handleDeleteUser = (confirm) => {
         if (confirm) {
@@ -158,7 +158,7 @@ function Profile1({ datas, onProfileUpdate }) {
             }, 2000);
 
             // Actualizar los datos del usuario aquí
-            
+
         }
 
     }, [dispatch, formData, privateProfile, datas.user, onProfileUpdate]);
@@ -229,7 +229,7 @@ function Profile1({ datas, onProfileUpdate }) {
                 <ul className="text-sm space-y-2 mt-4">
                     <li className="flex items-center">
                         <UserGroupIcon className="h-5 w-5 mr-2" />
-                        Logros: {datas.logros.length}
+                        Logros: 0
                     </li>
                     <li className="flex items-center">
                         <PhoneIcon className="h-5 w-5 mr-2" />
@@ -299,7 +299,7 @@ function Profile1({ datas, onProfileUpdate }) {
                 <div className="flex flex-wrap justify-center sm:justify-start space-y-4 sm:space-y-0 sm:space-x-4 mt-6">
                     <button onClick={clickAmi} className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
                         <UserGroupIcon className="h-5 w-5 inline-block mr-2" />
-                        Amigos
+                        Amigos {datas && datas.amigos.length}
                     </button>
                     <button onClick={clickPubli} className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
                         <NewspaperIcon className="h-5 w-5 inline-block mr-2" />
@@ -307,10 +307,15 @@ function Profile1({ datas, onProfileUpdate }) {
                     </button>
                     <button
                         onClick={clickNoti}
-                        className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto"
+                        className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto relative"
                     >
                         <BellIcon className="h-5 w-5 inline-block mr-2" />
                         Notificaciones
+                        {datas.solicitudRecibida.length > 0 && (
+                        <span
+                          className="bg-green-500 w-4 h-4 rounded-full absolute top-0 right-0 border-2 border-white heartbeat"
+                        ></span>
+                      )}
                     </button>
                     {editMode ? (
                         <>
@@ -413,7 +418,7 @@ function Profile1({ datas, onProfileUpdate }) {
                 </div>
             )}
             {publicaciones && <TabSelector />}
-            {notificaciones && <TabSelectorNotis />}
+            {notificaciones && <TabSelectorNotis onProfileUpdate={onProfileUpdate} />}
             {amigos && (
                 <>
                     <ListaAmigos friends={amigosList} onClose={clickPubli} />

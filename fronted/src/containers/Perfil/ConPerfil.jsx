@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { NavbarSuperPerfil } from '../../components/NavbarSuperPerfil';
-import Profile1 from '../probar/Profile1';
+import Profile1 from './Profile1';
 
 export const ConPerfil = () => {
   const [profile, setProfile] = useState("");

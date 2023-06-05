@@ -2,11 +2,8 @@ import { useEffect } from "react";
 import { checkAuthenticated, load_user } from '../actions/auth';
 import { useDispatch } from "react-redux";
 import Navbar from "../components/Navbar";
-import { useSelector } from 'react-redux';
 import { useLocation } from "react-router-dom";
-import { Navbarhome } from "../containers/Home/Navbarhome";
-import OtroNavbarPerfil from "../containers/Perfil/OtroNavbarPerfil";
-import Prueba1 from "../containers/probar/Prueba1";
+
 
 const Layout = ({ children }) => {
     const dispatch = useDispatch();

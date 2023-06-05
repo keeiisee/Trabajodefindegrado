@@ -17,7 +17,7 @@ export const crear_reserva = (park, fecha, hora, materiales, enBD) => async (dis
             descripcion: park.vicinity,
             imagenUrl: park.photos[0].getUrl(),
         };
-        console.log(parqueData)
+     
         const parqueBody = JSON.stringify(parqueData);
         try {
             await axios.post('http://localhost:8000/accounts/parque/create/', parqueBody, config);
@@ -33,3 +33,4 @@ export const crear_reserva = (park, fecha, hora, materiales, enBD) => async (dis
         console.log(err);
     }
 };
+

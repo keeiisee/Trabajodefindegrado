@@ -11,7 +11,7 @@ const ToggleButton = ({ label, initialState, onToggle, disabled }) => {
     };
 
     return (
-        <div className="flex items-center">
+        <div className="mt-2 flex items-center">
             <span className="mr-2 text-gray-700">{label}</span>
             <button
                 type="button"

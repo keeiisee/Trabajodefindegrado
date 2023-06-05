@@ -126,23 +126,6 @@ export const load_personas = (palabra) => async dispatch => {
     }
 }
 
-// export const modificar_perfil = (imagen, descripcion, logros ,user1, idPerfil) => async dispatch => {
-//     if (user1){
-//         var user = user1.id
-//     }
-//     const body = JSON.stringify({ user, descripcion, logros });
-//     const config = {
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'Authorization': `JWT ${localStorage.getItem('access')}`,
-//         }
-//     };
-//     try {        
-//         await axios.put(`http://localhost:8000/accounts/profiles/profiles/${idPerfil}/`, body, config);
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
 export const modificar_perfil = (imagen, descripcion, user,edad, telefono, privado) => async dispatch => {
     const formData = new FormData();
     formData.append('user_id', user.id);
@@ -195,31 +178,7 @@ export const crear_perfil = (imagen, descripcion, telefono, user, edad, privado)
         });
     }
 }
-// export const crear_perfil = (imagen, descripcion, logros ,user1) => async dispatch => {
-//     if (user1){
-//         var user = user1.id
-//     }
 
-//     const config = {
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'Authorization': `JWT ${localStorage.getItem('access')}`,
-//         }
-//     }
-
-//     const body = JSON.stringify({ user, descripcion, logros });
-//     try {
-//         await axios.post(`http://localhost:8000/accounts/profiles/profiles/`, body, config);
-//         dispatch({
-//             type: PROFILE_CREATE_SUCCES
-//         });
-
-//     } catch (err) {
-//         dispatch({
-//             type: PROFILE_CREATE_FAIL
-//         });
-//     }
-// }
 export const reset_password_confirm = (uid, token, new_password, re_new_password) => async dispatch => {
     const config = {
         headers: {
@@ -286,33 +245,6 @@ export const verify = (uid, token) => async dispatch => {
     }
 };
 
-// export const checkAuthenticated1 = () => async dispatch => {
-//     if (localStorage.getItem('access')) {
-//         const config = {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             }
-//         };
-
-//         const body = JSON.stringify({ token: localStorage.getItem('access') });
-
-//         try {
-//             await axios.post(`http://127.0.0.1:8000/auth/jwt/verify`, body, config);
-//             dispatch({
-//                 type: AUTHENTICATED_SUCCESS
-//             });
-//         } catch (err) {
-//             dispatch({
-//                 type: AUTHENTICATED_FAIL
-//             });
-//         }
-//     } else {
-//         dispatch({
-//             type: AUTHENTICATED_FAIL
-//         });
-//     }
-// };
 export const checkAuthenticated = () => async dispatch => {
     if (localStorage.getItem('access')) {
         const config = {

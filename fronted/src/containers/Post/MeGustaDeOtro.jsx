@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { useParams } from 'react-router-dom';
-import Post1 from '../probar/Post1';
+import Post1 from './Post1';
 
 const MeGustaDeOtro = () => {
     const routeParams = useParams()

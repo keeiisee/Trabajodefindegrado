@@ -3,7 +3,7 @@ import { connect, useDispatch, useSelector } from 'react-redux';
 import { crear_perfil } from '../../actions/auth';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import ToggleButton from '../probar/ToggleButton';
+import ToggleButton from './ToggleButton';
 
 function CrearPerfil() {
   const dispatch = useDispatch()
@@ -37,22 +37,6 @@ function CrearPerfil() {
   const handleToggle = (state) => {
     setPrivateProfile(state);
   };
-
-
-
-
-  
-
-  // function handleLogrosChange(e) {
-  //   const options = e.target.options;
-  //   const selectedValues = [];
-  //   for (let i = 0; i < options.length; i++) {
-  //     if (options[i].selected) {
-  //       selectedValues.push(options[i].value);
-  //     }
-  //   }
-  //   setLogros(selectedValues);
-  // }
 
   return (
     <div className="w-full max-w-xl mx-auto mt-5">
@@ -146,33 +130,6 @@ function CrearPerfil() {
         </form>
       </motion.div>
     </div>
-    // <div>
-    //   <div className="container py-5">
-    //     <h1 className="mb-4">Crear Perfil</h1>
-    //     <form>
-    // <div className="mb-3">
-    //   <label htmlFor="imagen" className="form-label">Imagen:</label>
-    //   <input id="imagen"
-    //       type="file"
-    //       accept="image/*"
-    //       name="imagen" className="form-control" onChange={(e) => onChange(e)} />
-    // </div>
-    //       <div className="mb-3">
-    //         <label htmlFor="descripcion" className="form-label">Biografía:</label>
-    //         <textarea className="form-control" onChange={(e) => onChange(e)} id="descripcion" name="descripcion" rows="3"></textarea>
-    //       </div>
-    //       <div className="mb-3">
-    //         <label className="form-label">Logros:</label>
-    //         <select className="form-select" onChange={(e) => onChange(e)}name="logros" multiple>
-    //           {opcionesLogros && opcionesLogros.map((logro, key) => (
-    //             <option key={key} value={logro}>{logro}</option>
-    //           ))}
-    //         </select>
-    //       </div>
-    //       <button type="submit" onClick={handleSubmit} className="btn btn-primary">Guardar</button>
-    //     </form>
-    //   </div>
-    // </div>
   );
 }
 

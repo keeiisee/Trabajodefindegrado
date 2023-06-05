@@ -222,7 +222,7 @@ class AddFriendView(APIView):
             requester_profile = Profile.objects.get(user__id=requester_id)
         except Profile.DoesNotExist:
             return Response({"error": "Perfil no encontrado"}, status=status.HTTP_404_NOT_FOUND)
-
+        
         user_profile.solicitudRecibida.remove(requester_profile.user)
         requester_profile.solicitudEnviada.remove(user_profile.user)
 
@@ -323,7 +323,7 @@ class ReservaCalisteniaList(viewsets.ModelViewSet):
 class CrearParqueCalisteniaView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = ParqueCalisteniaCreateSerializer(data=request.data)
-        print(request.data)
+        
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -417,3 +417,57 @@ class UpdateProfileImageView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+class LikeParqueView(APIView):
+    def post(self, request, *args, **kwargs):
+        parque_id = request.data.get('parque')
+        if not parque_id:
+            return Response({"error": "Debe proporcionar un parque_id."}, status=status.HTTP_400_BAD_REQUEST)
+
+        parque = get_object_or_404(ParqueCalistenia, placeId=parque_id)
+        user = request.user
+
+        if user not in parque.likes.all():
+            parque.likes.add(user)
+            if user in parque.dislikes.all():
+                parque.dislikes.remove(user)
+            parque.save()
+
+        serializer = ParqueCalisteniaCreateSerializer(parque)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class DislikeParque(APIView):
+    def post(self, request, *args, **kwargs):
+        parque_id = request.data.get('parque_id')
+        if not parque_id:
+            return Response({"error": "Debe proporcionar un parque_id."}, status=status.HTTP_400_BAD_REQUEST)
+
+        parque = get_object_or_404(ParqueCalistenia, id=parque_id)
+        user = request.user
+
+        if user not in parque.dislikes.all():
+            parque.dislikes.add(user.id)
+            if user in parque.likes.all():
+                parque.likes.remove(user.id)
+            parque.save()
+
+        banneado_check(parque)
+
+        serializer = ParqueCalisteniaCreateSerializer(parque)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+def banneado_check(parque):
+    total_likes = parque.likes.count()
+    total_dislikes = parque.dislikes.count()
+    total_reactions = total_likes + total_dislikes
+
+    if total_dislikes >= 5:
+        if total_reactions > 0:
+            media = total_likes / total_reactions
+            if media < 0.5:
+                parque.baneado = True
+            else:
+                parque.baneado = False
+        else:
+            parque.baneado = False
+        parque.save()

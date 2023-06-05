@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import Post1 from '../probar/Post1';
+import Post1 from './Post1';
 
 export const MisPublicaciones = () => {
     const [post, setPost] = useState([]);

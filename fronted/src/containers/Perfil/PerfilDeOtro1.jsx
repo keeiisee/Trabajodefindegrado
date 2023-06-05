@@ -26,39 +26,39 @@ const PerfilDeOtro1 = () => {
 
     const fetchData = useCallback(async () => {
         const config = {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `JWT ${localStorage.getItem('access')}`,
-          },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `JWT ${localStorage.getItem('access')}`,
+            },
         };
         try {
-          const responseProfile = await fetch(`http://localhost:8000/accounts/profile/${routeParams.id}/`, config);
-          const dataProfile = await responseProfile.json();
-          setProfile(dataProfile);
+            const responseProfile = await fetch(`http://localhost:8000/accounts/profile/${routeParams.id}/`, config);
+            const dataProfile = await responseProfile.json();
+            setProfile(dataProfile);
         } catch (error) {
-          console.log(error);
+            console.log(error);
         }
-      }, [routeParams.id]);
+    }, [routeParams.id]);
 
-      useEffect(() => {
+    useEffect(() => {
         fetchData();
-      }, [fetchData]);
+    }, [fetchData]);
 
-      const handleDeleteUser = (confirm) => {
+    const handleDeleteUser = (confirm) => {
         if (confirm) {
-          dispatch(removeFriend(profile[0].user_id)).then(() => fetchData());
+            dispatch(removeFriend(profile[0].user_id)).then(() => fetchData());
         }
         setShowModal(false);
-      };
-    
-      function enviarAmistad() {
+    };
+
+    function enviarAmistad() {
         dispatch(sendFriend(routeParams.id)).then(() => fetchData());
-      }
-    
-      function infoPerfil() {
+    }
+
+    function infoPerfil() {
         navigate(`/perfil/${routeParams.id}`);
-      }
-    
+    }
+
     useEffect(() => {
         // Verifica si profile tiene datos y si tiene al menos un amigo
         if (profile && profile.length > 0 && profile[0].amigos) {
@@ -99,7 +99,7 @@ const PerfilDeOtro1 = () => {
         }
         return '';
     }, [profile]);
-    
+
     return (
         <>{privacidad && !esAmigo ? (
             <>
@@ -131,7 +131,8 @@ const PerfilDeOtro1 = () => {
                         </li>
                         <li className="flex items-center">
                             <MailIcon className="h-5 w-5 mr-2" />
-                            Correo electrónico: 17678239@gmail.com
+                            
+                            Correo electrónico: {profile && profile[0].email}
                         </li>
                         <li className="flex items-center">
                             <CakeIcon className="h-5 w-5 mr-2" />
@@ -163,13 +164,6 @@ const PerfilDeOtro1 = () => {
                                     Enviar Amistad
                                 </button>
                             </>) : null}
-                        {/* // <button
-
-                    //     className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto"
-                    // >
-                    //     <BellIcon className="h-5 w-5 inline-block mr-2" />
-                    //     Notificaciones
-                    // </button> */}
                     </div>
                 </ProfileCard >
                 <div className="mt-20 ml-20 mr-20 mb-20 text-center animate-bounce">
@@ -200,7 +194,7 @@ const PerfilDeOtro1 = () => {
                                 <PhoneIcon className="h-5 w-5 mr-2" />
                                 Teléfono: {' '}
 
-                                654345417
+                                {profile && profile[0].telefono}
 
                             </li>
                             <li className="flex items-center">
@@ -209,7 +203,7 @@ const PerfilDeOtro1 = () => {
                             </li>
                             <li className="flex items-center">
                                 <MailIcon className="h-5 w-5 mr-2" />
-                                Correo electrónico: 17678239@gmail.com
+                                Correo electrónico: {profile && profile[0].user_email}
                             </li>
                             <li className="flex items-center">
                                 <CakeIcon className="h-5 w-5 mr-2" />
@@ -259,13 +253,6 @@ const PerfilDeOtro1 = () => {
                                 <NewspaperIcon className="h-5 w-5 inline-block mr-2" />
                                 Publicaciones
                             </button>
-                            {/* // <button
-
-                    //     className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto"
-                    // >
-                    //     <BellIcon className="h-5 w-5 inline-block mr-2" />
-                    //     Notificaciones
-                    // </button> */}
                         </div>
                     </ProfileCard >
                     {showModal && (

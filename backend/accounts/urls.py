@@ -1,12 +1,13 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import CrearParqueCalisteniaView, PublicacionesDeOtroFav, UpdatePostDescriptionView, EliminarPublicacionView, DeleteUserView, PublicacionesFavoritas, UltimasPublicacionesNoAmigosView,LikePublicacionView, UpdateProfileImageView, CrearProfileView, CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
+from .views import CrearParqueCalisteniaView, DislikeParque, LikeParqueView, PublicacionesDeOtroFav, UpdatePostDescriptionView, EliminarPublicacionView, DeleteUserView, PublicacionesFavoritas, UltimasPublicacionesNoAmigosView,LikePublicacionView, UpdateProfileImageView, CrearProfileView, CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
 
 router = routers.DefaultRouter()
 router.register(r'profiles/profiles', ProfileList)
 router.register(r'publicacion/create', PublicacionList)
 router.register(r'parqueCalis/view', ParqueCalisteniaList)
 router.register(r'reserva/view', ReservaCalisteniaList)
+
 urlpatterns = [
     #url que saca el perfil de todos los usuarios o del id del perfil que le pases
     #path('profiles/', include(router.urls)),
@@ -43,5 +44,8 @@ urlpatterns = [
 
     path('reservas/parque/<int:pk>/', ReservasPorParque.as_view(), name='reservas_por_parque'),
     path('parque/create/', CrearParqueCalisteniaView.as_view(), name='create_parque'),
+
+    path('parques/like/', LikeParqueView.as_view(), name='like_parque'),
+    path('parques/dislike/', DislikeParque.as_view(), name='dislike_parque'),
     
 ]

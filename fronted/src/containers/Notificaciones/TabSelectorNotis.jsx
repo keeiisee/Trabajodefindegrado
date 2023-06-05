@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import ListaDePEtionDeAmistad from './ListaDePEtionDeAmistad';
 
 
-const TabSelectorNotis = () => {
+const TabSelectorNotis = ({onProfileUpdate}) => {
     const [activeTab, setActiveTab] = useState('amistad');
 
     const handleClick = (tab) => {
@@ -41,7 +41,7 @@ const TabSelectorNotis = () => {
                     Me gustas recibidos
                 </button>
             </div>
-            {activeTab === 'amistad' && <ListaDePEtionDeAmistad />}
+            {activeTab === 'amistad' && <ListaDePEtionDeAmistad onProfileUpdate={onProfileUpdate}/>}
             {activeTab === 'likes' && <MisMeGusta />}
         </>
 

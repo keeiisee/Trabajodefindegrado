@@ -6,6 +6,8 @@ export const ParkCard = ({ park }) => {
   const photoUrl = photos ? photos[0].getUrl({ maxWidth: 300, maxHeight: 200 }) : '';
   const [showDiv, setShowDiv] = useState(false);
   const [id , setId] = useState("")
+  const [likes, setLikes] = useState([])
+  const [disLikes, setDisLikes] = useState([])
   useEffect(() => {
     const fetchData = async () => {
       const config = {
@@ -24,8 +26,10 @@ export const ParkCard = ({ park }) => {
         let foundId;
         setShowDiv(foundItem)
         if (foundItem) {
-          foundId = foundItem.id;
-          setId(foundId)
+          foundId = foundItem;
+          setId(foundId.id)
+          setLikes(foundId.likes)
+          setDisLikes(foundId.dislikes)
         }
       } catch (error) {
         console.log(error);
@@ -73,7 +77,7 @@ const handleClick = () => {
         <p>{vicinity}</p>
       </div>
 
-      <PhotoModal show={showModal} onClose={handleCloseModal} photoUrl={photoUrl} name={name} park={park} id={id} enBD={showDiv}/>
+      <PhotoModal show={showModal} onClose={handleCloseModal} photoUrl={photoUrl} name={name} park={park} id={id} enBD={showDiv} likes={likes} disLikes={disLikes}/>
     </div>
   );
 };

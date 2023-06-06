@@ -22,10 +22,11 @@ export const Parques = () => {
   }, [searchParams]);
 
   return (
-    <LoadScript googleMapsApiKey={googleMapsApiKey} libraries={libraries}>
-      <div className="App">
-        <Map radius={radius} region={selectedRegion} geoEnabled={geoEnabled} />
-      </div>
-    </LoadScript>
+    <h1>tu madre</h1>
+    // <LoadScript googleMapsApiKey={googleMapsApiKey} libraries={libraries}>
+    //   <div className="App">
+    //     <Map radius={radius} region={selectedRegion} geoEnabled={geoEnabled} />
+    //   </div>
+    // </LoadScript>
   );
 }

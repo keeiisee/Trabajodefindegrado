@@ -189,7 +189,7 @@ export const reset_password_confirm = (uid, token, new_password, re_new_password
     const body = JSON.stringify({ uid, token, new_password, re_new_password });
 
     try {
-        await axios.post(`http://127.0.0.1:8000/auth/users/reset_password_confirm/`, body, config);
+        await axios.post(`https://trabajodefindegrado-production-1dd0.up.railway.app/auth/users/reset_password_confirm/`, body, config);
 
         dispatch({
             type: PASSWORD_RESET_CONFIRM_SUCCESS
@@ -210,7 +210,7 @@ export const signup = (name, email, password, re_password) => async dispatch => 
     const body = JSON.stringify({ name, email, password, re_password });
 
     try {
-        const res = await axios.post(`http://127.0.0.1:8000/auth/users/`, body, config);
+        const res = await axios.post(`https://trabajodefindegrado-production-1dd0.up.railway.app/auth/users/`, body, config);
 
         dispatch({
             type: SIGNUP_SUCCESS,
@@ -233,7 +233,7 @@ export const verify = (uid, token) => async dispatch => {
     const body = JSON.stringify({ uid, token });
 
     try {
-        await axios.post(`http://127.0.0.1:8000/auth/users/activation/`, body, config);
+        await axios.post(`https://trabajodefindegrado-production-1dd0.up.railway.app/auth/users/activation/`, body, config);
 
         dispatch({
             type: ACTIVATION_SUCCESS,
@@ -257,7 +257,7 @@ export const checkAuthenticated = () => async dispatch => {
         const body = JSON.stringify({ token: localStorage.getItem('access') });
 
         try {
-            const res = await axios.post(`http://127.0.0.1:8000/auth/jwt/verify`, body, config)
+            const res = await axios.post(`https://trabajodefindegrado-production-1dd0.up.railway.app/auth/jwt/verify`, body, config)
 
             if (res.data.code !== 'token_not_valid') {
                 load_profile()
@@ -291,7 +291,7 @@ export const reset_password = (email) => async dispatch => {
     const body = JSON.stringify({ email });
 
     try {
-        await axios.post(`http://127.0.0.1:8000/auth/users/reset_password/`, body, config);
+        await axios.post(`https://trabajodefindegrado-production-1dd0.up.railway.app/auth/users/reset_password/`, body, config);
 
         dispatch({
             type: PASSWORD_RESET_SUCCESS
@@ -314,7 +314,7 @@ export const load_user = () => async dispatch => {
         };
 
         try {
-            const res = await axios.get(`http://127.0.0.1:8000/auth/users/me/`, config);
+            const res = await axios.get(`https://trabajodefindegrado-production-1dd0.up.railway.app/auth/users/me/`, config);
             dispatch({
                 type: USER_LOADED_SUCCESS,
                 payload: res.data

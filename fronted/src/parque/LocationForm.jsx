@@ -28,14 +28,12 @@ const LocationForm = () => {
       const { searchRadius, province, city } = formData;
 
       // Construir la cadena de consulta
-      const queryParams = new URLSearchParams({
-        searchRadius: searchRadius,
-        province: province,
-        city: city,
-      });
+      localStorage.setItem('searchRadius', searchRadius);
+      localStorage.setItem('province', province);
+      localStorage.setItem('city', city);
 
       // Navegar a la ruta con los parámetros de consulta
-      navigate(`/parques?${queryParams.toString()}`);
+      navigate(`/parques`);
       closePar();
       // Aquí puedes realizar la acción para enviar el formulario
     }

@@ -9,17 +9,27 @@ export const Parques = () => {
   const [radius, setRadius] = useState(1000);
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [geoEnabled, setGeoEnabled] = useState(false);
-  
-  const location = useLocation();
-  const searchParams = location.state;
 
   useEffect(() => {
-    if (searchParams) {
-      setGeoEnabled(searchParams.useGeolocation)
-      setRadius(searchParams.searchRadius);
-      setSelectedRegion({ province: searchParams.province, city: searchParams.city });
-    }
-  }, [searchParams]);
+    const getLocalStorageValues = () => {
+      const storedRadius = localStorage.getItem('radius');
+      const storedProvince = localStorage.getItem('province');
+      const storedCity = localStorage.getItem('city');
+      const storedGeoEnabled = localStorage.getItem('geoEnabled');
+
+      if (storedRadius) {
+        setRadius(parseInt(storedRadius, 10));
+      }
+      if (storedProvince && storedCity) {
+        setSelectedRegion({ province: storedProvince, city: storedCity });
+      }
+      if (storedGeoEnabled) {
+        setGeoEnabled(JSON.parse(storedGeoEnabled));
+      }
+    };
+
+    getLocalStorageValues();
+  }, []);
 
   return (
     <LoadScript googleMapsApiKey={googleMapsApiKey} libraries={libraries}>

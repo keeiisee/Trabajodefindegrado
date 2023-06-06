@@ -400,7 +400,7 @@ export const login = (email, password) => async dispatch => {
     };
 
     try {
-        const res = await fetch("http://127.0.0.1:8000/auth/jwt/create/", config);
+        const res = await fetch("https://trabajodefindegrado-production-1dd0.up.railway.app/auth/jwt/create/", config);
         const data = await res.json();
 
         if (res.ok) {

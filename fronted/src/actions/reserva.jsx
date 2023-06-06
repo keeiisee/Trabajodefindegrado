@@ -20,7 +20,7 @@ export const crear_reserva = (park, fecha, hora, materiales, enBD) => async (dis
      
         const parqueBody = JSON.stringify(parqueData);
         try {
-            await axios.post('http://localhost:8000/accounts/parque/create/', parqueBody, config);
+            await axios.post('https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/parque/create/', parqueBody, config);
         } catch (err) {
             console.log('Error creando parque de calistenia:', err);
         }
@@ -28,7 +28,7 @@ export const crear_reserva = (park, fecha, hora, materiales, enBD) => async (dis
 
     const body = JSON.stringify({ parque, fecha, hora, materiales });
     try {
-        await axios.post('http://localhost:8000/accounts/reserva/view/', body, config);
+        await axios.post('https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/reserva/view/', body, config);
     } catch (err) {
         console.log(err);
     }

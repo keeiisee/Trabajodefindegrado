@@ -83,7 +83,7 @@ function Profile1({ datas, onProfileUpdate }) {
                 const amigosArray = datas.amigos;
                 const amigosPromise = amigosArray.map(async (amigo) => {
                     try {
-                        const response = await axios.get(`http://localhost:8000/accounts/profile/${amigo}/`, config);
+                        const response = await axios.get(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/profile/${amigo}/`, config);
                         if (response.data) {
                             return response.data;
                         }

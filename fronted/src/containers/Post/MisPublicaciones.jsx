@@ -12,11 +12,11 @@ export const MisPublicaciones = () => {
                 }
             };
             try {
-                const responseProfile = await fetch('http://localhost:8000/accounts/profile/', config);
+                const responseProfile = await fetch('https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/profile/', config);
                 const dataProfile = await responseProfile.json();
 
                 if (dataProfile) {
-                    const responsePost = await fetch(`http://localhost:8000/accounts/publicaciones/${dataProfile[0].id}/`, config);
+                    const responsePost = await fetch(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/publicaciones/${dataProfile[0].id}/`, config);
                     const dataPost = await responsePost.json()
                     setPost(dataPost)
                 }

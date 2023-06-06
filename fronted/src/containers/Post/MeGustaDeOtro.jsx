@@ -10,7 +10,7 @@ const MeGustaDeOtro = () => {
     useEffect(() => {
         const obtenerPublicacionesFavoritas = async () => {
             try {      
-                const response = await fetch('http://localhost:8000/accounts/publicacionesDeOtro/favoritas/', {
+                const response = await fetch('https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/publicacionesDeOtro/favoritas/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

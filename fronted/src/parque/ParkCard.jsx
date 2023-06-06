@@ -17,7 +17,7 @@ export const ParkCard = ({ park }) => {
         }
       };
       try {
-        const parques = await fetch('http://localhost:8000/accounts/parqueCalis/view/', config);
+        const parques = await fetch('https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/parqueCalis/view/', config);
         const dataParque = await parques.json();
 
         const foundItem = dataParque.find(item => item.placeId === park.place_id);

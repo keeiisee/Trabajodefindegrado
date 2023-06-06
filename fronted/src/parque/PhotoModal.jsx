@@ -29,7 +29,7 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, like
                 };
 
                 try {
-                    const reservas = await fetch(`http://localhost:8000/accounts/reservas/parque/${id}/`, config);
+                    const reservas = await fetch(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/reservas/parque/${id}/`, config);
                     const dataReserva = await reservas.json();
                     setReserva(dataReserva);
                 } catch (error) {
@@ -73,7 +73,7 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, like
         const body = JSON.stringify({ parque_id: id });
         try {
             await axios.post(
-                `http://localhost:8000/accounts/parques/dislike/`,
+                `https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/parques/dislike/`,
                 body,
                 config
             );

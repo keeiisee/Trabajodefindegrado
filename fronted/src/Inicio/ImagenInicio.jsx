@@ -21,10 +21,10 @@ const ImagenInicio = ({ imagen }) => {
                 }
             };
             try {
-                const responseProfile = await fetch(`http://localhost:8000/accounts/profiles/profiles/${imagen.autor}/`, config);
+                const responseProfile = await fetch(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/profiles/profiles/${imagen.autor}/`, config);
                 const dataProfile = await responseProfile.json();
                 setProfile(dataProfile);
-                const responseUser = await fetch(`http://localhost:8000/accounts/profile/`, config);
+                const responseUser = await fetch(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/profile/`, config);
                 const dataUser = await responseUser.json()
 
                 if (dataUser[0].user_id === dataProfile.user_id) {

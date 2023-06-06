@@ -9,7 +9,7 @@ const MisMeGusta = () => {
     useEffect(() => {
         const obtenerPublicacionesFavoritas = async () => {
             try {
-                const response = await fetch('http://localhost:8000/accounts/publicaciones/favoritas/', {
+                const response = await fetch('https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/publicaciones/favoritas/', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

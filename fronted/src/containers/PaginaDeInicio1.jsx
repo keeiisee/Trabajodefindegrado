@@ -15,7 +15,7 @@ const PaginaDeInicio1 = () => {
         const amigos = async () => {
             if (profile) {
                 try {
-                    const response = await axios.get('http://localhost:8000/accounts/ultima_publi/', {
+                    const response = await axios.get('https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/ultima_publi/', {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `JWT ${localStorage.getItem('access')}`, // Asumiendo que el token de autenticación se guarda en localStorage
@@ -33,7 +33,7 @@ const PaginaDeInicio1 = () => {
         const mg = async () => {
             if (profile) {
                 try {
-                    const response = await fetch('http://localhost:8000/accounts/publicaciones/favoritas/', {
+                    const response = await fetch('https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/publicaciones/favoritas/', {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ const PaginaDeInicio1 = () => {
         const noAmigos = async () => {
             if (profile) {
                 try {
-                    const response = await axios.get('http://localhost:8000/accounts/utlima_publiNoFriend/', {
+                    const response = await axios.get('https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/utlima_publiNoFriend/', {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `JWT ${localStorage.getItem('access')}`,

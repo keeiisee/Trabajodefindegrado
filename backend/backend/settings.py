@@ -117,6 +117,20 @@ DATABASES = {
         'HOST': os.getenv('DB_HOST', 'localhost')
     }
 }
+# mysql -hcontainers-us-west-205.railway.app -uroot -pDlKKQHlzt8QFTLZzWs70 --port 7184 --protocol=TCP railway
+DATABASES = {
+  'default': {
+    'ENGINE': 'django.db.backends.mysql',
+    'NAME': 'railway',
+    'USER': 'root',
+    'PASSWORD': 'DlKKQHlzt8QFTLZzWs70',
+    'HOST': 'containers-us-west-205.railway.app',
+    'PORT': '7184',
+  }
+}
+
+
+
 # DATABASES = {
 #   'default': {
 #     'ENGINE': 'django.db.backends.postgresql_psycopg2',

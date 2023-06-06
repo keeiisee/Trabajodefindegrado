@@ -54,7 +54,7 @@ export const Navbar = () => {
       };
 
       try {
-        const responseProfile = await fetch('https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/profile/', config);
+        const responseProfile = await fetch('http://localhost:8000/accounts/profile/', config);
         const dataProfile = await responseProfile.json();
         setProfile(dataProfile);
       } catch (error) {
@@ -127,7 +127,7 @@ export const Navbar = () => {
                       <div className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out" />
                     </li>
                     <li className="text-lg font-medium group">
-                      <button type="button" onClick={explorar}><img src="https://trabajodefindegrado-production-1dd0.up.railway.app/static/barraIcons.png" alt="Custom Icon" className="h-6 w-6" /></button>
+                      <button type="button" onClick={explorar}><img src="http://localhost:8000/media/barraIcons.png" alt="Custom Icon" className="h-6 w-6" /></button>
                       <div className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out" />
                     </li>
                     <li>

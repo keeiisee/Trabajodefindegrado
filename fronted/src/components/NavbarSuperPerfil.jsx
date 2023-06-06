@@ -20,7 +20,7 @@ export const NavbarSuperPerfil = ({ profile: profileProp }) => {
           };
           try {
             const responseProfile = await fetch(
-              "https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/profile/",
+              "http://localhost:8000/accounts/profile/",
               config
             );
             const dataProfile = await responseProfile.json();

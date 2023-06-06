@@ -11,7 +11,7 @@ export const eliminar_post = (publicacion_id) => async (dispatch) => {
 
   try {
     await axios.post(
-      'https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/publicacion/delete/',
+      'http://localhost:8000/accounts/publicacion/delete/',
       body,
       config
     );
@@ -31,7 +31,7 @@ export const modificar_post = (publicacion_id, descripcion) => async (dispatch) 
 
   try {
     await axios.post(
-      'https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/modificar/publicacion/',
+      'http://localhost:8000/accounts/modificar/publicacion/',
       body,
       config
     );
@@ -52,7 +52,7 @@ export const post_like = (publicacion_id, like) => async (dispatch) => {
 
   try {
     await axios.post(
-      'https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/like/publicacion/',
+      'http://localhost:8000/accounts/like/publicacion/',
       body,
       config
     );
@@ -75,7 +75,7 @@ export const crear_post = (descripcion, autor, imagen) => async (dispatch) => {
 
   try {
     await axios.post(
-      'https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/crear/publicacion/',
+      'http://localhost:8000/accounts/crear/publicacion/',
       formData,
       config
     );
@@ -92,7 +92,7 @@ export const ver_post_profile_por_id = (autor) => async dispatch => {
     }
   }
   try {
-    const res = await axios.post(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/publicaciones/${autor}/`, config);
+    const res = await axios.post(`http://localhost:8000/accounts/publicaciones/${autor}/`, config);
     if (res.data) {
       console.log(res)
       return res
@@ -124,7 +124,7 @@ export const like_post = (park, enBD) => async (dispatch) => {
 
     const parqueBody = JSON.stringify(parqueData);
     try {
-      await axios.post('https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/parque/create/', parqueBody, config);
+      await axios.post('http://localhost:8000/accounts/parque/create/', parqueBody, config);
     } catch (err) {
       console.log('Error creando parque de calistenia:', err);
     }
@@ -133,7 +133,7 @@ export const like_post = (park, enBD) => async (dispatch) => {
   const body = JSON.stringify({ parque });
   try {
     await axios.post(
-      `https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/parques/like/`,
+      `http://localhost:8000/accounts/parques/like/`,
       body,
       config
     );

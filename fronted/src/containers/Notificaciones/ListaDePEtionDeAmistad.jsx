@@ -18,16 +18,16 @@ const ListaDePEtionDeAmistad = ({ onProfileUpdate }) => {
             };
 
             try {
-                const responseProfile = await fetch('https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/profile/', config);
+                const responseProfile = await fetch('http://localhost:8000/accounts/profile/', config);
                 const dataProfile = await responseProfile.json();
                 setProfile(dataProfile);
 
                 const userIds = dataProfile[0].solicitudRecibida;
                 const promises = userIds.map(async (userId) => {
-                    const response = await fetch(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/usuarios/${userId}/`, config);
+                    const response = await fetch(`http://localhost:8000/accounts/usuarios/${userId}/`, config);
                     const userData = await response.json();
 
-                    const responseProfileData = await fetch(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/profile/${userId}/`, config);
+                    const responseProfileData = await fetch(`http://localhost:8000/accounts/profile/${userId}/`, config);
                     const profileData = await responseProfileData.json();
 
                     if (userData && profileData && profileData[0]) {

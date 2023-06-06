@@ -129,7 +129,7 @@ const Map = ({ radius, region, geoEnabled }) => {
         }
       };
       try {
-        const parques = await fetch('https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/parqueCalis/view/', config);
+        const parques = await fetch('http://localhost:8000/accounts/parqueCalis/view/', config);
         const dataParqueJson = await parques.json();
         setDataParque(dataParqueJson);
       } catch (error) {

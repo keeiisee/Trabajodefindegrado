@@ -9,7 +9,7 @@ export const PublicacionDeOtro = () => {
   const routeParams = useParams()
   useEffect(() => {
     const fetchData = async () => {
-      const profileUrl = `https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/profile/${routeParams.id}/`;
+      const profileUrl = `http://localhost:8000/accounts/profile/${routeParams.id}/`;
       const config = {
         headers: {
           'Content-Type': 'application/json',
@@ -25,7 +25,7 @@ export const PublicacionDeOtro = () => {
         const dataProfile = await responseProfile.json();
 
         if (dataProfile.length > 0) {
-          const postUrl = `https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/publicaciones/${dataProfile[0].id}/`;
+          const postUrl = `http://localhost:8000/accounts/publicaciones/${dataProfile[0].id}/`;
           const responsePost = await fetch(postUrl, config);
           const dataPost = await responsePost.json();
           setPost(dataPost);

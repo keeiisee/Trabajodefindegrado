@@ -28,6 +28,7 @@ const LocationForm = () => {
       const { searchRadius, province, city } = formData;
 
       // Construir la cadena de consulta
+      localStorage.setItem('geoEnabled', useGeolocation)
       localStorage.setItem('searchRadius', searchRadius);
       localStorage.setItem('province', province);
       localStorage.setItem('city', city);

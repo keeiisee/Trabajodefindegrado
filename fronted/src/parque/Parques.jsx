@@ -14,15 +14,14 @@ export const Parques = () => {
     const getLocalStorageValues = () => {
       const storedRadius = localStorage.getItem('radius');
       const storedProvince = localStorage.getItem('province');
+      console.log(storedProvince)
       const storedCity = localStorage.getItem('city');
       const storedGeoEnabled = localStorage.getItem('geoEnabled');
-
+      console.log(storedGeoEnabled)
       if (storedRadius) {
         setRadius(parseInt(storedRadius, 10));
       }
-      if (storedProvince && storedCity) {
-        setSelectedRegion({ province: storedProvince, city: storedCity });
-      }
+      setSelectedRegion({ province: storedProvince, city: storedCity });
       if (storedGeoEnabled) {
         setGeoEnabled(JSON.parse(storedGeoEnabled));
       }
@@ -34,6 +33,7 @@ export const Parques = () => {
   return (
     <LoadScript googleMapsApiKey={googleMapsApiKey} libraries={libraries}>
       <div className="App">
+
         <Map radius={radius} region={selectedRegion} geoEnabled={geoEnabled} />
       </div>
     </LoadScript>

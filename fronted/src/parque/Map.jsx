@@ -81,10 +81,9 @@ const Map = ({ radius, region, geoEnabled }) => {
       }
     );
   };
-
-
  
   useEffect(() => {
+    console.log(region)
     if (!geoEnabled) {
       let address = '';
 

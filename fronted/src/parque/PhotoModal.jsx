@@ -49,9 +49,9 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, like
         newVisibility[index] = !newVisibility[index];
         setMaterialVisibility(newVisibility);
     };
-
-    const [isLikeActive, setIsLikeActive] = useState(likes ? likes.includes(user.id) : []);
-    const [isDislikeActive, setIsDislikeActive] = useState(disLikes ? disLikes.includes(user.id) : []);
+    console.log(likes)
+    const [isLikeActive, setIsLikeActive] = useState(likes.length > 0 ? likes.includes(user.id) : []);
+    const [isDislikeActive, setIsDislikeActive] = useState(disLikes.length > 0 ? disLikes.includes(user.id) : []);
     const dispatch = useDispatch()
     const handleLikeClick = (event) => {
         event.preventDefault();

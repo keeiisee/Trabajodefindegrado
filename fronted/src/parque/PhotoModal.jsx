@@ -29,7 +29,7 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, like
                 };
 
                 try {
-                    const reservas = await fetch(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/reservas/parque/${id}/`, config);
+                    const reservas = await fetch(`/accounts/reservas/parque/${id}/`, config);
                     const dataReserva = await reservas.json();
                     setReserva(dataReserva);
                 } catch (error) {
@@ -50,20 +50,20 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, like
         setMaterialVisibility(newVisibility);
     };
 
-    const [isLikeActive, setIsLikeActive] = useState(likes.includes(user.id));
-    const [isDislikeActive, setIsDislikeActive] = useState(disLikes.includes(user.id));
+    const [isLikeActive, setIsLikeActive] = useState(likes ? likes.includes(user.id) : []);
+    const [isDislikeActive, setIsDislikeActive] = useState(disLikes ? disLikes.includes(user.id) : []);
     const dispatch = useDispatch()
     const handleLikeClick = (event) => {
         event.preventDefault();
         setIsLikeActive(true);
         setIsDislikeActive(false);
-        dispatch(like_post(park,id, enBD))
+        dispatch(like_post(park, id, enBD))
     };
 
     const handleDislikeClick = async () => {
         setIsLikeActive(false);
         setIsDislikeActive(true);
-        
+
         const config = {
             headers: {
                 'Content-Type': 'application/json',

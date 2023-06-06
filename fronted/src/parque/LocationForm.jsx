@@ -20,22 +20,30 @@ const LocationForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    event.preventDefault();
-  const searchRadius = parseInt(formData.searchRadius);
-  if (searchRadius < 5) {
-    setSearchRadiusError(true);
-  } else {
-    setSearchRadiusError(false);
-    const { searchRadius, province, city } = formData;
-    navigate('/parques');
-    closePar()
-    // window.location.reload()
-    // Aquí puedes realizar la acción para enviar el formulario
-  }
-};
-    
-  
-  const cancelar = () =>{
+    const searchRadius = parseInt(formData.searchRadius);
+    if (searchRadius < 5) {
+      setSearchRadiusError(true);
+    } else {
+      setSearchRadiusError(false);
+      const { searchRadius, province, city } = formData;
+
+      // Construir la cadena de consulta
+      const queryParams = new URLSearchParams({
+        searchRadius: searchRadius,
+        province: province,
+        city: city,
+      });
+
+      // Navegar a la ruta con los parámetros de consulta
+      navigate(`/parques?${queryParams.toString()}`);
+      closePar();
+      window.location.reload();
+      // Aquí puedes realizar la acción para enviar el formulario
+    }
+  };
+
+
+  const cancelar = () => {
     closePar()
   }
   const toggleGeolocation = () => {

@@ -1,5 +1,4 @@
-from django.urls import path, include, re_path
-from . import views
+from django.urls import path, include
 from rest_framework import routers
 from .views import CrearParqueCalisteniaView, DislikeParque, LikeParqueView, PublicacionesDeOtroFav, UpdatePostDescriptionView, EliminarPublicacionView, DeleteUserView, PublicacionesFavoritas, UltimasPublicacionesNoAmigosView,LikePublicacionView, UpdateProfileImageView, CrearProfileView, CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
 
@@ -10,7 +9,6 @@ router.register(r'parqueCalis/view', ParqueCalisteniaList)
 router.register(r'reserva/view', ReservaCalisteniaList)
 
 urlpatterns = [
-    re_path(r'^$', views.index, name='index'),
     #url que saca el perfil de todos los usuarios o del id del perfil que le pases
     #path('profiles/', include(router.urls)),
     path('delete/user/', DeleteUserView.as_view(), name='delete_user'),

@@ -39,7 +39,7 @@ export const Navbarhome = () => {
                 <>
                   <li className="text-lg font-medium group">
                     <a
-                      href="#"
+                      type='button'
                       onClick={openLog}
                       className="text-white hover:text-yellow-300 transition-colors duration-200"
                     >
@@ -48,7 +48,7 @@ export const Navbarhome = () => {
                   </li>
                   <li className="text-lg font-medium group">
                     <a
-                      href="#"
+                      type='button'
                       onClick={openReg}
                       className="text-white hover:text-yellow-300 transition-colors duration-200"
                     >

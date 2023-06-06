@@ -14,10 +14,9 @@ export const Parques = () => {
     const getLocalStorageValues = () => {
       const storedRadius = localStorage.getItem('radius');
       const storedProvince = localStorage.getItem('province');
-      console.log(storedProvince)
+
       const storedCity = localStorage.getItem('city');
       const storedGeoEnabled = localStorage.getItem('geoEnabled');
-      console.log(storedGeoEnabled)
       if (storedRadius) {
         setRadius(parseInt(storedRadius, 10));
       }

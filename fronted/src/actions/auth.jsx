@@ -20,7 +20,18 @@ import {
     PROFILE_LOADED_SUCCES,
     PROFILE_LOADED_FAIL,
 } from './types';
-
+function convertImageToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        resolve(event.target.result);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
 export const removeFriend = (recipient_id) => async dispatch => {
     const config = {
         headers: {
@@ -127,6 +138,7 @@ export const load_personas = (palabra) => async dispatch => {
 }
 
 export const modificar_perfil = (imagen, descripcion, user,edad, telefono, privado) => async dispatch => {
+    const base64Image = await convertImageToBase64(imagen);
     const formData = new FormData();
     formData.append('user_id', user.id);
     formData.append('descripcion', descripcion);
@@ -135,7 +147,7 @@ export const modificar_perfil = (imagen, descripcion, user,edad, telefono, priva
     formData.append('is_private', privado);
 
     if (imagen !== null) {
-        formData.append('imagen', imagen);
+        formData.append('imagen', base64Image);
     }
 
     const config = {
@@ -151,11 +163,11 @@ export const modificar_perfil = (imagen, descripcion, user,edad, telefono, priva
     }
 }
 export const crear_perfil = (imagen, descripcion, telefono, user, edad, privado) => async dispatch => {
-
+    const base64Image = await convertImageToBase64(imagen);
     const formData = new FormData();
     formData.append('user', user.id);
     formData.append('descripcion', descripcion);
-    formData.append('imagen', imagen);
+    formData.append('imagen', base64Image);
     formData.append('edad', edad);
     formData.append('telefono', telefono);
     formData.append('is_private', privado);

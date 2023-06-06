@@ -20,7 +20,7 @@ class MaterialSerializer(serializers.ModelSerializer):
 
 class PublicacionSerializer(serializers.ModelSerializer):
     #autor = serializers.StringRelatedField()
-    imagen = ImagenUrlField()
+    # imagen = ImagenUrlField()
     class Meta:
         model = Publicacion
         fields = ['id','autor', 'imagen', 'descripcion', 'fecha_publicacion', 'like']
@@ -99,9 +99,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         instance.edad = validated_data.get('edad', instance.edad)
         instance.descripcion = validated_data.get('descripcion', instance.descripcion)
         instance.is_private = validated_data.get('is_private', instance.is_private)
-  
-        if 'imagen' in validated_data:
-            instance.imagen = validated_data['imagen']
+        instance.imagen = validated_data.get('imagen', instance.imagen)
 
         instance.save()
         return instance

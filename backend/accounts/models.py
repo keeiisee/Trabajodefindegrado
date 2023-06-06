@@ -49,7 +49,7 @@ class Profile(models.Model):
     amigos = models.ManyToManyField(UserAccount, blank=True, related_name='user_friends')
     solicitudEnviada = models.ManyToManyField(UserAccount, blank=True, related_name='sen_solicitud_firend')
     solicitudRecibida = models.ManyToManyField(UserAccount, blank=True, related_name='recieve_solicitud_firend')
-    imagen = models.ImageField(default='descarga.png', blank=True, null=True)
+    imagen = models.TextField(blank=True, null=True)
     parques_calistenia = models.ManyToManyField('ParqueCalistenia', blank=True, related_name='usuarios_inscritos')
     misMeGustan = models.ManyToManyField('Publicacion', blank=True, related_name='mis_mg')
     is_private = models.BooleanField(default=False)
@@ -68,7 +68,7 @@ class Profile(models.Model):
 
 class Publicacion(models.Model):
     autor = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='publicaciones')
-    imagen = models.ImageField(default='descarga.png', blank=True, null=True)
+    imagen = models.TextField(blank=True, null=True)
     descripcion = models.TextField(max_length=1000)
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
     like = models.ManyToManyField(Profile, blank=True, related_name='publicacion_likes')

@@ -37,7 +37,6 @@ const LocationForm = () => {
       // Navegar a la ruta con los parámetros de consulta
       navigate(`/parques?${queryParams.toString()}`);
       closePar();
-      window.location.reload();
       // Aquí puedes realizar la acción para enviar el formulario
     }
   };

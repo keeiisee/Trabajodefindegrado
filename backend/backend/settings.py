@@ -24,13 +24,13 @@ SECRET_KEY = 'django-insecure-s)52u-e6l1=t3r2^yla^o^!uj$#$tuhll3gov(of@70j^#_@&z
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-CSRF_TRUSTED_ORIGINS = ['https://trabajodefindegrado-production-1dd0.up.railway.app', 'https://trabajodefindegrado.vercel.app/']
+CSRF_TRUSTED_ORIGINS = ['https://trabajodefindegrado-production-1dd0.up.railway.app', 'https://trabajodefindegrado.vercel.app']
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:5173',
-    'https://trabajodefindegrado.vercel.app/'
+    'https://trabajodefindegrado.vercel.app'
 ]
-
+CORS_ALLOWED_ORIGINS = ["*"]
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',
@@ -39,7 +39,10 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT'
 ]
-
+# CORS_ALLOWED_ORIGINS = [
+#       'https://trabajodefindegrado.vercel.app',
+#       'http://localhost:5173',
+#   ]
 CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
@@ -49,7 +52,8 @@ CORS_ALLOW_HEADERS = [
     'origin',
     'user-agent',
     'x-csrftoken',
-    'x-requested-with'
+    'x-requested-with',
+    'corsheaders',
 ]
 
 # Application definition
@@ -70,6 +74,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

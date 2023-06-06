@@ -1,7 +1,7 @@
 import random
 from django.db.models import Q
 from django.http import Http404, JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from rest_framework import generics, permissions, viewsets, status
 from rest_framework.response import Response
 from .models import Material, Profile, UserAccount, Publicacion, ParqueCalistenia, Reserva
@@ -10,6 +10,21 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.generics import ListAPIView
 from datetime import date
+def index(request):
+
+    """
+    Función vista para la página inicio del sitio.
+    """
+    # Genera contadores de algunos de los objetos principales
+
+    num_authors=2  # El 'all()' esta implícito por defecto.
+
+    # Renderiza la plantilla HTML index.html con los datos en la variable contexto
+    return render(
+        request,
+        'index.html',
+context={'num_authors':num_authors},
+    )
 
 class EliminarPublicacionView(APIView):
     def post(self, request, *args, **kwargs):

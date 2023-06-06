@@ -27,7 +27,7 @@ const LocationForm = () => {
   } else {
     setSearchRadiusError(false);
     const { searchRadius, province, city } = formData;
-    navigate('/parques', { state: { searchRadius, province, city, useGeolocation } });
+    navigate('/parques');
     closePar()
     window.location.reload()
     // Aquí puedes realizar la acción para enviar el formulario

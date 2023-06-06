@@ -7,7 +7,7 @@ const googleMapsApiKey = 'AIzaSyA18Y1G5FH2nDFfkJcI5x_HxJmRGOtubIA';
 const libraries = ['places'];
 export const Parques = () => {
   // const [radius, setRadius] = useState(1000);
-  const [selectedRegion, setSelectedRegion] = useState(null);
+  // const [selectedRegion, setSelectedRegion] = useState(null);
   // const [geoEnabled, setGeoEnabled] = useState(false);
   
   // const location = useLocation();
@@ -17,14 +17,14 @@ export const Parques = () => {
   //   if (searchParams) {
   //     setGeoEnabled(searchParams.useGeolocation)
   //     setRadius(searchParams.searchRadius);
-      setSelectedRegion({ province: 'Lo pagan', city: 'Murcia' });
+      // setSelectedRegion({ province: 'Lo pagan', city: 'Murcia' });
   //   }
   // }, [searchParams]);
 
   return (
     <LoadScript googleMapsApiKey={googleMapsApiKey} libraries={libraries}>
       <div className="App">
-        <Map radius={10} region={selectedRegion} geoEnabled={false} />
+        <Map radius={10} region={{ province: 'Lo pagan', city: 'Murcia' }} geoEnabled={false} />
       </div>
     </LoadScript>
   );

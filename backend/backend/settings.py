@@ -24,12 +24,9 @@ SECRET_KEY = 'django-insecure-s)52u-e6l1=t3r2^yla^o^!uj$#$tuhll3gov(of@70j^#_@&z
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-CSRF_TRUSTED_ORIGINS = ['https://trabajodefindegrado-production-1dd0.up.railway.app', 'https://trabajodefindegrado.vercel.app']
+CSRF_TRUSTED_ORIGINS = ['https://trabajodefindegrado-production-1dd0.up.railway.app', 'https://trabajodefindegrado.vercel.app','https://trabajodefindegrado-production.up.railway.app', 'https://zesty-account-production.up.railway.app']
 ALLOWED_HOSTS = ['*']
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:5173',
-    'https://trabajodefindegrado.vercel.app'
-]
+CORS_ORIGIN_WHITELIST = ['*']
 CORS_ALLOWED_ORIGINS = ["*"]
 CORS_ALLOW_METHODS = [
     'DELETE',

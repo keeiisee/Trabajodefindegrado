@@ -11,21 +11,15 @@ export const Parques = () => {
   const [geoEnabled, setGeoEnabled] = useState(false);
   
   const location = useLocation();
+  const searchParams = location.state;
 
   useEffect(() => {
-    const getQueryParams = () => {
-      const searchParams = new URLSearchParams(location.search);
-      const searchRadius = parseInt(searchParams.get('searchRadius'), 10) || 1000;
-      const province = searchParams.get('province') || 'Lo pagan';
-      const city = searchParams.get('city') || 'Murcia';
-      
-      setGeoEnabled(false);
-      setRadius(searchRadius);
-      setSelectedRegion({ province: province, city: city });
-    };
-    
-    getQueryParams();
-  }, [location]);
+    if (searchParams) {
+      setGeoEnabled(searchParams.useGeolocation)
+      setRadius(searchParams.searchRadius);
+      setSelectedRegion({ province: searchParams.province, city: searchParams.city });
+    }
+  }, [searchParams]);
 
   return (
     <LoadScript googleMapsApiKey={googleMapsApiKey} libraries={libraries}>
@@ -34,4 +28,4 @@ export const Parques = () => {
       </div>
     </LoadScript>
   );
-};
+}

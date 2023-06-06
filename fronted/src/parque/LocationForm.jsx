@@ -29,7 +29,7 @@ const LocationForm = () => {
     const { searchRadius, province, city } = formData;
     navigate('/parques');
     closePar()
-    window.location.reload()
+    // window.location.reload()
     // Aquí puedes realizar la acción para enviar el formulario
   }
 };

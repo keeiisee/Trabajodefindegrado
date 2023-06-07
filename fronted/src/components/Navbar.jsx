@@ -20,7 +20,7 @@ const PalabrasList = ({ palabras, setPalabras }) => (
             <a
               style={{ whiteSpace: 'nowrap', fontSize: '12px' }}
               onClick={() => setPalabras([])}
-              href={`/perfil/${palabra.id}`}
+              href={`/#/perfil/${palabra.id}`}
             >
               {palabra.name}
             </a>

@@ -8,6 +8,7 @@ export const ParkCard = ({ park }) => {
   const [id , setId] = useState("")
   const [likes, setLikes] = useState([])
   const [disLikes, setDisLikes] = useState([])
+  const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       const config = {
@@ -37,13 +38,13 @@ export const ParkCard = ({ park }) => {
     }
 
     fetchData();
-  }, [])
+  }, [showModal])
 
   const handleImageError = (e) => {
     e.target.onerror = null; // Evita llamadas repetidas al controlador de errores en caso de que la imagen predeterminada también falle
     e.target.src = 'https://wallpapercosmos.com/w/full/f/5/1/1130764-2121x1414-desktop-hd-calisthenics-background-photo.jpg'; // Reemplaza esto con la ruta de tu imagen predeterminada
   };
-  const [showModal, setShowModal] = useState(false);
+  
 
   const handleOpenModal = () => {
     setShowModal(true);

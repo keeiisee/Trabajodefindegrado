@@ -54,7 +54,7 @@ export const Navbar = () => {
       };
 
       try {
-        const responseProfile = await fetch('https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/profile/', config);
+        const responseProfile = await fetch('http://localhost:8000/accounts/profile/', config);
         const dataProfile = await responseProfile.json();
         setProfile(dataProfile);
       } catch (error) {

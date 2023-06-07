@@ -325,6 +325,11 @@ class CrearParqueCalisteniaView(APIView):
         serializer = ParqueCalisteniaCreateSerializer(data=request.data)
         
         if serializer.is_valid():
+            # Verificar si ya existe un parque con el mismo nombre
+            placeId = serializer.validated_data['placeId']
+            if ParqueCalistenia.objects.filter(placeId=placeId).exists():
+                return Response({'error': 'El parque ya existe.'}, status=status.HTTP_400_BAD_REQUEST)
+
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -438,11 +443,11 @@ class LikeParqueView(APIView):
 
 class DislikeParque(APIView):
     def post(self, request, *args, **kwargs):
-        parque_id = request.data.get('parque_id')
+        parque_id = request.data.get('parque')
         if not parque_id:
             return Response({"error": "Debe proporcionar un parque_id."}, status=status.HTTP_400_BAD_REQUEST)
 
-        parque = get_object_or_404(ParqueCalistenia, id=parque_id)
+        parque = get_object_or_404(ParqueCalistenia, placeId=parque_id)
         user = request.user
 
         if user not in parque.dislikes.all():

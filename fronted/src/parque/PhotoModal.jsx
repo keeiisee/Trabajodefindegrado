@@ -3,10 +3,14 @@ import { DateTimeForm } from './DateTimeForm';
 import { Transition } from '@headlessui/react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { like_post } from '../actions/post';
+import { dislike_post, like_post } from '../actions/post';
 //si
 export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, likes = [], disLikes = [] }) => {
     if (!show) return null;
+    const [reloadReservas, setReloadReservas] = useState(false);
+    const handleReservaCreated = () => {
+        setReloadReservas(!reloadReservas);
+      };
     const user = useSelector(state => state.auth.user);
     const [showDateTimeForm, setShowDateTimeForm] = useState(false);
     const [reserva, setReserva] = useState([])
@@ -27,9 +31,8 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, like
                         'Authorization': `JWT ${localStorage.getItem('access')}`,
                     }
                 };
-
                 try {
-                    const reservas = await fetch(`/accounts/reservas/parque/${id}/`, config);
+                    const reservas = await fetch(`http://localhost:8000/accounts/reservas/parque/${id}/`, config);
                     const dataReserva = await reservas.json();
                     setReserva(dataReserva);
                 } catch (error) {
@@ -40,7 +43,7 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, like
             fetchData();
         }
 
-    }, [])
+    }, [reloadReservas])
     //nuevo
     const [materialVisibility, setMaterialVisibility] = useState([]);
 
@@ -49,9 +52,9 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, like
         newVisibility[index] = !newVisibility[index];
         setMaterialVisibility(newVisibility);
     };
-    console.log(likes)
-    const [isLikeActive, setIsLikeActive] = useState(likes.length > 0 ? likes.includes(user.id) : null);
-    const [isDislikeActive, setIsDislikeActive] = useState(disLikes.length > 0 ? disLikes.includes(user.id) : null);
+
+    const [isLikeActive, setIsLikeActive] = useState(likes.includes(user.id));
+    const [isDislikeActive, setIsDislikeActive] = useState(disLikes.includes(user.id));
     const dispatch = useDispatch()
     const handleLikeClick = (event) => {
         event.preventDefault();
@@ -62,24 +65,8 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, like
 
     const handleDislikeClick = async () => {
         setIsLikeActive(false);
-        setIsDislikeActive(true);
-
-        const config = {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `JWT ${localStorage.getItem('access')}`,
-            },
-        };
-        const body = JSON.stringify({ parque_id: id });
-        try {
-            await axios.post(
-                `http://localhost:8000/accounts/parques/dislike/`,
-                body,
-                config
-            );
-        } catch (err) {
-            console.error(err);
-        }
+        setIsDislikeActive(true);   
+        dispatch(dislike_post(park, id, enBD))
     };
 
     if (!show) return null;
@@ -116,7 +103,7 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, like
                             </Transition>
                         </div>
 
-                        <DateTimeForm show={showDateTimeForm} onClose={handleCloseDateTimeForm} park={park} enBD={enBD} />
+                        <DateTimeForm show={showDateTimeForm} onClose={handleCloseDateTimeForm} park={park} enBD={enBD} onReservaCreated={handleReservaCreated}/>
                         {/* <AchievementForm show={showAchievementForm} onClose={handleCloseAchievementForm} /> */}
                         {reserva.length > 0 &&
                             <>

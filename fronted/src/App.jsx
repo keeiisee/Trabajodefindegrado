@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, useNavigate, Link } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes, useNavigate, Link } from 'react-router-dom';
 import Activate from './containers/Activate';
 import ResetPassword from './containers/ResetPassword';
 import ResetPasswordConfirm from './containers/ResetPasswordConfirm';

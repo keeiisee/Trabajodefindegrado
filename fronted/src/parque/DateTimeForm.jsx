@@ -4,7 +4,7 @@ import { crear_reserva } from '../actions/reserva';
 import { Listbox } from '@headlessui/react';
 import { CheckIcon, SelectorIcon, XIcon } from '@heroicons/react/solid';
 
-export const DateTimeForm = ({ show, onClose, park, enBD }) => {
+export const DateTimeForm = ({ show, onClose, park, enBD, onReservaCreated }) => {
   if (!show) return null;
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
@@ -45,6 +45,11 @@ export const DateTimeForm = ({ show, onClose, park, enBD }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     dispatch(crear_reserva(park, date, time, selectedMaterials, enBD))
+    console.log(onReservaCreated)
+    if (onReservaCreated) {
+      console.log("r")
+      onReservaCreated();
+    }
     onClose();
   };
   //si

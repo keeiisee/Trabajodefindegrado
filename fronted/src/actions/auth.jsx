@@ -20,7 +20,18 @@ import {
     PROFILE_LOADED_SUCCES,
     PROFILE_LOADED_FAIL,
 } from './types';
-
+function convertImageToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        resolve(event.target.result);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
 export const removeFriend = (recipient_id) => async dispatch => {
     const config = {
         headers: {
@@ -30,7 +41,7 @@ export const removeFriend = (recipient_id) => async dispatch => {
     };
     const body = JSON.stringify({ recipient_id: recipient_id });
     try {
-        await axios.post(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/remove_friend/`, body, config);
+        await axios.post(`http://localhost:8000/accounts/remove_friend/`, body, config);
 
     } catch (err) {
         console.log(err)
@@ -46,7 +57,7 @@ export const publicaionesAmigos = () => async dispatch => {
         }
     }
     try {
-        const res = await axios.get(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/last_friend_posts/`, config);
+        const res = await axios.get(`http://localhost:8000/accounts/last_friend_posts/`, config);
         if (res.data != []) {
             return res.data
         } else {
@@ -65,7 +76,7 @@ export const addFriend = (recipient_id) => async dispatch => {
     };
     const body = JSON.stringify({ recipient_id: recipient_id });
     try {
-        await axios.post(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/add_friend/`, body, config);
+        await axios.post(`http://localhost:8000/accounts/add_friend/`, body, config);
 
     } catch (err) {
         console.log(err)
@@ -82,7 +93,7 @@ export const sendFriend = (recipient_id) => async dispatch => {
     
     const body = JSON.stringify({ recipient_id: recipient_id });
     try {
-        await axios.post(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/send_friend/`, body, config);
+        await axios.post(`http://localhost:8000/accounts/send_friend/`, body, config);
 
     } catch (err) {
         console.log(err)
@@ -98,7 +109,7 @@ export const rejectFriend = (recipient_id) => async dispatch => {
     };
     const body = JSON.stringify({ recipient_id: recipient_id });
     try {
-        await axios.post(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/reject_friend/`, body, config);
+        await axios.post(`http://localhost:8000/accounts/reject_friend/`, body, config);
 
     } catch (err) {
         console.log(err)
@@ -115,7 +126,7 @@ export const load_personas = (palabra) => async dispatch => {
         }
     }
     try {
-        const res = await axios.get(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/users/${palabra}/`, config);
+        const res = await axios.get(`http://localhost:8000/accounts/users/${palabra}/`, config);
         if (res.data != []) {
             return res.data
         } else {
@@ -127,6 +138,7 @@ export const load_personas = (palabra) => async dispatch => {
 }
 
 export const modificar_perfil = (imagen, descripcion, user,edad, telefono, privado) => async dispatch => {
+    const base64Image = await convertImageToBase64(imagen);
     const formData = new FormData();
     formData.append('user_id', user.id);
     formData.append('descripcion', descripcion);
@@ -135,7 +147,7 @@ export const modificar_perfil = (imagen, descripcion, user,edad, telefono, priva
     formData.append('is_private', privado);
 
     if (imagen !== null) {
-        formData.append('imagen', imagen);
+        formData.append('imagen', base64Image);
     }
 
     const config = {
@@ -145,17 +157,17 @@ export const modificar_perfil = (imagen, descripcion, user,edad, telefono, priva
         }
     };
     try {
-        await axios.put(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/modificar/perfil/`, formData, config);
+        await axios.put(`http://localhost:8000/accounts/modificar/perfil/`, formData, config);
     } catch (error) {
         console.log(error);
     }
 }
 export const crear_perfil = (imagen, descripcion, telefono, user, edad, privado) => async dispatch => {
-
+    const base64Image = await convertImageToBase64(imagen);
     const formData = new FormData();
     formData.append('user', user.id);
     formData.append('descripcion', descripcion);
-    formData.append('imagen', imagen);
+    formData.append('imagen', base64Image);
     formData.append('edad', edad);
     formData.append('telefono', telefono);
     formData.append('is_private', privado);
@@ -167,7 +179,7 @@ export const crear_perfil = (imagen, descripcion, telefono, user, edad, privado)
         }
     };
     try {
-        await axios.post(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/crear/perfil/`, formData, config);
+        await axios.post(`http://localhost:8000/accounts/crear/perfil/`, formData, config);
         dispatch({
             type: PROFILE_CREATE_SUCCES
         });
@@ -189,7 +201,7 @@ export const reset_password_confirm = (uid, token, new_password, re_new_password
     const body = JSON.stringify({ uid, token, new_password, re_new_password });
 
     try {
-        await axios.post(`https://trabajodefindegrado-production-1dd0.up.railway.app/auth/users/reset_password_confirm/`, body, config);
+        await axios.post(`http://127.0.0.1:8000/auth/users/reset_password_confirm/`, body, config);
 
         dispatch({
             type: PASSWORD_RESET_CONFIRM_SUCCESS
@@ -210,7 +222,7 @@ export const signup = (name, email, password, re_password) => async dispatch => 
     const body = JSON.stringify({ name, email, password, re_password });
 
     try {
-        const res = await axios.post(`https://trabajodefindegrado-production-1dd0.up.railway.app/auth/users/`, body, config);
+        const res = await axios.post(`http://127.0.0.1:8000/auth/users/`, body, config);
 
         dispatch({
             type: SIGNUP_SUCCESS,
@@ -233,7 +245,7 @@ export const verify = (uid, token) => async dispatch => {
     const body = JSON.stringify({ uid, token });
 
     try {
-        await axios.post(`https://trabajodefindegrado-production-1dd0.up.railway.app/auth/users/activation/`, body, config);
+        await axios.post(`http://127.0.0.1:8000/auth/users/activation/`, body, config);
 
         dispatch({
             type: ACTIVATION_SUCCESS,
@@ -257,7 +269,7 @@ export const checkAuthenticated = () => async dispatch => {
         const body = JSON.stringify({ token: localStorage.getItem('access') });
 
         try {
-            const res = await axios.post(`https://trabajodefindegrado-production-1dd0.up.railway.app/auth/jwt/verify`, body, config)
+            const res = await axios.post(`http://127.0.0.1:8000/auth/jwt/verify`, body, config)
 
             if (res.data.code !== 'token_not_valid') {
                 load_profile()
@@ -291,7 +303,7 @@ export const reset_password = (email) => async dispatch => {
     const body = JSON.stringify({ email });
 
     try {
-        await axios.post(`https://trabajodefindegrado-production-1dd0.up.railway.app/auth/users/reset_password/`, body, config);
+        await axios.post(`http://127.0.0.1:8000/auth/users/reset_password/`, body, config);
 
         dispatch({
             type: PASSWORD_RESET_SUCCESS
@@ -314,7 +326,7 @@ export const load_user = () => async dispatch => {
         };
 
         try {
-            const res = await axios.get(`https://trabajodefindegrado-production-1dd0.up.railway.app/auth/users/me/`, config);
+            const res = await axios.get(`http://127.0.0.1:8000/auth/users/me/`, config);
             dispatch({
                 type: USER_LOADED_SUCCESS,
                 payload: res.data
@@ -339,7 +351,7 @@ export const deleted_user = () => async dispatch => {
     }
    
     try {
-        await axios.post(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/delete/user/`, null, config);
+        await axios.post(`http://localhost:8000/accounts/delete/user/`, null, config);
         dispatch({
             type: LOGOUT
         });
@@ -356,7 +368,7 @@ export const load_Idprofile = () => async dispatch => {
         }
     }
     try {
-        const res = await axios.get(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/profile/`, config);
+        const res = await axios.get(`http://localhost:8000/accounts/profile/`, config);
         if (res.data.length !== 0) {
             return res.data
         }
@@ -372,7 +384,7 @@ export const load_profile = () => async dispatch => {
         }
     }
     try {
-        const res = await axios.get(`https://trabajodefindegrado-production-1dd0.up.railway.app/accounts/profile/`, config);
+        const res = await axios.get(`http://localhost:8000/accounts/profile/`, config);
 
         if (res.data.length !== 0) {
             dispatch({
@@ -400,7 +412,7 @@ export const login = (email, password) => async dispatch => {
     };
 
     try {
-        const res = await fetch("https://trabajodefindegrado-production-1dd0.up.railway.app/auth/jwt/create/", config);
+        const res = await fetch("http://127.0.0.1:8000/auth/jwt/create/", config);
         const data = await res.json();
 
         if (res.ok) {

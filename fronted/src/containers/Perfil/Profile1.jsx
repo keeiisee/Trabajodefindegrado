@@ -29,6 +29,7 @@ function Profile1({ datas, onProfileUpdate }) {
     const [isSaving, setIsSaving] = useState(false);
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const apiUrl = import.meta.env.VITE_API_URL;
     const [formData, setFormData] = useState({
         descripcion: '',
         imagen: null,
@@ -83,7 +84,7 @@ function Profile1({ datas, onProfileUpdate }) {
                 const amigosArray = datas.amigos;
                 const amigosPromise = amigosArray.map(async (amigo) => {
                     try {
-                        const response = await axios.get(`http://localhost:8000/accounts/profile/${amigo}/`, config);
+                        const response = await axios.get(`${apiUrl}/accounts/profile/${amigo}/`, config);
                         if (response.data) {
                             return response.data;
                         }

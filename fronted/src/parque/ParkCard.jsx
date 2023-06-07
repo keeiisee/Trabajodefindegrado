@@ -9,6 +9,7 @@ export const ParkCard = ({ park }) => {
   const [likes, setLikes] = useState([])
   const [disLikes, setDisLikes] = useState([])
   const [showModal, setShowModal] = useState(false);
+  const apiUrl = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const fetchData = async () => {
       const config = {
@@ -18,7 +19,7 @@ export const ParkCard = ({ park }) => {
         }
       };
       try {
-        const parques = await fetch('http://localhost:8000/accounts/parqueCalis/view/', config);
+        const parques = await fetch(`${apiUrl}/accounts/parqueCalis/view/`, config);
         const dataParque = await parques.json();
 
         const foundItem = dataParque.find(item => item.placeId === park.place_id);

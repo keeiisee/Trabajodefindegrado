@@ -4,7 +4,7 @@ import Profile1 from './Profile1';
 
 export const ConPerfil = () => {
   const [profile, setProfile] = useState("");
-  
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [updateProfileKey, setUpdateProfileKey] = useState(0);
 
   const handleProfileUpdate = () => {
@@ -20,7 +20,7 @@ export const ConPerfil = () => {
         }
       };
       try {
-        const responseProfile = await fetch('http://localhost:8000/accounts/profile/', config);
+        const responseProfile = await fetch(`${apiUrl}/accounts/profile/`, config);
         const dataProfile = await responseProfile.json();
         setProfile(dataProfile);
       } catch (error) {

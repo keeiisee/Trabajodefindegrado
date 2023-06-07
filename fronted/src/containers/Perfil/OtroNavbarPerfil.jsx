@@ -9,6 +9,7 @@ export const OtroNavbarPerfil = () => {
     const routeParams = useParams()
     const navigate = useNavigate()
     const miProfile = useSelector(state => state.auth.profile);
+    const apiUrl = import.meta.env.VITE_API_URL;
     useEffect(() => {
         const fetchData = async () => {
             const config = {
@@ -18,7 +19,7 @@ export const OtroNavbarPerfil = () => {
                 }
             };
             try {
-                const responseProfile = await fetch(`http://localhost:8000/accounts/profile/${routeParams.id}/`, config);
+                const responseProfile = await fetch(`${apiUrl}/accounts/profile/${routeParams.id}/`, config);
                 const dataProfile = await responseProfile.json();
                 setProfile(dataProfile)
             } catch (error) {

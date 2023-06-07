@@ -45,9 +45,7 @@ export const DateTimeForm = ({ show, onClose, park, enBD, onReservaCreated }) =>
   const handleSubmit = (event) => {
     event.preventDefault();
     dispatch(crear_reserva(park, date, time, selectedMaterials, enBD))
-    console.log(onReservaCreated)
     if (onReservaCreated) {
-      console.log("r")
       onReservaCreated();
     }
     onClose();

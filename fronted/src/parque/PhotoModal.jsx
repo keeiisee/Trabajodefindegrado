@@ -17,7 +17,7 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, like
     const handleOpenDateTimeForm = () => {
         setShowDateTimeForm(true);
     };
-
+    const apiUrl = import.meta.env.VITE_API_URL;
     const handleCloseDateTimeForm = () => {
         setShowDateTimeForm(false);
     };
@@ -32,7 +32,7 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, like
                     }
                 };
                 try {
-                    const reservas = await fetch(`http://localhost:8000/accounts/reservas/parque/${id}/`, config);
+                    const reservas = await fetch(`${apiUrl}/accounts/reservas/parque/${id}/`, config);
                     const dataReserva = await reservas.json();
                     setReserva(dataReserva);
                 } catch (error) {

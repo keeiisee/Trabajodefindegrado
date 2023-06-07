@@ -6,11 +6,11 @@ import Post1 from './Post1';
 const MeGustaDeOtro = () => {
     const routeParams = useParams()
     const [publicacionesFavoritas, setPublicacionesFavoritas] = useState([]);
-
+    const apiUrl = import.meta.env.VITE_API_URL;
     useEffect(() => {
         const obtenerPublicacionesFavoritas = async () => {
             try {      
-                const response = await fetch('http://localhost:8000/accounts/publicacionesDeOtro/favoritas/', {
+                const response = await fetch(`${apiUrl}/accounts/publicacionesDeOtro/favoritas/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -10,12 +10,13 @@ const PaginaDeInicio1 = () => {
     const profile = useSelector(state => state.auth.profile);
     const [posts, setPost] = useState([]);
     const [filtro, setFiltro] = useState('amigos');
+    const apiUrl = import.meta.env.VITE_API_URL;
     useEffect(() => {
 
         const amigos = async () => {
             if (profile) {
                 try {
-                    const response = await axios.get('http://localhost:8000/accounts/ultima_publi/', {
+                    const response = await axios.get(`${apiUrl}/accounts/ultima_publi/`, {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `JWT ${localStorage.getItem('access')}`, // Asumiendo que el token de autenticación se guarda en localStorage
@@ -33,7 +34,7 @@ const PaginaDeInicio1 = () => {
         const mg = async () => {
             if (profile) {
                 try {
-                    const response = await fetch('http://localhost:8000/accounts/publicaciones/favoritas/', {
+                    const response = await fetch(`${apiUrl}/accounts/publicaciones/favoritas/`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -52,7 +53,7 @@ const PaginaDeInicio1 = () => {
         const noAmigos = async () => {
             if (profile) {
                 try {
-                    const response = await axios.get('http://localhost:8000/accounts/utlima_publiNoFriend/', {
+                    const response = await axios.get(`${apiUrl}/accounts/utlima_publiNoFriend/`, {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `JWT ${localStorage.getItem('access')}`,

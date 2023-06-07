@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
     const location = useLocation()
     const navBarHome = location.pathname === "/";
     const navBarPerfil = location.pathname.includes("/profile");
-
+    const activate = location.pathname.includes("/activate");
     useEffect(() => {
         dispatch(checkAuthenticated());
         dispatch(load_user());

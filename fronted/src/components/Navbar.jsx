@@ -43,7 +43,7 @@ export const Navbar = () => {
   const [profileI, setProfile] = useState('');
   const navigate = useNavigate();
   const [letras, setLetras] = useState('');
-
+  const apiUrl = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const fetchData = async () => {
       const config = {
@@ -54,7 +54,7 @@ export const Navbar = () => {
       };
 
       try {
-        const responseProfile = await fetch('http://localhost:8000/accounts/profile/', config);
+        const responseProfile = await fetch(`${apiUrl}/accounts/profile/`, config);
         const dataProfile = await responseProfile.json();
         setProfile(dataProfile);
       } catch (error) {

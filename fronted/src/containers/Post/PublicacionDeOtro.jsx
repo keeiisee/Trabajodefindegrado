@@ -7,9 +7,10 @@ export const PublicacionDeOtro = () => {
 
   const [post, setPost] = useState([]);
   const routeParams = useParams()
+  const apiUrl = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const fetchData = async () => {
-      const profileUrl = `http://localhost:8000/accounts/profile/${routeParams.id}/`;
+      const profileUrl = `${apiUrl}/accounts/profile/${routeParams.id}/`;
       const config = {
         headers: {
           'Content-Type': 'application/json',
@@ -25,7 +26,7 @@ export const PublicacionDeOtro = () => {
         const dataProfile = await responseProfile.json();
 
         if (dataProfile.length > 0) {
-          const postUrl = `http://localhost:8000/accounts/publicaciones/${dataProfile[0].id}/`;
+          const postUrl = `${apiUrl}/accounts/publicaciones/${dataProfile[0].id}/`;
           const responsePost = await fetch(postUrl, config);
           const dataPost = await responsePost.json();
           setPost(dataPost);

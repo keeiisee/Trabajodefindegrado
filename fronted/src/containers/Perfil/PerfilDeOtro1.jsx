@@ -13,6 +13,7 @@ const ProfileCard = styled.div`
     color: white;
   `;
 const PerfilDeOtro1 = () => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     const [showModal, setShowModal] = useState(false);
     const dispatch = useDispatch()
     const [esAmigo, setEsAmigo] = useState(false)
@@ -32,7 +33,7 @@ const PerfilDeOtro1 = () => {
             },
         };
         try {
-            const responseProfile = await fetch(`http://localhost:8000/accounts/profile/${routeParams.id}/`, config);
+            const responseProfile = await fetch(`${apiUrl}/accounts/profile/${routeParams.id}/`, config);
             const dataProfile = await responseProfile.json();
             setProfile(dataProfile);
         } catch (error) {

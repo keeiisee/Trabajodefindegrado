@@ -11,6 +11,7 @@ function convertImageToBase64(file) {
     reader.readAsDataURL(file);
   });
 }
+const apiUrl = import.meta.env.VITE_API_URL;
 export const eliminar_post = (publicacion_id) => async (dispatch) => {
   const body = JSON.stringify({ publicacion_id });
   const config = {
@@ -22,7 +23,7 @@ export const eliminar_post = (publicacion_id) => async (dispatch) => {
 
   try {
     await axios.post(
-      'http://localhost:8000/accounts/publicacion/delete/',
+      `${apiUrl}/accounts/publicacion/delete/`,
       body,
       config
     );
@@ -42,7 +43,7 @@ export const modificar_post = (publicacion_id, descripcion) => async (dispatch) 
 
   try {
     await axios.post(
-      'http://localhost:8000/accounts/modificar/publicacion/',
+      `${apiUrl}/accounts/modificar/publicacion/`,
       body,
       config
     );
@@ -63,7 +64,7 @@ export const post_like = (publicacion_id, like) => async (dispatch) => {
 
   try {
     await axios.post(
-      'http://localhost:8000/accounts/like/publicacion/',
+      `${apiUrl}/accounts/like/publicacion/`,
       body,
       config
     );
@@ -87,7 +88,7 @@ export const crear_post = (descripcion, autor, imagen) => async (dispatch) => {
 
   try {
     await axios.post(
-      'http://localhost:8000/accounts/crear/publicacion/',
+      `${apiUrl}/accounts/crear/publicacion/`,
       formData,
       config
     );
@@ -104,9 +105,8 @@ export const ver_post_profile_por_id = (autor) => async dispatch => {
     }
   }
   try {
-    const res = await axios.post(`http://localhost:8000/accounts/publicaciones/${autor}/`, config);
+    const res = await axios.post(`${apiUrl}/accounts/publicaciones/${autor}/`, config);
     if (res.data) {
-      console.log(res)
       return res
     }
   } catch (err) {
@@ -126,7 +126,6 @@ export const like_post = (park, enBD) => async (dispatch) => {
 
   if (!enBD) {
     // Crear parque de calistenia si no existe en la base de datos
-    console.log(park)
     const parqueData = {
       placeId: park.place_id,
       nombre: park.name,
@@ -136,16 +135,15 @@ export const like_post = (park, enBD) => async (dispatch) => {
 
     const parqueBody = JSON.stringify(parqueData);
     try {
-      await axios.post('http://localhost:8000/accounts/parque/create/', parqueBody, config);
+      await axios.post(`${apiUrl}/accounts/parque/create/`, parqueBody, config);
     } catch (err) {
       console.log('Error creando parque de calistenia:', err);
     }
   }
-  console.log(parque)
   const body = JSON.stringify({ parque });
   try {
     await axios.post(
-      `http://localhost:8000/accounts/parques/like/`,
+      `${apiUrl}/accounts/parques/like/`,
       body,
       config
     );
@@ -176,16 +174,15 @@ export const dislike_post = (park, enBD) => async (dispatch) => {
 
     const parqueBody = JSON.stringify(parqueData);
     try {
-      await axios.post('http://localhost:8000/accounts/parque/create/', parqueBody, config);
+      await axios.post(`${apiUrl}/accounts/parque/create/`, parqueBody, config);
     } catch (err) {
       console.log('Error creando parque de calistenia:', err);
     }
   }
-  console.log(parque)
   const body = JSON.stringify({ parque });
   try {
     await axios.post(
-      `http://localhost:8000/accounts/parques/dislike/`,
+      `${apiUrl}/accounts/parques/dislike/`,
       body,
       config
     );

@@ -1,4 +1,5 @@
 import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_URL;
 export const crear_reserva = (park, fecha, hora, materiales, enBD) => async (dispatch) => {
     const parque = park.place_id;
 
@@ -10,6 +11,7 @@ export const crear_reserva = (park, fecha, hora, materiales, enBD) => async (dis
     };
 
     if (!enBD) {
+        
         // Crear parque de calistenia si no existe en la base de datos
         const parqueData = {
             placeId: park.place_id,
@@ -20,15 +22,16 @@ export const crear_reserva = (park, fecha, hora, materiales, enBD) => async (dis
      
         const parqueBody = JSON.stringify(parqueData);
         try {
-            await axios.post('http://localhost:8000/accounts/parque/create/', parqueBody, config);
+            await axios.post(`${apiUrl}/accounts/parque/create/`, parqueBody, config);
         } catch (err) {
             console.log('Error creando parque de calistenia:', err);
         }
     }
 
     const body = JSON.stringify({ parque, fecha, hora, materiales });
+    console.log(body)
     try {
-        await axios.post('http://localhost:8000/accounts/reserva/view/', body, config);
+        await axios.post(`${apiUrl}/accounts/reserva/view/`, body, config);
     } catch (err) {
         console.log(err);
     }

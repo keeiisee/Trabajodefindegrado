@@ -11,6 +11,7 @@ const Post1 = ({ imagen }) => {
   const [profile, setProfile] = useState(null)
   const [mismoUser, setMismoUser] = useState(false)
   const [meGusta, setMeGusta] = useState(false)
+  const apiUrl = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const fetchData = async () => {
       const config = {
@@ -20,10 +21,10 @@ const Post1 = ({ imagen }) => {
         }
       };
       try {
-        const responseProfile = await fetch(`http://localhost:8000/accounts/profiles/profiles/${imagen.autor}/`, config);
+        const responseProfile = await fetch(`${apiUrl}/accounts/profiles/profiles/${imagen.autor}/`, config);
         const dataProfile = await responseProfile.json();
         setProfile(dataProfile);
-        const responseUser = await fetch(`http://localhost:8000/accounts/profile/`, config);
+        const responseUser = await fetch(`${apiUrl}/accounts/profile/`, config);
         const dataUser = await responseUser.json()
 
         if (dataUser[0].user_id === dataProfile.user_id) {

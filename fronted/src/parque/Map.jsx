@@ -119,6 +119,7 @@ const Map = ({ radius, region, geoEnabled }) => {
       searchNearbyParks();
     }
   }, [region, window.google, center]);
+  const apiUrl = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const fetchData = async () => {
       const config = {
@@ -128,7 +129,7 @@ const Map = ({ radius, region, geoEnabled }) => {
         }
       };
       try {
-        const parques = await fetch('http://localhost:8000/accounts/parqueCalis/view/', config);
+        const parques = await fetch(`${apiUrl}/accounts/parqueCalis/view/`, config);
         const dataParqueJson = await parques.json();
         setDataParque(dataParqueJson);
       } catch (error) {

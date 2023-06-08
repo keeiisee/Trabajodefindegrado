@@ -7,6 +7,7 @@ import { dislike_post, like_post } from '../actions/post';
 //si
 export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, likes = [], disLikes = [] }) => {
     if (!show) return null;
+    const imageUrl = photoUrl ? photoUrl : 'https://deportesurbanos.com/wp-content/uploads/2020/03/Instalacion-Parque-Calistenia-DUCNT-122.jpg'
     const [reloadReservas, setReloadReservas] = useState(false);
     const handleReservaCreated = () => {
         setReloadReservas(!reloadReservas);
@@ -35,6 +36,7 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, like
                     const reservas = await fetch(`${apiUrl}/accounts/reservas/parque/${id}/`, config);
                     const dataReserva = await reservas.json();
                     setReserva(dataReserva);
+                    
                 } catch (error) {
                     console.log(error);
                 }
@@ -44,6 +46,7 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, like
         }
 
     }, [reloadReservas])
+
     //nuevo
     const [materialVisibility, setMaterialVisibility] = useState([]);
 
@@ -68,8 +71,6 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, like
         setIsDislikeActive(true);   
         dispatch(dislike_post(park, id, enBD))
     };
-
-    if (!show) return null;
     return (
         <div className="fixed z-10 inset-0 overflow-y-auto">
             <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -79,7 +80,7 @@ export const PhotoModal = ({ show, onClose, photoUrl, name, park, id, enBD, like
                 <span className="hidden sm:inline-block sm:align-middle" aria-hidden="true">&#8203;</span>
                 <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                     <div className="relative">
-                        <img src={photoUrl} alt={`${name} large`} className="w-full h-96 object-cover" />
+                        <img src={imageUrl} alt={`${name} large`} className="w-full h-96 object-cover" />
                         <div className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-blue-500"></div>
                     </div>
                     <h2 className="mt-10 mx-3 text-2xl font-bold mb-2 text-blue-700">{name}</h2>

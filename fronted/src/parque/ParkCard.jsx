@@ -23,7 +23,6 @@ export const ParkCard = ({ park }) => {
         const dataParque = await parques.json();
 
         const foundItem = dataParque.find(item => item.placeId === park.place_id);
-
         // Comprueba si se ha encontrado un elemento y guarda su ID en una variable
         let foundId;
         setShowDiv(foundItem)
@@ -43,7 +42,7 @@ export const ParkCard = ({ park }) => {
 
   const handleImageError = (e) => {
     e.target.onerror = null; // Evita llamadas repetidas al controlador de errores en caso de que la imagen predeterminada también falle
-    e.target.src = 'https://wallpapercosmos.com/w/full/f/5/1/1130764-2121x1414-desktop-hd-calisthenics-background-photo.jpg'; // Reemplaza esto con la ruta de tu imagen predeterminada
+    e.target.src = 'https://deportesurbanos.com/wp-content/uploads/2020/03/Instalacion-Parque-Calistenia-DUCNT-122.jpg'; 
   };
   
 

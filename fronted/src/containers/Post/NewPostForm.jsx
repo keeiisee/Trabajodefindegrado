@@ -6,7 +6,7 @@ import { crear_post } from '../../actions/post';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../provider/UserContext';
 
-function NewPostForm() {
+function NewPostForm({setIsOpen}) {
   const onChange = e => {
     if (e.target.type === 'file') {
       setFormData({ ...formData, [e.target.name]: e.target.files[0] });
@@ -28,7 +28,7 @@ function NewPostForm() {
     event.preventDefault();
     dispatch(crear_post(descripcion, profile[0].id, imagen, ''))
     closePos();
-    navigate('/profile');
+    setIsOpen(false)
   };
 
   useEffect(() => {

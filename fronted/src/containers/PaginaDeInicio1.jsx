@@ -87,10 +87,10 @@ const PaginaDeInicio1 = () => {
                 setFiltro('amigos');
                 break;
             case 1:
-                setFiltro('mis_megusta');
+                setFiltro('sin_seguir');
                 break;
             case 2:
-                setFiltro('sin_seguir');
+                setFiltro('mis_megusta');
                 break;
             default:
                 setFiltro('amigos');

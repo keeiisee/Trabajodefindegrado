@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../provider/UserContext';
 
-const LocationForm = () => {
+const LocationForm = ({cerrar}) => {
   const navigate = useNavigate()
   const { closePar } = useContext(UserContext)
   const [formData, setFormData] = React.useState({
@@ -36,6 +36,7 @@ const LocationForm = () => {
       // Navegar a la ruta con los parámetros de consulta
       navigate(`/parques`);
       closePar();
+      cerrar()
       // Aquí puedes realizar la acción para enviar el formulario
     }
   };

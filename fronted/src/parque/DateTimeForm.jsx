@@ -59,6 +59,7 @@ export const DateTimeForm = ({ show, onClose, park, enBD, onReservaCreated }) =>
           Fecha
         </label>
         <input
+          required
           type="date"
           id="date"
           value={date}
@@ -71,6 +72,7 @@ export const DateTimeForm = ({ show, onClose, park, enBD, onReservaCreated }) =>
           Hora
         </label>
         <input
+          required
           type="time"
           id="time"
           value={time}

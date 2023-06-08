@@ -108,25 +108,25 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'auth_system',
-        'USER': 'postgres',
-        'PASSWORD': '2203',
-        'HOST': os.getenv('DB_HOST', 'localhost')
-    }
-}
 # DATABASES = {
-#   'default': {
-#     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#     'NAME': 'railway',
-#     'USER': 'postgres',
-#     'PASSWORD': 'SXSfoHrBHTKnBL7nG5MA',
-#     'HOST': 'containers-us-west-181.railway.app',
-#     'PORT': '6381',
-#   }
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'auth_system',
+#         'USER': 'postgres',
+#         'PASSWORD': '2203',
+#         'HOST': os.getenv('DB_HOST', 'localhost')
+#     }
 # }
+DATABASES = {
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': 'railway',
+    'USER': 'postgres',
+    'PASSWORD': 'SXSfoHrBHTKnBL7nG5MA',
+    'HOST': 'containers-us-west-181.railway.app',
+    'PORT': '6381',
+  }
+}
 
 
 # Password validation
@@ -204,7 +204,9 @@ SIMPLE_JWT = {
         'rest_framework_simplejwt.tokens.AccessToken',
     )
 }
-# DOMAIN = ('localhost:5173') 
+# para uso local, poner el 
+DOMAIN = ('localhost:5173') 
+# DOMAIN = ('miputoreact.herokuapp.com/#') 
 SITE_NAME = ('CalistenicsApp') 
 DJOSER = {
     'LOGIN_FIELD': 'email',
@@ -219,7 +221,6 @@ DJOSER = {
     'ACTIVATION_URL': 'activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
     'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
-    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:8000/google', 'http://localhost:8000/facebook'],
     'SERIALIZERS': {
         'user_create': 'accounts.serializers.UserCreateSerializer',
         'user': 'accounts.serializers.UserCreateSerializer',

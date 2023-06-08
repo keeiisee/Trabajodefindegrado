@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion';
 import { addFriend, rejectFriend } from '../../actions/auth';
 import { useDispatch } from 'react-redux';
+import TailwindSpinner from '../Perfil/TailwindSpinner';
 
 const ListaDePEtionDeAmistad = ({ onProfileUpdate }) => {
     const dispatch = useDispatch();
@@ -74,11 +75,8 @@ const ListaDePEtionDeAmistad = ({ onProfileUpdate }) => {
         setIsSaving(true);
         dispatch(addFriend(id));
         updateSolicitudes(id);
-        setTimeout(() => {
-            setIsSaving(false);
-            // Llamar a onProfileUpdate para notificar que el perfil ha sido actualizado
-            onProfileUpdate();
-        }, 1000);
+
+        onProfileUpdate();
     };
 
     const denegarSolicitud = (id) => {
@@ -124,26 +122,17 @@ const ListaDePEtionDeAmistad = ({ onProfileUpdate }) => {
                                 alt="Profile"
                                 className="w-12 h-12 rounded-full object-cover"
                             />
-                            <a href={`/perfil/${request && request.id}`} className="text-xlfont-semibold">{request && request.name}</a>
+                            <a href={`/#/perfil/${request && request.id}`} className="text-xlfont-semibold">{request && request.name}</a>
                         </div>
                         <div className="flex space-x-2">
-                            {
-                                isSaving ? (
-                                    <div className="flex justify-center items-center">
-                                        <TailwindSpinner />
-                                    </div>
-                                ) : (
-                                    <button
-                                        className="bg-green-500 text-white font-bold py-1 px-3 rounded focus:outline-none"
-                                        onClick={() => aceptarSolicitud(request && request.id)}
 
-                                    >
-                                        Aceptar
-                                    </button>
-                                )
+                            <button
+                                className="bg-green-500 text-white font-bold py-1 px-3 rounded focus:outline-none"
+                                onClick={() => aceptarSolicitud(request && request.id)}
 
-                            }
-
+                            >
+                                Aceptar
+                            </button>
                             <button
                                 className="bg-red-500 text-white font-bold py-1 px-3 rounded focus:outline-none"
                                 onClick={() => denegarSolicitud(request && request.id)}

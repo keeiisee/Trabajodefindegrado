@@ -9,15 +9,14 @@ export const crear_reserva = (park, fecha, hora, materiales, enBD) => async (dis
             'Authorization': `JWT ${localStorage.getItem('access')}`,
         },
     };
-
     if (!enBD) {
-        
+        const imageUrl = park.photos ? park.photos[0].getUrl() : 'https://deportesurbanos.com/wp-content/uploads/2020/03/Instalacion-Parque-Calistenia-DUCNT-122.jpg'
         // Crear parque de calistenia si no existe en la base de datos
         const parqueData = {
             placeId: park.place_id,
             nombre: park.name,
             descripcion: park.vicinity,
-            imagenUrl: park.photos[0].getUrl(),
+            imagenUrl: imageUrl,
         };
      
         const parqueBody = JSON.stringify(parqueData);

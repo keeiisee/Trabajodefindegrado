@@ -4,14 +4,14 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { UserContext } from '../provider/UserContext';
 import { useSelector } from 'react-redux';
-import { MenuIcon, XIcon } from "@heroicons/react/outline";
+import { HomeIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import { User } from 'react-feather';
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { LogoutIcon, PhotographIcon, SearchIcon, UploadIcon, ViewBoardsIcon } from '@heroicons/react/solid';
 import LocationForm from '../parque/LocationForm';
 import NewPostForm from '../containers/Post/NewPostForm';
-const PalabrasList = ({ palabras, setPalabras }) => (
+const PalabrasList = ({ palabras, cerrar }) => (
   <div className="position-relative">
     <ul className="list-group position-absolute top-100 start-0">
       {palabras.map((palabra, index) => (
@@ -19,7 +19,7 @@ const PalabrasList = ({ palabras, setPalabras }) => (
           {palabra.id ? (
             <a
               style={{ whiteSpace: 'nowrap', fontSize: '12px' }}
-              onClick={() => setPalabras([])}
+              onClick={() => cerrar()}
               href={`/#/perfil/${palabra.id}`}
             >
               {palabra.name}
@@ -64,7 +64,11 @@ export const Navbar = () => {
 
     fetchData();
   }, []);
-
+  const cerrar = () => {
+    setIsOpen(false);
+    setPalabras([])
+    setLetras('')
+  }
   const logout_user = () => {
     dispatch(logout());
     navigate('/');
@@ -91,12 +95,12 @@ export const Navbar = () => {
     <>
       <div className="relative">
         {isOpenParque && (
-          <LocationForm />
+          <LocationForm cerrar={cerrar} />
         )}
       </div>
       <div className="relative">
         {isOpenP && (
-          <NewPostForm />
+          <NewPostForm setIsOpen={setIsOpen} />
         )}
       </div>
 
@@ -115,7 +119,7 @@ export const Navbar = () => {
                       <SearchIcon className="h-5 w-5" />
                     </div>
                     <input onChange={e => onChange(e)} value={letras} onKeyDown={e => { if (e.key === 'Enter') e.preventDefault(); }} id="search" name="search" className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 bg-gray-300 text-black placeholder-black focus:outline-none focus:bg-gray-300 focus:text-black sm:text-sm transition duration-150 ease-in-out" placeholder="Buscar Usuarios" type="search" />
-                    <PalabrasList palabras={palabras} />
+                    <PalabrasList palabras={palabras} cerrar={cerrar} />
                   </div>
                 </div>
               </div>
@@ -127,24 +131,24 @@ export const Navbar = () => {
                       <div className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out" />
                     </li>
                     <li className="text-lg font-medium group">
-                      <button type="button" onClick={explorar}><img src="http://localhost:8000/media/barraIcons.png" alt="Custom Icon" className="h-6 w-6" /></button>
+                      <button type="button" onClick={explorar}><img src="https://cdn-icons-png.flaticon.com/512/4615/4615521.png" alt="Custom Icon" className="h-6 w-6" /></button>
                       <div className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out" />
                     </li>
                     <li>
-                       <div className="relative">
-                      <Link onClick={() => setIsOpen(false)} to="/profile">
-                        <img className="w-10 h-10 object-contain" src={url} alt="Foto de Perfil" />
-                      </Link>
-                      {soli.length > 0 && (
-                        <span
-                          className="bg-green-500 w-4 h-4 rounded-full absolute top-0 right-0 border-2 border-white heartbeat"
-                        ></span>
-                      )}
-                    </div>
+                      <div className="relative">
+                        <Link onClick={() => setIsOpen(false)} to="/profile">
+                          <img className="w-10 h-10 object-contain" src={url} alt="Foto de Perfil" />
+                        </Link>
+                        {soli.length > 0 && (
+                          <span
+                            className="bg-green-500 w-4 h-4 rounded-full absolute top-0 right-0 border-2 border-white heartbeat"
+                          ></span>
+                        )}
+                      </div>
 
-                    <div className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out" />
+                      <div className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out" />
                     </li>
-                   
+
                   </>
                 ) : (
                   <>
@@ -161,77 +165,94 @@ export const Navbar = () => {
               </ul>
             </div>
           </div>
-          <Menu as="div" className="absolute inset-y-0 right-0 flex items-center sm:hidden">
-            {({ open }) => (
-              <>
-                <Menu.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white transition duration-150 ease-in-out" aria-label="Main menu" aria-expanded="false">
-                  {!open ? <MenuIcon className="h-6 w-6 text-white" /> : <XIcon className="h-6 w-6 text-white" />}
-                </Menu.Button>
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <Menu.Items className={`${open ? 'block' : 'hidden'} sm:hidden bg-marron-800 divide-y divide-marron-700`}>
-                    <div className="px-2 pt-2 pb-3">
-                      <ul className="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-6 lg:md:-x-8">
-                        {profile ? (
-                          <>
-                            <li className="text-lg md:text-base lg:text-lg font-medium group text-white">
-                              <button type="button" onClick={openPos}>Subir Imagen</button>
-                              <div className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out" />
-                            </li>
-                            <li className="text-lg md:text-base lg:text-lg font-medium group text-white">
-                              <Link to="/profile">Perfil</Link>
-                              <div className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out" />
-                            </li>
-                          </>
-                        ) : (
-                          <li className="text-lg md:text-base lg:text-lg font-medium group text-white">
-                            <Link to="/crear-perfil">Crear Perfil</Link>
-                            <div className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out" />
-                          </li>
-                        )}
-                        <li className="text-lg md:text-base lg:text-lg font-medium group text-white">
-                          <button type="button" className="mr-5 hover:text-gray-900" onClick={logout_user}>Cerrar Sesión</button>
-                          <div className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out" />
-                        </li>
-                        <div className="flex-1 flex justify-center px-2 lg:ml-6 lg:justify-end">
-                          <div className="max-w-md w-full lg:max-w-xs mb:w-10">
-                            <label htmlFor="search" className="sr-only">Buscar Usuarios</label>
-                            <div className="relative">
-                              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <SearchIcon className="h-5 w-5" />
-                              </div>
-                              <input
-                                onChange={e => onChange(e)}
-                                value={letras}
-                                onKeyDown={e => { if (e.key === 'Enter') e.preventDefault(); }}
-                                id="search"
-                                name="search"
-                                className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 bg-gray-300 text-black placeholder-black focus:outline-none focus:bg-gray-300 focus:text-black sm:text-sm transition duration-150 ease-in-out"
-                                placeholder="Buscar Usuarios"
-                                type="search"
-                              />
-                              <PalabrasList palabras={palabras} />
-                            </div>
-                          </div>
-                        </div>
-                      </ul>
-                    </div>
-                  </Menu.Items>
-                </Transition>
-              </>
-            )}
-          </Menu>
+          <div className="sm:hidden flex items-center">
+            <button className="sm:hidden text-white focus:outline-none mr-5" onClick={toggleMenu}>
+              <svg
+                className="w-6 h-6 fill-current"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+              </svg>
+            </button>
+            {profile &&
+              <div className="sm:hidden">
+                <Link onClick={() => setIsOpen(false)} to="/profile">
+                  <img className="w-10 h-10 object-contain" src={url} alt="Foto de Perfil" />
+                </Link>
+                {soli.length > 0 && (
+                  <span
+                    className="bg-green-500 w-4 h-4 rounded-full absolute top-0 right-0 border-2 border-white heartbeat"
+                  ></span>
+                )}
+              </div>
+            }
+          </div>
+
+
+
         </div>
 
+        {isOpen && (
+          <div className="sm:hidden mt-4">
+            <ul className="shadow-md">
+              {profile ? (
+                <>
+                  <li>
+                    <Link onClick={() => setIsOpen(false)} to="/paginadeinicio" className="block px-4 py-2 text-gray-800">
+                      <div className="flex justify-between">
+                        Inicio
+                        <HomeIcon className="h-6 w-6" /> {/* Reemplace HomeIcon con el ícono que desee */}
+                      </div>
+                    </Link>
+                  </li>
+                  <li>
+                    <a onClick={() => { openPos() }} type='button' className="block px-4 py-2 text-white-500">
+                      <div className="flex justify-between">
+                        Subir imagen
+                        <UploadIcon className="h-6 w-6" />
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a type="button" onClick={explorar} className="block px-4 py-2 text-gray-800">
+                      <div className="flex justify-between">
+                        Buscar Parques
+                        <img src="https://cdn-icons-png.flaticon.com/512/4615/4615521.png" alt="Custom Icon" className="h-6 w-6" />
+                      </div>
+                    </a>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="text-lg font-medium group">
+                    <Link onClick={() => setIsOpen(false)} to="/crear-perfil"><User size={18} className="inline-block mr-1" /></Link>
+                    Crear Perfil
+                  </li>
+                </>
+              )}
+              <li>
+                <a type="button" onClick={logout_user} className="block px-4 py-2 text-gray-800" >
+                <div className="flex justify-between">
+                  Cerrar Sesion
+                  <LogoutIcon className="h-5 w-5" />
+                </div>
+                </a>
+              </li>
+              <div className="max-w-md w-full lg:max-w-xs mb:w-10 mt-2">
+                <label htmlFor="search" className="sr-only">Buscar Usuarios</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <SearchIcon className="h-5 w-5" />
+                  </div>
+                  <input onChange={e => onChange(e)} value={letras} onKeyDown={e => { if (e.key === 'Enter') e.preventDefault(); }} id="search" name="search" className="block w-full pl-10 pr-3 py-2 rounded-md leading-5 bg-gray-300 text-black placeholder-black focus:outline-none focus:bg-gray-300 focus:text-black sm:text-sm transition duration-150 ease-in-out" placeholder="Buscar Usuarios" type="search" />
+                  <PalabrasList palabras={palabras} cerrar={cerrar} />
+                </div>
+              </div>
+            </ul>
+          </div>
+        )}
       </nav>
-
     </>
   );
 }

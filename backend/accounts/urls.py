@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import CrearParqueCalisteniaView, DislikeParque, LikeParqueView, PublicacionesDeOtroFav, UpdatePostDescriptionView, EliminarPublicacionView, DeleteUserView, PublicacionesFavoritas, UltimasPublicacionesNoAmigosView,LikePublicacionView, UpdateProfileImageView, CrearProfileView, CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
+from .views import CrearParqueCalisteniaView, DislikeParque, LikeParqueView, PublicacionesDeOtroFav, ReservasPorPerfilView, UpdatePostDescriptionView, EliminarPublicacionView, DeleteUserView, PublicacionesFavoritas, UltimasPublicacionesNoAmigosView,LikePublicacionView, UpdateProfileImageView, CrearProfileView, CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
 
 router = routers.DefaultRouter()
 router.register(r'profiles/profiles', ProfileList)
@@ -42,8 +42,9 @@ urlpatterns = [
     path('remove_friend/', RemoveFriendView.as_view(), name='remove_friend'),
 
 
-    path('reservas/parque/<int:pk>/', ReservasPorParque.as_view(), name='reservas_por_parque'),
+    path('reservas/parque/', ReservasPorParque.as_view(), name='reservas_por_parque'),
     path('parque/create/', CrearParqueCalisteniaView.as_view(), name='create_parque'),
+    path('reservas_perfil/', ReservasPorPerfilView.as_view(), name='reservas_perfil'),
 
     path('parques/like/', LikeParqueView.as_view(), name='like_parque'),
     path('parques/dislike/', DislikeParque.as_view(), name='dislike_parque'),

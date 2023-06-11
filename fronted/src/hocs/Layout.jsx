@@ -9,9 +9,9 @@ const Layout = ({ children }) => {
     const dispatch = useDispatch();
     const location = useLocation();
     const navBarHome = location.pathname === "/";
-    const navBarPerfil = location.pathname.includes("/profile");
+    
     const activate = location.pathname.includes("/activate");
-    console.log(activate)
+    const ResetPassword = location.pathname.includes("/password/reset/confirm");
     useEffect(() => {
       dispatch(checkAuthenticated());
       dispatch(load_user());
@@ -19,7 +19,7 @@ const Layout = ({ children }) => {
   
     return (
       <div>
-        {!navBarHome && !navBarPerfil && !activate ? <Navbar /> : null}
+        {!navBarHome && !activate && !ResetPassword ? <Navbar /> : null}
         {children}
       </div>
     );

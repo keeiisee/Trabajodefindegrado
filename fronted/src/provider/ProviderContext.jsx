@@ -10,6 +10,14 @@ export const UserProvider = ({ children }) => {
   const [isOpenL, setIsOpenL] = useState(false);
   const [isOpenR, setIsOpenR] = useState(false);
   const [isOpenParque, setIsOpenParque] = useState(false)
+  const [updateProfileKey, setUpdateProfileKey] = useState(0);
+  const [actuParques, setActuParques] = useState(0);
+  const actualizarBusqueda = () => {
+    setActuParques(actuParques + 1);
+  };
+  const handleProfileUpdate = () => {
+    setUpdateProfileKey(updateProfileKey + 1);
+  };
   const openPostM = () => {
     setIsOpenPM(true);
   };
@@ -42,7 +50,7 @@ export const UserProvider = ({ children }) => {
     setIsOpenR(false);
   };
   return (
-    <UserContext.Provider value={{ openPostM,closePostM,isOpenPM,setIsOpenPM, isOpenParque, setIsOpenParque, openPar, closePar, isOpenP, setIsOpenP, openPos, closePos, seccion, setSeccion, palabras, setPalabras, isOpenL, setIsOpenL, isOpenR, setIsOpenR, openLog, closeLog, openReg, closeReg }}>{/* //cualquier hijo del userProvider puede acceder al value */}
+    <UserContext.Provider value={{actualizarBusqueda,actuParques, handleProfileUpdate, updateProfileKey, openPostM,closePostM,isOpenPM,setIsOpenPM, isOpenParque, setIsOpenParque, openPar, closePar, isOpenP, setIsOpenP, openPos, closePos, seccion, setSeccion, palabras, setPalabras, isOpenL, setIsOpenL, isOpenR, setIsOpenR, openLog, closeLog, openReg, closeReg }}>{/* //cualquier hijo del userProvider puede acceder al value */}
       {children}
     </UserContext.Provider>
   )

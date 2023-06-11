@@ -177,12 +177,33 @@ class LikePublicacionView(generics.GenericAPIView):
         except Exception as e:
             return Response({"error": f"Error al procesar la solicitud: {str(e)}"}, status=500)
 
-class ReservasPorParque(ListAPIView):
-    serializer_class = ReservaCreateSerializer
+class ReservasPorParque(APIView):
 
-    def get_queryset(self):
-        parque_id = self.kwargs['pk']
-        return Reserva.objects.filter(parque=parque_id, fecha=date.today())
+    def post(self, request):
+        place_id = request.data.get("place_id")
+        
+        if not place_id:
+            return Response({"detail": "placeId is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            parque_id = ParqueCalistenia.objects.get(placeId=place_id)
+            reserva = Reserva.objects.filter(parque=parque_id, fecha=date.today())
+            print(reserva)
+            serializer = ReservaCreateSerializer(reserva, many=True, context={'request': request})
+            return Response(serializer.data)
+
+        except UserAccount.DoesNotExist:
+            return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        except Profile.DoesNotExist:
+            return Response({"detail": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
+# class ReservasPorParque1(ListAPIView):
+#     serializer_class = ReservaCreateSerializer
+
+#     def get_queryset(self):
+#         placeId = self.kwargs['pk']
+#         print("sd")
+#         return Reserva.objects.filter(placeId=placeId, fecha=date.today())
     
 class RemoveFriendView(APIView):
     def post(self, request):
@@ -320,6 +341,13 @@ class ReservaCalisteniaList(viewsets.ModelViewSet):
         serializer = self.get_serializer(reserva)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+class ReservasPorPerfilView(APIView):
+    serializer_class = ReservaCreateSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return Reserva.objects.filter(usuario__user=user)
+    
 class CrearParqueCalisteniaView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = ParqueCalisteniaCreateSerializer(data=request.data)
@@ -386,7 +414,6 @@ class CrearPublicacionView(APIView):
     parser_classes = [MultiPartParser]
 
     def post(self, request, *args, **kwargs):
-        print(request.data)
         serializer = PublicacionCreateSerializer(data=request.data)
         
         if serializer.is_valid():
@@ -428,7 +455,7 @@ class LikeParqueView(APIView):
         parque_id = request.data.get('parque')
         if not parque_id:
             return Response({"error": "Debe proporcionar un parque_id."}, status=status.HTTP_400_BAD_REQUEST)
-
+        print(parque_id)
         parque = get_object_or_404(ParqueCalistenia, placeId=parque_id)
         user = request.user
 

@@ -10,6 +10,11 @@ export const ParkCard = ({ park }) => {
   const [disLikes, setDisLikes] = useState([])
   const [showModal, setShowModal] = useState(false);
   const apiUrl = import.meta.env.VITE_API_URL;
+  const [recargar, setRecargar] = useState(0)
+  const actu = () =>{
+    setRecargar(recargar + 1)
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       const config = {
@@ -21,16 +26,15 @@ export const ParkCard = ({ park }) => {
       try {
         const parques = await fetch(`${apiUrl}/accounts/parqueCalis/view/`, config);
         const dataParque = await parques.json();
-
+ 
         const foundItem = dataParque.find(item => item.placeId === park.place_id);
         // Comprueba si se ha encontrado un elemento y guarda su ID en una variable
-        let foundId;
         setShowDiv(foundItem)
+  
         if (foundItem) {
-          foundId = foundItem;
-          setId(foundId.id)
-          setLikes(foundId.likes)
-          setDisLikes(foundId.dislikes)
+          setId(foundItem.placeId)
+          setLikes(foundItem.likes)
+          setDisLikes(foundItem.dislikes)
         }
       } catch (error) {
         console.log(error);
@@ -38,7 +42,7 @@ export const ParkCard = ({ park }) => {
     }
 
     fetchData();
-  }, [showModal])
+  }, [showModal, recargar])
 
   const handleImageError = (e) => {
     e.target.onerror = null; // Evita llamadas repetidas al controlador de errores en caso de que la imagen predeterminada también falle
@@ -78,7 +82,7 @@ const handleClick = () => {
         <p>{vicinity}</p>
       </div>
 
-      <PhotoModal show={showModal} onClose={handleCloseModal} photoUrl={photoUrl} name={name} park={park} id={id} enBD={showDiv} likes={likes} disLikes={disLikes}/>
+      <PhotoModal show={showModal} onClose={handleCloseModal} photoUrl={photoUrl} name={name} park={park} id={id} enBD={showDiv} likes={likes} disLikes={disLikes} actu={actu}/>
     </div>
   );
 };

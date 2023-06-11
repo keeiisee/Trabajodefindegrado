@@ -50,11 +50,9 @@ class Profile(models.Model):
     solicitudEnviada = models.ManyToManyField(UserAccount, blank=True, related_name='sen_solicitud_firend')
     solicitudRecibida = models.ManyToManyField(UserAccount, blank=True, related_name='recieve_solicitud_firend')
     imagen = models.TextField(blank=True, null=True)
-    parques_calistenia = models.ManyToManyField('ParqueCalistenia', blank=True, related_name='usuarios_inscritos')
     misMeGustan = models.ManyToManyField('Publicacion', blank=True, related_name='mis_mg')
     is_private = models.BooleanField(default=False)
     telefono = models.CharField(max_length=20, blank=True, null=True)
-    
     edad = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
@@ -94,35 +92,11 @@ class Material(models.Model):
         return self.nombre
     
 class Reserva(models.Model):
-    usuario = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    parque = models.ForeignKey(ParqueCalistenia, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='reserva')
+    parque = models.ForeignKey(ParqueCalistenia, on_delete=models.CASCADE, related_name='parques')
     fecha = models.DateField()
     hora = models.TimeField()
     materiales = models.ManyToManyField(Material, blank=True)
 
     def __str__(self):
         return f"{self.usuario.user.name} - {self.parque.nombre} - {self.fecha} - {self.hora}"
-
-
-# class Post(models.Model):
-#     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
-#     created_date = models.DateTimeField(default=datetime.now())
-#     title = models.CharField(max_length=200)
-#     content = models.TextField()
-#     image = models.ImageField(upload_to='post_images/', blank=True)
-#     likes = models.ManyToManyField(UserAccount, related_name='liked_posts', blank=True)
-
-#     def total_likes(self):
-#         return self.likes.count()
-
-#     def __str__(self):
-#         return self.title
-    
-# class Comment(models.Model):
-    # post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    # author = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
-    # created_date = models.DateTimeField(default=datetime.now())
-    # content = models.TextField()
-
-    # def __str__(self):
-    #     return f'Comment by {self.author} on {self.post}'

@@ -2,14 +2,16 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { UserContext } from '../../provider/UserContext'
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { login } from '../../actions/auth';
+import { Link, useNavigate } from 'react-router-dom';
+import { login, reset_password } from '../../actions/auth';
 import { motion } from 'framer-motion';
 
 export const LoginModal = () => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const { closeLog } = useContext(UserContext);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [esResetPass, setEsResetPass] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const error = useSelector((state) => state.auth.error);
   useEffect(() => {
     setErrorMessage(error);
@@ -33,8 +35,20 @@ export const LoginModal = () => {
   const navigate = useNavigate();
   const onSubmit = (e) => {
     e.preventDefault();
-
-    dispatch(login(email, password));
+    if(esResetPass){
+      setIsSubmitting(true);
+      dispatch(reset_password(email))
+        .then(() => {
+          setIsSubmitting(false);
+          closeLog();
+        })
+        .catch(() => {
+          setIsSubmitting(false);
+        });
+    } else if (!esResetPass){
+      dispatch(login(email, password));
+    }
+    
   };
 
   useEffect(() => {
@@ -74,67 +88,132 @@ export const LoginModal = () => {
           animate="visible"
           exit="exit"
         >
-          <h2 className="text-2xl font-semibold mb-6 text-center text-indigo-600">
-            Iniciar sesión
-          </h2>
-          <form onSubmit={(e) => onSubmit(e)}>
-            <div className="mb-4">
-              <label
-                className="block text-gray-700 font-bold mb-2"
-                htmlFor="email"
-              >
-                Email
-              </label>
-              <input
-                className="appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-indigo-500"
-                id="email"
-                type="email"
-                placeholder="Email"
-                name="email"
-                value={email}
-                onChange={(e) => onChange(e)}
-                required
-              />
-            </div>
-            <div className="mb-6">
-              <label
-                className="block text-gray-700 font-bold mb-2"
-                htmlFor="password"
-              >
-                Contraseña
-              </label>
-              <input
-                className="appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-indigo-500"
-                id="password"
-                type="password"
-                placeholder="Contraseña"
-                name="password"
-                value={password}
-                onChange={(e) => onChange(e)}
-                required
-              />
-            </div>
-            {errorMessage && (
-              <div className="bg-yellow-500 text-white px-4 py-2 mb-6 rounded">
-                {errorMessage}
-              </div>
-            )}
-            <div className="flex items-center justify-between">
-              <button
-                className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-200"
-                type="button"
-                onClick={onCancel}
-              >
-                Cancelar
-              </button>
-              <button
-                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-200"
+          {esResetPass &&
+            <>
+              <h2 className="text-2xl font-semibold mb-6 text-center text-indigo-600">
+                Restablecer contraseña
+              </h2>
+              <form onSubmit={(e) => onSubmit(e)}>
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-700 font-bold mb-2"
+                    htmlFor="email"
+                  >
+                    Email
+                  </label>
+                  <input
+                    className="appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-indigo-500"
+                    id="email"
+                    type="email"
+                    placeholder="Email"
+                    name="email"
+                    value={email}
+                    onChange={(e) => onChange(e)}
+                    required
+                  />
+                  <div className="text-right mt-3">
+                    <Link
+                      onClick={() => setEsResetPass(false)}
+                      className="text-sm text-indigo-600 hover:text-indigo-800"
+                    >
+                      Iniciar Sesion
+                    </Link>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <button
+                    className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-200"
+                    type="button"
+                    onClick={onCancel}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                disabled={isSubmitting}
+                className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="submit"
               >
-                Iniciar sesión
+                {isSubmitting ? 'Enviando...' : 'Enviar'}
               </button>
-            </div>
-          </form>
+                </div>
+              </form>
+            </>
+          }
+          {!esResetPass &&
+            <>
+              <h2 className="text-2xl font-semibold mb-6 text-center text-indigo-600">
+                Iniciar sesión
+              </h2>
+              <form onSubmit={(e) => onSubmit(e)}>
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-700 font-bold mb-2"
+                    htmlFor="email"
+                  >
+                    Email
+                  </label>
+                  <input
+                    className="appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-indigo-500"
+                    id="email"
+                    type="email"
+                    placeholder="Email"
+                    name="email"
+                    value={email}
+                    onChange={(e) => onChange(e)}
+                    required
+                  />
+                </div>
+                <div className="mb-6">
+                  <label
+                    className="block text-gray-700 font-bold mb-2"
+                    htmlFor="password"
+                  >
+                    Contraseña
+                  </label>
+                  <input
+                    className="appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:border-indigo-500"
+                    id="password"
+                    type="password"
+                    placeholder="Contraseña"
+                    name="password"
+                    value={password}
+                    onChange={(e) => onChange(e)}
+                    required
+                  />
+                  <div className="text-right mt-3">
+                    <Link
+                      onClick={() => setEsResetPass(true)}
+                      className="text-sm text-indigo-600 hover:text-indigo-800"
+                    >
+                      ¿Olvidaste tu contraseña? Restablecer
+                    </Link>
+                  </div>
+                </div>
+
+                {errorMessage && (
+                  <div className="bg-yellow-500 text-white px-4 py-2 mb-6 rounded">
+                    {errorMessage}
+                  </div>
+                )}
+                <div className="flex items-center justify-between">
+                  <button
+                    className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-200"
+                    type="button"
+                    onClick={onCancel}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-200"
+                    type="submit"
+                  >
+                    Iniciar sesión
+                  </button>
+                </div>
+              </form>
+            </>
+          }
+
         </motion.div>
       </div>
     </>

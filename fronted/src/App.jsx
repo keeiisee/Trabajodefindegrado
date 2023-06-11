@@ -22,6 +22,7 @@ import MisMeGusta from './containers/Post/MisMeGusta';
 import NewPostForm from './containers/Post/NewPostForm';
 import PaginaDeInicio1 from './containers/PaginaDeInicio1';
 import PerfilDeOtro1 from './containers/Perfil/PerfilDeOtro1';
+import Navbar from './components/Navbar';
 
 export const PrivateRoute = ({ children }) => {
       //const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
@@ -49,7 +50,7 @@ const App = () => {
                                           <Route path='/password/reset/confirm/:uid/:token' element={<ResetPasswordConfirm />}></Route>
                                           <Route path='/paginadeinicio' element={<PrivateRoute><PaginaDeInicio1 /></PrivateRoute>}></Route>
                                           <Route path='/activate/:uid/:token' element={<Activate />}></Route>
-                                          <Route path='/profile' element={<PrivateRoute><ConPerfil /></PrivateRoute>}></Route>
+                                          {/* <Route path='/profile' element={<PrivateRoute><Navbar /></PrivateRoute>}></Route> */}
                                           <Route path='/crear-perfil' element={<PrivateRoute><CrearPerfil /></PrivateRoute>}></Route>
                                           <Route path='/perfil/:id' element={<PrivateRoute><PerfilDeOtro1 /></PrivateRoute>}></Route>
                                           <Route path='/profile/crear-post' element={<PrivateRoute><NewPostForm /></PrivateRoute>}></Route>

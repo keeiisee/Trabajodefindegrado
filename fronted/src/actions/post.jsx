@@ -1,16 +1,39 @@
 import axios from 'axios';
-function convertImageToBase64(file) {
-  return new Promise((resolve, reject) => {
+function resizeImage(file, maxWidth, maxHeight) {
+  return new Promise((resolve) => {
     const reader = new FileReader();
-    reader.onload = (event) => {
-      resolve(event.target.result);
-    };
-    reader.onerror = (error) => {
-      reject(error);
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+        const resizedImageDataUrl = canvas.toDataURL('image/jpeg', 0.75);
+        resolve(resizedImageDataUrl);
+      };
+      img.src = e.target.result;
     };
     reader.readAsDataURL(file);
   });
 }
+
 const apiUrl = import.meta.env.VITE_API_URL;
 export const eliminar_post = (publicacion_id) => async (dispatch) => {
   const body = JSON.stringify({ publicacion_id });
@@ -74,11 +97,13 @@ export const post_like = (publicacion_id, like) => async (dispatch) => {
 }
 
 export const crear_post = (descripcion, autor, imagen) => async (dispatch) => {
-  const base64Image = await convertImageToBase64(imagen);
+  const maxWidth = 800;
+  const maxHeight = 800;
+  const resizedImageDataUrl = await resizeImage(imagen, maxWidth, maxHeight);
   const formData = new FormData();
   formData.append('autor', autor);
   formData.append('descripcion', descripcion);
-  formData.append('imagen', base64Image);
+  formData.append('imagen', resizedImageDataUrl);
   const config = {
     headers: {
       'Content-Type': 'multipart/form-data',

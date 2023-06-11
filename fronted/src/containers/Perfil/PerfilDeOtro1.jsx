@@ -13,29 +13,41 @@ const ProfileCard = styled.div`
     color: white;
   `;
 const PerfilDeOtro1 = () => {
+    const [publicaciones, setPublicaciones] = useState(true)
     const apiUrl = import.meta.env.VITE_API_URL;
     const [showModal, setShowModal] = useState(false);
-    const dispatch = useDispatch()
-    const [esAmigo, setEsAmigo] = useState(false)
-    const [soliRec, setSoliRec] = useState(false)
-    const [soliEnv, setSoliEnv] = useState(false)
-    const [publicaciones, setPublicaciones] = useState(true)
+    const dispatch = useDispatch();
     const userR = useSelector(state => state.auth.user);
     const [profile, setProfile] = useState("");
-    const routeParams = useParams()
-    const navigate = useNavigate()
+    const routeParams = useParams();
+    const navigate = useNavigate();
+
+    const [relationshipStatus, setRelationshipStatus] = useState({
+        esAmigo: false,
+        soliRec: false,
+        soliEnv: false,
+    });
 
     const fetchData = useCallback(async () => {
         const config = {
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `JWT ${localStorage.getItem('access')}`,
+                "Content-Type": "application/json",
+                "Authorization": `JWT ${localStorage.getItem("access")}`,
             },
         };
         try {
             const responseProfile = await fetch(`${apiUrl}/accounts/profile/${routeParams.id}/`, config);
             const dataProfile = await responseProfile.json();
             setProfile(dataProfile);
+
+            const { amigos, solicitudRecibida, solicitudEnviada } = dataProfile[0];
+
+            setRelationshipStatus({
+                esAmigo: amigos.includes(userR.id),
+                soliRec: solicitudRecibida.includes(userR.id),
+                soliEnv: solicitudEnviada.includes(userR.id),
+            });
+
         } catch (error) {
             console.log(error);
         }
@@ -52,57 +64,31 @@ const PerfilDeOtro1 = () => {
         setShowModal(false);
     };
 
-    function enviarAmistad() {
+    const enviarAmistad = () => {
         dispatch(sendFriend(routeParams.id)).then(() => fetchData());
-    }
+    };
 
-    function infoPerfil() {
+    const infoPerfil = () => {
         navigate(`/perfil/${routeParams.id}`);
-    }
-
-    useEffect(() => {
-        // Verifica si profile tiene datos y si tiene al menos un amigo
-        if (profile && profile.length > 0 && profile[0].amigos) {
-            // Guarda los amigos en un nuevo array
-            const amigosArray = profile[0].amigos;
-            const recibidosArray = profile[0].solicitudRecibida
-            const enviadosArray = profile[0].solicitudEnviada
-
-            if (enviadosArray.includes(userR.id)) {
-                setSoliEnv(true)
-            } else {
-                setSoliEnv(false)
-            }
-            if (recibidosArray.includes(userR.id)) {
-                setSoliRec(true)
-            } else {
-                setSoliRec(false)
-            }
-            // Comprueba si user.id está presente en amigosArray
-            if (amigosArray.includes(userR.id)) {
-                setEsAmigo(true)
-            } else {
-                setEsAmigo(false)
-            }
-        }
-    }, [profile]);
+    };
 
     const url = useMemo(() => {
         if (profile) {
             return profile[0].imagen;
         }
-        return '';
+        return "";
     }, [profile]);
 
     const privacidad = useMemo(() => {
         if (profile) {
             return profile[0].is_private;
         }
-        return '';
+        return "";
     }, [profile]);
 
+
     return (
-        <>{privacidad && !esAmigo ? (
+        <>{privacidad && !relationshipStatus.esAmigo ? (
             <>
                 <ProfileCard className="mt-10 mx-10 rounded-lg shadow-md p-6">
                     <div className="space-y-4">
@@ -132,7 +118,7 @@ const PerfilDeOtro1 = () => {
                         </li>
                         <li className="flex items-center">
                             <MailIcon className="h-5 w-5 mr-2" />
-                            
+
                             Correo electrónico: {profile && profile[0].email}
                         </li>
                         <li className="flex items-center">
@@ -145,20 +131,20 @@ const PerfilDeOtro1 = () => {
                     </ul>
                     <div className="flex flex-wrap justify-center sm:justify-start space-y-4 sm:space-y-0 sm:space-x-4 mt-6">
                         {
-                            soliRec &&
+                            relationshipStatus.soliRec &&
                             <button className="bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
                                 <UserGroupIcon className="h-5 w-5 inline-block mr-2" />
                                 Solicitud Enviada
                             </button>
                         }
                         {
-                            soliEnv &&
+                            relationshipStatus.soliEnv &&
                             <button className="bg-orange-600 text-white font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
                                 <UserGroupIcon className="h-5 w-5 inline-block mr-2" />
                                 Te ha enviado solicitud
                             </button>
                         }
-                        {!soliEnv && !esAmigo && !soliRec ? (
+                        {!relationshipStatus.soliEnv && !relationshipStatus.esAmigo && !relationshipStatus.soliRec ? (
                             <>
                                 <button onClick={enviarAmistad} className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
                                     <NewspaperIcon className="h-5 w-5 inline-block mr-2" />
@@ -174,7 +160,7 @@ const PerfilDeOtro1 = () => {
             </>
 
         ) : null}
-            {privacidad && esAmigo || !privacidad ? (
+            {privacidad && relationshipStatus.esAmigo || !privacidad ? (
                 <>
                     <ProfileCard className="mt-10 mx-10 rounded-lg shadow-md p-6">
                         <div className="space-y-4">
@@ -215,7 +201,7 @@ const PerfilDeOtro1 = () => {
                             </li>
                         </ul>
                         <div className="flex flex-wrap justify-center sm:justify-start space-y-4 sm:space-y-0 sm:space-x-4 mt-6">
-                            {esAmigo &&
+                            {relationshipStatus.esAmigo &&
                                 <>
                                     <button className="bg-green-500 text-white font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
                                         <UserGroupIcon className="h-5 w-5 inline-block mr-2" />
@@ -230,20 +216,20 @@ const PerfilDeOtro1 = () => {
 
                             }
                             {
-                                soliRec &&
+                                relationshipStatus.soliRec &&
                                 <button className="bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
                                     <UserGroupIcon className="h-5 w-5 inline-block mr-2" />
                                     Solicitud Enviada
                                 </button>
                             }
                             {
-                                soliEnv &&
+                                relationshipStatus.soliEnv &&
                                 <button className="bg-orange-600 text-white font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
                                     <UserGroupIcon className="h-5 w-5 inline-block mr-2" />
                                     Te ha enviado solicitud
                                 </button>
                             }
-                            {!soliEnv && !esAmigo && !soliRec ? (
+                            {!relationshipStatus.soliEnv && !relationshipStatus.esAmigo && !relationshipStatus.soliRec ? (
                                 <>
                                     <button onClick={enviarAmistad} className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
                                         <NewspaperIcon className="h-5 w-5 inline-block mr-2" />

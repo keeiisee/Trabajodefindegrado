@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import MisPublicaciones from '../Post/MisPublicaciones';
 import MisMeGusta from '../Post/MisMeGusta';
+import PostMiosMeGusta from '../Post/PostMiosMeGusta';
 
-const TabSelector = () => {
+const TabSelector = ({imga, profile, onProfileUpdate, mislikes}) => {
     const [activeTab, setActiveTab] = useState('publications');
 
     const handleClick = (tab) => {
         setActiveTab(tab);
+        onProfileUpdate()
     };
     //puede que lo quite, en ese caso hay que cambiar el div de abajo por el siguiente <div className="mt-10 flex justify-center">
     const scrollToButtons = () => {
@@ -41,8 +43,9 @@ const TabSelector = () => {
                     Mis me gusta
                 </button>
             </div>
-            {activeTab === 'publications' && <MisPublicaciones />}
-            {activeTab === 'likes' && <MisMeGusta />}
+            
+            {activeTab === 'publications' && <MisPublicaciones imga={imga} profile={profile} onProfileUpdate={onProfileUpdate}/>}
+            {activeTab === 'likes' && <MisMeGusta mislikes={mislikes}/>}
         </>
 
     );

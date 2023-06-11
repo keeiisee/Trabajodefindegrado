@@ -29,10 +29,10 @@ const initialState = {
     error: null
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
     const { type, payload } = action;
 
-    switch(type) {
+    switch (type) {
         case 'CLEAR_ERROR':
             return {
                 ...state,
@@ -60,7 +60,7 @@ export default function(state = initialState, action) {
                 error: null
             }
         case USER_LOADED_SUCCESS:
-                return {
+            return {
                 ...state,
                 user: payload,
                 error: null
@@ -68,7 +68,7 @@ export default function(state = initialState, action) {
         case PROFILE_LOADED_SUCCES:
         case PROFILE_CREATE_SUCCES:
             localStorage.setItem('profile', true);
-            return{
+            return {
                 ...state,
                 profile: true,
                 error: null
@@ -76,18 +76,18 @@ export default function(state = initialState, action) {
         case PROFILE_LOADED_FAIL:
         case PROFILE_CREATE_FAIL:
             localStorage.removeItem('profile')
-            return{
+            return {
                 ...state,
                 profile: false
             }
-       
+
 
         case AUTHENTICATED_FAIL:
             return {
                 ...state,
                 isAuthenticated: false
             }
-        
+
         case USER_LOADED_FAIL:
             return {
                 ...state,
@@ -106,7 +106,8 @@ export default function(state = initialState, action) {
                 isAuthenticated: false,
                 user: null,
                 profile: null,
-                error: action.payload // Agrega esta línea
+                error: action.payload,
+                success: action.payload.success,// Agrega esta línea
             };
         case LOGOUT:
             localStorage.removeItem('access');
@@ -118,7 +119,7 @@ export default function(state = initialState, action) {
                 refresh: null,
                 isAuthenticated: false,
                 user: null,
-                profile:null,
+                profile: null,
                 error: null
             }
         case PASSWORD_RESET_SUCCESS:

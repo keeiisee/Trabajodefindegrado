@@ -5,12 +5,15 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { signup } from "../../actions/auth";
 import { animated, useSpring } from 'react-spring';
-const RegisterModal = () => {
-    const dispatch = useDispatch();
+const RegisterModal = ({ setNotification }) => {
+  const [error1, setError1] = useState({ email: '', name: '' });
+  const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const success = useSelector((state) => state.auth.success);
   const { closeReg } = useContext(UserContext);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(''); 
   const [accountCreated, setAccountCreated] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -27,11 +30,23 @@ const RegisterModal = () => {
       return;
     }
 
-    dispatch(signup(name, email, password, re_password));
-    setAccountCreated(true);
-    closeReg();
+    setIsSubmitting(true);
+    dispatch(signup(name, email, password, re_password))
+      .then(() => {
+        setIsSubmitting(false);
+        setNotification('Recibirás un correo de confirmación en breve.');
+        closeReg();
+      })
+      .catch(() => {
+        setIsSubmitting(false);
+      });
   };
-
+  useEffect(() => {
+    if (success) {
+      setAccountCreated(true);
+      closeReg();
+    }
+  }, [success]);
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -46,7 +61,16 @@ const RegisterModal = () => {
       navigate('/');
     }
   }, [accountCreated, navigate]);
+  const erroresStatus = useSelector((state) => state.auth.error);
 
+  useEffect(() => {
+    if (erroresStatus) {
+      if (erroresStatus.email || erroresStatus.name) {
+        setError1(erroresStatus);
+      }
+    }
+
+  }, [erroresStatus]);
   const animation = useSpring({
     opacity: 1,
     transform: 'translate3d(0,0,0)',
@@ -85,6 +109,9 @@ const RegisterModal = () => {
                 onChange={(e) => onChange(e)}
                 required
               />
+              {error1.email && (
+                <p className="text-red-500 mt-2">{error1.email}</p>
+              )}
             </div>
             <div className="mb-4">
               <label
@@ -103,6 +130,9 @@ const RegisterModal = () => {
                 onChange={(e) => onChange(e)}
                 required
               />
+              {error1.name && (
+                <p className="text-red-500 mt-2">{error1.name}</p>
+              )}
             </div>
             <div className="mb-4">
               <label
@@ -146,7 +176,7 @@ const RegisterModal = () => {
               <p className="text-red-500 mb-4">{error}</p>
             )}
             <div className="flex items-center justify-between">
-            <button
+              <button
                 className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-200"
                 type="button"
                 onClick={closeReg}
@@ -154,10 +184,11 @@ const RegisterModal = () => {
                 Cancelar
               </button>
               <button
+                disabled={isSubmitting}
                 className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="submit"
               >
-                Registrarse
+                {isSubmitting ? 'Enviando...' : 'Registrarse'}
               </button>
             </div>
           </form>

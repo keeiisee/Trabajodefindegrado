@@ -4,19 +4,20 @@ import { useParams } from 'react-router-dom';
 import Post1 from './Post1';
 
 const MeGustaDeOtro = () => {
-    const routeParams = useParams()
+    const routeParams = useParams();
     const [publicacionesFavoritas, setPublicacionesFavoritas] = useState([]);
     const apiUrl = import.meta.env.VITE_API_URL;
+
     useEffect(() => {
         const obtenerPublicacionesFavoritas = async () => {
-            try {      
+            try {
                 const response = await fetch(`${apiUrl}/accounts/publicacionesDeOtro/favoritas/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `JWT ${localStorage.getItem('access')}`,
                     },
-                    body: JSON.stringify({'id': routeParams.id})
+                    body: JSON.stringify({ id: routeParams.id }),
                 });
                 const publicacionesJson = await response.json();
                 setPublicacionesFavoritas(publicacionesJson);
@@ -26,14 +27,10 @@ const MeGustaDeOtro = () => {
         };
 
         obtenerPublicacionesFavoritas();
-    }, []);
+    }, [routeParams.id, apiUrl]);
     return (
 
         <>
-
-            {/* <NavbarSuperPerfil />
-            <div className="sm:ml-64 mr-6">
-                <div className="p-4 ml-6 sm:ml-14 border-4 nav-border bg-marron rounded-lg dark:border-gray-700"> */}
             {publicacionesFavoritas.length <= 0 && (
                 <div className="mt-20 ml-20 mr-20 mb-20 text-center animate-bounce">
                     <h1 className="text-4xl font-bold text-gray-700 animate-pulse">No hay publicaciones que ver</h1>

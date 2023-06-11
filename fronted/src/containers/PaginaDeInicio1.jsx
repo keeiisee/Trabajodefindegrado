@@ -10,6 +10,7 @@ const PaginaDeInicio1 = () => {
     const profile = useSelector(state => state.auth.profile);
     const [posts, setPost] = useState([]);
     const [filtro, setFiltro] = useState('amigos');
+    
     const apiUrl = import.meta.env.VITE_API_URL;
     useEffect(() => {
 
@@ -140,7 +141,7 @@ const PaginaDeInicio1 = () => {
 
             <section className="text-gray-600 body-font">
                 <div className="container px-5 py-24 mx-auto">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-8">
                         {posts.map((post) => (
                             <div
                                 key={post.id}

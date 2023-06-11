@@ -20,15 +20,36 @@ import {
     PROFILE_LOADED_SUCCES,
     PROFILE_LOADED_FAIL,
 } from './types';
-
-function convertImageToBase64(file) {
-    return new Promise((resolve, reject) => {
+function resizeImage(file, maxWidth, maxHeight) {
+    return new Promise((resolve) => {
       const reader = new FileReader();
-      reader.onload = (event) => {
-        resolve(event.target.result);
-      };
-      reader.onerror = (error) => {
-        reject(error);
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          let width = img.width;
+          let height = img.height;
+  
+          if (width > height) {
+            if (width > maxWidth) {
+              height *= maxWidth / width;
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width *= maxHeight / height;
+              height = maxHeight;
+            }
+          }
+  
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0, width, height);
+          const resizedImageDataUrl = canvas.toDataURL('image/jpeg', 0.75);
+          resolve(resizedImageDataUrl);
+        };
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     });
@@ -94,7 +115,7 @@ export const sendFriend = (recipient_id) => async dispatch => {
             'Authorization': `JWT ${localStorage.getItem('access')}`,
         }
     };
-    
+
     const body = JSON.stringify({ recipient_id: recipient_id });
     try {
         await axios.post(`${apiUrl}/accounts/send_friend/`, body, config);
@@ -141,8 +162,8 @@ export const load_personas = (palabra) => async dispatch => {
     }
 }
 
-export const modificar_perfil = (imagen, descripcion, user,edad, telefono, privado) => async dispatch => {
-    
+export const modificar_perfil = (imagen, descripcion, user, edad, telefono, privado) => async dispatch => {
+
     const formData = new FormData();
     formData.append('user_id', user.id);
     formData.append('descripcion', descripcion);
@@ -150,10 +171,12 @@ export const modificar_perfil = (imagen, descripcion, user,edad, telefono, priva
     formData.append('telefono', telefono);
     formData.append('is_private', privado);
     if (imagen !== null) {
-        const base64Image = await convertImageToBase64(imagen);
-        formData.append('imagen', base64Image);
-    }
-
+        const maxWidth = 800;
+        const maxHeight = 800;
+        const resizedImageDataUrl = await resizeImage(imagen, maxWidth, maxHeight);
+        formData.append('imagen', resizedImageDataUrl);
+      }
+    
     const config = {
         headers: {
             'Content-Type': 'multipart/form-data',
@@ -167,11 +190,13 @@ export const modificar_perfil = (imagen, descripcion, user,edad, telefono, priva
     }
 }
 export const crear_perfil = (imagen, descripcion, telefono, user, edad, privado) => async dispatch => {
-    const base64Image = await convertImageToBase64(imagen);
+    const maxWidth = 800;
+    const maxHeight = 800;
+    const resizedImageDataUrl = await resizeImage(imagen, maxWidth, maxHeight);
     const formData = new FormData();
     formData.append('user', user.id);
     formData.append('descripcion', descripcion);
-    formData.append('imagen', base64Image);
+    formData.append('imagen', resizedImageDataUrl);
     formData.append('edad', edad);
     formData.append('telefono', telefono);
     formData.append('is_private', privado);
@@ -233,9 +258,22 @@ export const signup = (name, email, password, re_password) => async dispatch => 
             payload: res.data
         });
     } catch (err) {
+        const errorMessage = {};
+
+        if (err.response && err.response.data) {
+            if (err.response.data.email) {
+                errorMessage.email = 'El correo electrónico ya está en uso.';
+            }
+            if (err.response.data.name) {
+                errorMessage.name = 'El nombre de usuario ya está en uso.';
+            }
+        }
+
         dispatch({
-            type: SIGNUP_FAIL
-        })
+            type: SIGNUP_FAIL,
+            payload: { ...errorMessage, success: false },
+        });
+        return Promise.reject();
     }
 };
 
@@ -303,9 +341,7 @@ export const reset_password = (email) => async dispatch => {
             'Content-Type': 'application/json'
         }
     };
-
     const body = JSON.stringify({ email });
-
     try {
         await axios.post(`${apiUrl}/auth/users/reset_password/`, body, config);
 
@@ -353,7 +389,7 @@ export const deleted_user = () => async dispatch => {
             'Authorization': `JWT ${localStorage.getItem('access')}`,
         }
     }
-   
+
     try {
         await axios.post(`${apiUrl}/accounts/delete/user/`, null, config);
         dispatch({

@@ -21,9 +21,10 @@ class MaterialSerializer(serializers.ModelSerializer):
 class PublicacionSerializer(serializers.ModelSerializer):
     #autor = serializers.StringRelatedField()
     # imagen = ImagenUrlField()
+    autor_name = serializers.CharField(source='autor.user.name', read_only=True)
     class Meta:
         model = Publicacion
-        fields = ['id','autor', 'imagen', 'descripcion', 'fecha_publicacion', 'like']
+        fields = ['id','autor','autor_name', 'imagen', 'descripcion', 'fecha_publicacion', 'like']
 
 class UserCreateSerializer(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
@@ -36,17 +37,44 @@ class ProfileOtherSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('user_id', 'user_name', 'descripcion', 'amigos', 'solicitudEnviada', 'solicitudRecibida', 'imagen', 'parques_calistenia', 'misMeGustan', 'is_private', 'telefono', 'edad')
-        
+        fields = ('user_id', 'user_name', 'descripcion', 'amigos', 'solicitudEnviada', 'solicitudRecibida', 'imagen', 'misMeGustan', 'is_private', 'telefono', 'edad')
+
+class ParqueCalisteniaCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ParqueCalistenia
+        fields = ['nombre', 'placeId', 'descripcion', 'imagenUrl', 'baneado', 'likes', 'dislikes']
+
+class ReservaCreateSerializer(serializers.ModelSerializer):
+    usuario_name = serializers.CharField(source='usuario.user.name', read_only=True)
+    materiales = MaterialSerializer(many=True, read_only=True)
+    class Meta:
+        model = Reserva
+        fields = ('usuario', 'parque', 'fecha', 'hora', 'usuario_name', 'materiales')
+
+class ReservaSerializer(serializers.ModelSerializer):
+    usuario_name = serializers.CharField(source='usuario.user.name', read_only=True)
+    materiales = MaterialSerializer(many=True, read_only=True)
+    parque = ParqueCalisteniaCreateSerializer(read_only=True)
+    class Meta:
+        model = Reserva
+        fields = ('usuario', 'parque', 'fecha', 'hora', 'usuario_name', 'materiales')
+
 class ProfileCreateSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source='user.id', read_only=True)
     user_name = serializers.CharField(source='user.name', read_only=True)
     user_email = serializers.CharField(source='user.email', read_only=True)
     user_publicaciones = PublicacionSerializer(source="publicaciones", many=True, read_only=True)
+    user_reservas = ReservaSerializer(source="reserva", many=True, read_only=True)
+    publicaciones_con_mis_likes = serializers.SerializerMethodField()
     class Meta:
         model = Profile
-        fields = ('id', 'user','user_publicaciones', 'descripcion','parques_calistenia','solicitudEnviada','solicitudRecibida','amigos','imagen','user_id', 'user_name','user_email','telefono','edad','is_private')
-
+        fields = ('id', 'user','user_publicaciones','publicaciones_con_mis_likes', 'descripcion','solicitudEnviada','solicitudRecibida','amigos','imagen','user_id', 'user_name','user_email','telefono','edad','is_private', 'user_reservas')
+    def get_publicaciones_con_mis_likes(self, obj):
+        # Filtra las publicaciones que tienen tu "me gusta"
+        publicaciones_con_mis_likes = Publicacion.objects.filter(like=obj)
+        # Utiliza el serializer "PublicacionSerializer" para serializar las publicaciones
+        return PublicacionSerializer(publicaciones_con_mis_likes, many=True).data
+    
 class UserCreateSerializerView(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -63,17 +91,7 @@ class PublicacionCreateSerializer(serializers.ModelSerializer):
         model = Publicacion
         fields = '__all__'
 
-class ParqueCalisteniaCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ParqueCalistenia
-        fields = '__all__'  
 
-class ReservaCreateSerializer(serializers.ModelSerializer):
-    usuario_name = serializers.CharField(source='usuario.user.name', read_only=True)
-    materiales = MaterialSerializer(many=True, read_only=True)
-    class Meta:
-        model = Reserva
-        fields = ('usuario', 'parque', 'fecha', 'hora', 'usuario_name', 'materiales')
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     

@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { NavbarSuperPerfil } from '../../components/NavbarSuperPerfil';
 import Profile1 from './Profile1';
 
 export const ConPerfil = () => {
@@ -35,7 +34,6 @@ export const ConPerfil = () => {
     <>
       {profile && (
         <>
-          <NavbarSuperPerfil profile={profile} />
           <Profile1 datas={profile[0]} onProfileUpdate={handleProfileUpdate} />
         </>
       )}

@@ -1,43 +1,41 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Navbar from '../../components/Navbar';
 import { load_Idprofile } from '../../actions/auth';
-import { connect, useDispatch } from 'react-redux';
+import {  useDispatch } from 'react-redux';
 import { crear_post } from '../../actions/post';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../provider/UserContext';
 
-function NewPostForm({setIsOpen}) {
-  const onChange = e => {
-    if (e.target.type === 'file') {
-      setFormData({ ...formData, [e.target.name]: e.target.files[0] });
-    } else {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-    }
-  };
-  const dispatch = useDispatch()
-  const [profile, setProfile] = useState('');
-  const navigate = useNavigate();
+function NewPostForm({ setIsOpen, handleProfileUpdate }) {
+  const dispatch = useDispatch();
   const { closePos } = useContext(UserContext);
+  const [profile, setProfile] = useState('');
   const [formData, setFormData] = useState({
     descripcion: '',
-    imagen: null
+    imagen: null,
   });
   const { descripcion, imagen } = formData;
 
-  const onSubmit = event => {
+  const onChange = (e) => {
+    const { name, type, value, files } = e.target;
+    setFormData({ ...formData, [name]: type === 'file' ? files[0] : value });
+  };
+
+  const onSubmit = (event) => {
     event.preventDefault();
-    dispatch(crear_post(descripcion, profile[0].id, imagen, ''))
+    dispatch(crear_post(descripcion, profile[0].id, imagen, ''));
+    handleProfileUpdate()
     closePos();
-    setIsOpen(false)
+    setIsOpen(false);
+    
   };
 
   useEffect(() => {
-    const fechData = async () => {
+    const fetchData = async () => {
       const datosProfile = await dispatch(load_Idprofile());
       setProfile(datosProfile);
     };
-    fechData();
-  }, []);
+    fetchData();
+  }, [dispatch]);
 
   return (
     

@@ -9,7 +9,11 @@ export default {
       colors: {
         'marron':"#eaccad",
       },
+      screens: {
+        '1045': '1045px',
+      },
     },
+    
   },
   plugins: [],
 }

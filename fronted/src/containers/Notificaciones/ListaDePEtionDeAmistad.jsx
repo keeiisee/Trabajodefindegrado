@@ -2,13 +2,13 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion';
 import { addFriend, rejectFriend } from '../../actions/auth';
 import { useDispatch } from 'react-redux';
-import TailwindSpinner from '../Perfil/TailwindSpinner';
 
 const ListaDePEtionDeAmistad = ({ onProfileUpdate }) => {
     const dispatch = useDispatch();
     const [usuariosQueSolicitan, setUsuariosQueSolicitan] = useState({});
+    const [isSubmittingA, setIsSubmittingA] = useState(false);
+    const [isSubmittingD, setIsSubmittingD] = useState(false);
     const [profile, setProfile] = useState(null);
-    const [isSaving, setIsSaving] = useState(false);
     const apiUrl = import.meta.env.VITE_API_URL;
     useEffect(() => {
         const fetchData = async () => {
@@ -63,25 +63,33 @@ const ListaDePEtionDeAmistad = ({ onProfileUpdate }) => {
         return [];
     }, [profile, usuariosQueSolicitan]);
 
-    const updateSolicitudes = (id) => {
-        setProfile((prevProfile) => {
-            const updatedProfile = [...prevProfile];
-            updatedProfile[0].solicitudRecibida = updatedProfile[0].solicitudRecibida.filter((userId) => userId !== id);
-            return updatedProfile;
-        });
-    };
+
 
     const aceptarSolicitud = (id) => {
-        setIsSaving(true);
-        dispatch(addFriend(id));
-        updateSolicitudes(id);
+        setIsSubmittingA(true);
+        dispatch(addFriend(id))
+            .then(() => {
+                onProfileUpdate();
+                setIsSubmittingA(false);
+            })
+            .catch(() => {
+                setIsSubmittingA(false);
+            });
 
-        onProfileUpdate();
+
     };
 
     const denegarSolicitud = (id) => {
-        dispatch(rejectFriend(id));
-        updateSolicitudes(id);
+        setIsSubmittingD(true);
+        dispatch(rejectFriend(id))
+            .then(() => {
+                onProfileUpdate();
+                setIsSubmittingD(false);
+            })
+            .catch(() => {
+                setIsSubmittingD(false);
+            });
+
     };
 
     const itemVariants = {
@@ -125,19 +133,20 @@ const ListaDePEtionDeAmistad = ({ onProfileUpdate }) => {
                             <a href={`/#/perfil/${request && request.id}`} className="text-xlfont-semibold">{request && request.name}</a>
                         </div>
                         <div className="flex space-x-2">
-
                             <button
+                                disabled={isSubmittingA}
                                 className="bg-green-500 text-white font-bold py-1 px-3 rounded focus:outline-none"
                                 onClick={() => aceptarSolicitud(request && request.id)}
 
                             >
-                                Aceptar
+                                {isSubmittingA ? '...' : 'Aceptar'}
                             </button>
-                            <button
+                            <button 
+                                disabled={isSubmittingD}
                                 className="bg-red-500 text-white font-bold py-1 px-3 rounded focus:outline-none"
                                 onClick={() => denegarSolicitud(request && request.id)}
                             >
-                                Denegar
+                                {isSubmittingD ? '...' : 'Denegar'}
                             </button>
                         </div>
                     </motion.li>

@@ -177,6 +177,31 @@ class LikePublicacionView(generics.GenericAPIView):
         except Exception as e:
             return Response({"error": f"Error al procesar la solicitud: {str(e)}"}, status=500)
 
+class ReservasPorFecha(APIView):
+
+    def post(self, request):
+        place_id = request.data.get("place_id")
+        fecha_solicitada = request.data.get("fecha")
+
+        if not place_id:
+            return Response({"detail": "placeId is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not fecha_solicitada:
+            return Response({"detail": "fecha is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            parque = ParqueCalistenia.objects.get(placeId=place_id)
+            reservas = Reserva.objects.filter(parque=parque, fecha=fecha_solicitada)
+            serializer = ReservaCreateSerializer(reservas, many=True, context={'request': request})
+            return Response(serializer.data)
+
+        except ParqueCalistenia.DoesNotExist:
+            return Response({"detail": "Parque not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        except ValueError:
+            return Response({"detail": "Invalid date format. Use YYYY-MM-DD."},
+                             status=status.HTTP_400_BAD_REQUEST)
+        
 class ReservasPorParque(APIView):
 
     def post(self, request):
@@ -197,13 +222,7 @@ class ReservasPorParque(APIView):
 
         except Profile.DoesNotExist:
             return Response({"detail": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
-# class ReservasPorParque1(ListAPIView):
-#     serializer_class = ReservaCreateSerializer
 
-#     def get_queryset(self):
-#         placeId = self.kwargs['pk']
-#         print("sd")
-#         return Reserva.objects.filter(placeId=placeId, fecha=date.today())
     
 class RemoveFriendView(APIView):
     def post(self, request):
@@ -341,6 +360,25 @@ class ReservaCalisteniaList(viewsets.ModelViewSet):
         serializer = self.get_serializer(reserva)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+class EliminarReservaView(APIView):
+    def post(self, request, *args, **kwargs):
+        # Obtener el ID de la publicación a eliminar del cuerpo de la solicitud
+        id = request.data.get('id')
+        
+        # Verificar que se proporcionó un ID válido
+        if not id:
+            return Response({'error': 'Debe proporcionar un ID'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Obtener la publicación correspondiente y eliminarla
+        try:
+            reserva = Reserva.objects.get(id=id)
+            reserva.delete()
+            return Response({'success': 'Reserva eliminada correctamente'}, status=status.HTTP_200_OK)
+        except Reserva.DoesNotExist:
+            return Response({'error': 'La reserva especificada no existe'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 class ReservasPorPerfilView(APIView):
     serializer_class = ReservaCreateSerializer
 

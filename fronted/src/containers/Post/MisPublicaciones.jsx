@@ -1,8 +1,9 @@
 import React from 'react'
 import PostMiosPublic from './PostMiosPublic';
 
-export const MisPublicaciones = ({imga = [], profile, onProfileUpdate}) => {
+export const MisPublicaciones = ({imga = [], profile, otro}) => {
     const imagenesInvertidas = imga.slice().reverse(); 
+
     return (
         <>
             {imagenesInvertidas.length <= 0 && (
@@ -20,7 +21,7 @@ export const MisPublicaciones = ({imga = [], profile, onProfileUpdate}) => {
                                 key={post.id}
                                 className="transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105"
                             >
-                                <PostMiosPublic imagen={post}  profile={profile} onProfileUpdate={onProfileUpdate}/>
+                                <PostMiosPublic imagen={post} profile={profile} otro={otro}/>
                             </div>
                         ))}
                     </div>

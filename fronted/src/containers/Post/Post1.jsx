@@ -291,7 +291,7 @@ const Post1 = ({ imagen, onPostUpdated }) => {
               <img src={imagen.imagen} alt={imagen.descripcion} className="object-contain max-w-full max-h-[290px] mb-2" />
               {/* Nuevo div para el párrafo "Descripción" */}
               <div className="bg-gradient-to-r from-pink-500 to-indigo-500 text-white font-bold py-1 px-4 mb-2 rounded shadow-md">
-                <a href={`/#/perfil/${imagen.autor}`}>Ver Perfil</a>
+                <a href={`/#/perfil/${imagen.autor_id}`}>Ver Perfil</a>
                 
               </div>
               <p className="break-all whitespace-normal">{imagen.descripcion}</p>

@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import CrearParqueCalisteniaView, DislikeParque, LikeParqueView, PublicacionesDeOtroFav, ReservasPorPerfilView, UpdatePostDescriptionView, EliminarPublicacionView, DeleteUserView, PublicacionesFavoritas, UltimasPublicacionesNoAmigosView,LikePublicacionView, UpdateProfileImageView, CrearProfileView, CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
+from .views import EliminarReservaView, CrearParqueCalisteniaView, DislikeParque, LikeParqueView, PublicacionesDeOtroFav, ReservasPorFecha, ReservasPorPerfilView, UpdatePostDescriptionView, EliminarPublicacionView, DeleteUserView, PublicacionesFavoritas, UltimasPublicacionesNoAmigosView,LikePublicacionView, UpdateProfileImageView, CrearProfileView, CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
 
 router = routers.DefaultRouter()
 router.register(r'profiles/profiles', ProfileList)
@@ -41,8 +41,9 @@ urlpatterns = [
     path('utlima_publiNoFriend/', UltimasPublicacionesNoAmigosView.as_view(), name='last_post_noFriend'),
     path('remove_friend/', RemoveFriendView.as_view(), name='remove_friend'),
 
-
+    path('reservasDeleted/', EliminarReservaView.as_view(), name='reservas_deleted'),
     path('reservas/parque/', ReservasPorParque.as_view(), name='reservas_por_parque'),
+    path('reservasPorfecha/', ReservasPorFecha.as_view(), name='reservas_por_fecha'),
     path('parque/create/', CrearParqueCalisteniaView.as_view(), name='create_parque'),
     path('reservas_perfil/', ReservasPorPerfilView.as_view(), name='reservas_perfil'),
 

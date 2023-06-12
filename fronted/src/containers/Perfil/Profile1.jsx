@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { MailIcon, PhoneIcon, CakeIcon } from '@heroicons/react/outline';
 import { UserGroupIcon, NewspaperIcon, CogIcon, BellIcon } from '@heroicons/react/solid';
 import styled from '@emotion/styled';
@@ -13,13 +13,15 @@ import ToggleButton from './ToggleButton';
 import TailwindSpinner from './TailwindSpinner';
 import MisParques from './MisParques';
 import MediaQuery from 'react-responsive';
+import { UserContext } from '../../provider/UserContext';
 
 const ProfileCard = styled.div`
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
   `;
 
-function Profile1({ datas, onProfileUpdate }) {
+function Profile1({ datas }) {
+    const { handleProfileUpdate, updateProfileKey } = useContext(UserContext);
     const [privateProfile, setPrivateProfile] = useState(datas.is_private);
     const [publicaciones, setPublicaciones] = useState(true)
     const [amigos, setAmigos] = useState(false)
@@ -105,7 +107,7 @@ function Profile1({ datas, onProfileUpdate }) {
         };
 
         fetchData();
-    }, [onProfileUpdate]);
+    }, [updateProfileKey]);
 
     const handleDeleteUser = (confirm) => {
         if (confirm) {
@@ -153,13 +155,13 @@ function Profile1({ datas, onProfileUpdate }) {
             // Resto del código para enviar el formulario
             dispatch(modificar_perfil(imagen, descripcion, user, edad, telefono, privateProfile))
                 .then(() => {
-                    onProfileUpdate();
+                    handleProfileUpdate();
                     setIsSaving(false)
                     setEditMode(false);
                 })
         }
 
-    }, [dispatch, formData, privateProfile, datas.user, onProfileUpdate]);
+    }, [dispatch, formData, privateProfile, datas.user, handleProfileUpdate]);
     //
 
     function clickPubli() {
@@ -542,8 +544,8 @@ function Profile1({ datas, onProfileUpdate }) {
                 </div>
             )}
             {reservas && <MisParques reservas={datas.user_reservas} />}
-            {publicaciones && <TabSelector mislikes={datas.publicaciones_con_mis_likes} imga={datas.user_publicaciones} profile={datas} onProfileUpdate={onProfileUpdate} />}
-            {notificaciones && <TabSelectorNotis onProfileUpdate={onProfileUpdate} />}
+            {publicaciones && <TabSelector mislikes={datas.publicaciones_con_mis_likes} imga={datas.user_publicaciones} profile={datas} />}
+            {notificaciones && <TabSelectorNotis  />}
             {amigos && (
                 <>
                     <ListaAmigos friends={amigosList} onClose={() => setAmigos(false)} />

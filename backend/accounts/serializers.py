@@ -19,12 +19,11 @@ class MaterialSerializer(serializers.ModelSerializer):
         fields = ['id', 'nombre']       
 
 class PublicacionSerializer(serializers.ModelSerializer):
-    #autor = serializers.StringRelatedField()
-    # imagen = ImagenUrlField()
+    autor_id = serializers.IntegerField(source='autor.user.id', read_only=True)
     autor_name = serializers.CharField(source='autor.user.name', read_only=True)
     class Meta:
         model = Publicacion
-        fields = ['id','autor','autor_name', 'imagen', 'descripcion', 'fecha_publicacion', 'like']
+        fields = ['id','autor','autor_name','autor_id', 'imagen', 'descripcion', 'fecha_publicacion', 'like']
 
 class UserCreateSerializer(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
@@ -49,7 +48,7 @@ class ReservaCreateSerializer(serializers.ModelSerializer):
     materiales = MaterialSerializer(many=True, read_only=True)
     class Meta:
         model = Reserva
-        fields = ('usuario', 'parque', 'fecha', 'hora', 'usuario_name', 'materiales')
+        fields = ('id','usuario', 'parque', 'fecha', 'hora', 'usuario_name', 'materiales')
 
 class ReservaSerializer(serializers.ModelSerializer):
     usuario_name = serializers.CharField(source='usuario.user.name', read_only=True)
@@ -57,7 +56,8 @@ class ReservaSerializer(serializers.ModelSerializer):
     parque = ParqueCalisteniaCreateSerializer(read_only=True)
     class Meta:
         model = Reserva
-        fields = ('usuario', 'parque', 'fecha', 'hora', 'usuario_name', 'materiales')
+        fields = ('id','usuario', 'parque', 'fecha', 'hora', 'usuario_name', 'materiales')
+
 
 class ProfileCreateSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source='user.id', read_only=True)

@@ -54,7 +54,10 @@ class Profile(models.Model):
     is_private = models.BooleanField(default=False)
     telefono = models.CharField(max_length=20, blank=True, null=True)
     edad = models.IntegerField(blank=True, null=True)
-
+    rutinas = models.ManyToManyField('Rutina', blank=True, related_name='usuarios_rutinas')
+    experiencia = models.IntegerField(default=0)
+    nivel = models.IntegerField(default=1)
+    
     def __str__(self):
         return self.user.name
 
@@ -64,6 +67,20 @@ class Profile(models.Model):
         else:
             return ''
 
+class Rutina(models.Model):
+    NIVEL_CHOICES = (
+        ('principiante', 'Principiante'),
+        ('intermedio', 'Intermedio'),
+        ('avanzado', 'Avanzado'),
+    )
+    nombre = models.CharField(max_length=255)
+    descripcion = models.TextField()
+    nivel = models.CharField(max_length=20, choices=NIVEL_CHOICES)
+    experiencia = models.IntegerField()
+
+    def __str__(self):
+        return self.nombre
+    
 class Publicacion(models.Model):
     autor = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='publicaciones')
     imagen = models.TextField(blank=True, null=True)

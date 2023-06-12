@@ -110,6 +110,12 @@ export default function (state = initialState, action) {
                 success: action.payload.success,// Agrega esta línea
             };
         case LOGOUT:
+        case PASSWORD_RESET_SUCCESS:
+        case PASSWORD_RESET_FAIL:
+        case PASSWORD_RESET_CONFIRM_SUCCESS:
+        case PASSWORD_RESET_CONFIRM_FAIL:
+        case ACTIVATION_SUCCESS:
+        case ACTIVATION_FAIL:
             localStorage.removeItem('access');
             localStorage.removeItem('refresh');
             localStorage.removeItem('profile');
@@ -121,15 +127,6 @@ export default function (state = initialState, action) {
                 user: null,
                 profile: null,
                 error: null
-            }
-        case PASSWORD_RESET_SUCCESS:
-        case PASSWORD_RESET_FAIL:
-        case PASSWORD_RESET_CONFIRM_SUCCESS:
-        case PASSWORD_RESET_CONFIRM_FAIL:
-        case ACTIVATION_SUCCESS:
-        case ACTIVATION_FAIL:
-            return {
-                ...state
             }
         default:
             return state

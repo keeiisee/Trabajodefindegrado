@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
@@ -7,12 +7,14 @@ import { UserGroupIcon, NewspaperIcon, CogIcon, BellIcon } from '@heroicons/reac
 import TabSelector from './TabSelector';
 import { removeFriend, sendFriend } from '../../actions/auth';
 import TabSelectorOtro from './TabSelectorOtro';
+import { UserContext } from '../../provider/UserContext';
 
 const ProfileCard = styled.div`
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
   `;
 const PerfilDeOtro1 = () => {
+    const [isLoading, setIsLoading] = useState(true);
     const [publicaciones, setPublicaciones] = useState(true)
     const apiUrl = import.meta.env.VITE_API_URL;
     const [showModal, setShowModal] = useState(false);
@@ -21,7 +23,7 @@ const PerfilDeOtro1 = () => {
     const [profile, setProfile] = useState("");
     const routeParams = useParams();
     const navigate = useNavigate();
-
+    const { handleProfileUpdate, updateProfileKey } = useContext(UserContext);
     const [relationshipStatus, setRelationshipStatus] = useState({
         esAmigo: false,
         soliRec: false,
@@ -29,6 +31,7 @@ const PerfilDeOtro1 = () => {
     });
 
     const fetchData = useCallback(async () => {
+        setIsLoading(true);
         const config = {
             headers: {
                 "Content-Type": "application/json",
@@ -43,16 +46,16 @@ const PerfilDeOtro1 = () => {
             const { amigos, solicitudRecibida, solicitudEnviada } = dataProfile[0];
 
             setRelationshipStatus({
-                esAmigo: amigos.includes(userR.id),
-                soliRec: solicitudRecibida.includes(userR.id),
-                soliEnv: solicitudEnviada.includes(userR.id),
+                esAmigo: amigos.includes(userR && userR.id),
+                soliRec: solicitudRecibida.includes(userR && userR.id),
+                soliEnv: solicitudEnviada.includes(userR && userR.id),
             });
-
+            setIsLoading(false);
         } catch (error) {
             console.log(error);
         }
-    }, [routeParams.id]);
-
+    }, [routeParams.id, updateProfileKey]);
+    
     useEffect(() => {
         fetchData();
     }, [fetchData]);
@@ -88,78 +91,85 @@ const PerfilDeOtro1 = () => {
 
 
     return (
-        <>{privacidad && !relationshipStatus.esAmigo ? (
-            <>
-                <ProfileCard className="mt-10 mx-10 rounded-lg shadow-md p-6">
-                    <div className="space-y-4">
-                        <img
-                            onClick={infoPerfil}
-                            src={url}
-                            alt="Profile"
-                            className="w-24 h-24 rounded-full object-cover"
-                        />
 
-                        <h1 className="text-2xl font-semibold">{profile && profile[0].user_name}</h1>
-                        <h3 htmlFor="descripcion" className="form-label font-bold">Biografia:</h3>
-                        <h3 className="text-xl">{profile && profile[0].descripcion}</h3>
-                    </div>
-                    <ul className="text-sm space-y-2 mt-4">
-
-                        <li className="flex items-center">
-                            <PhoneIcon className="h-5 w-5 mr-2" />
-                            Teléfono: {' '}
-
-                            {profile && profile[0].telefono}
-
-                        </li>
-                        <li className="flex items-center">
-                            <UserGroupIcon className="h-5 w-5 mr-2" />
-                            Logros: 0
-                        </li>
-                        <li className="flex items-center">
-                            <MailIcon className="h-5 w-5 mr-2" />
-
-                            Correo electrónico: {profile && profile[0].email}
-                        </li>
-                        <li className="flex items-center">
-                            <CakeIcon className="h-5 w-5 mr-2" />
-                            Edad:{' '}
-
-                            {profile && profile[0].edad}
-
-                        </li>
-                    </ul>
-                    <div className="flex flex-wrap justify-center sm:justify-start space-y-4 sm:space-y-0 sm:space-x-4 mt-6">
-                        {
-                            relationshipStatus.soliRec &&
-                            <button className="bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
-                                <UserGroupIcon className="h-5 w-5 inline-block mr-2" />
-                                Solicitud Enviada
-                            </button>
-                        }
-                        {
-                            relationshipStatus.soliEnv &&
-                            <button className="bg-orange-600 text-white font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
-                                <UserGroupIcon className="h-5 w-5 inline-block mr-2" />
-                                Te ha enviado solicitud
-                            </button>
-                        }
-                        {!relationshipStatus.soliEnv && !relationshipStatus.esAmigo && !relationshipStatus.soliRec ? (
-                            <>
-                                <button onClick={enviarAmistad} className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
-                                    <NewspaperIcon className="h-5 w-5 inline-block mr-2" />
-                                    Enviar Amistad
-                                </button>
-                            </>) : null}
-                    </div>
-                </ProfileCard >
-                <div className="mt-20 ml-20 mr-20 mb-20 text-center animate-bounce">
-                    <h1 className="text-4xl font-bold text-gray-700 animate-pulse">Este perfil es privado</h1>
-                    <p className="mt-4 text-gray-500">Para poder ver sus publicaciones y me gusta, enviale amistad</p>
+        <>
+            {isLoading &&
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="spinner"></div>
                 </div>
-            </>
+            }
+            {!isLoading && privacidad && !relationshipStatus.esAmigo ? (
+                <>
+                    <ProfileCard className="mt-10 mx-10 rounded-lg shadow-md p-6">
+                        <div className="space-y-4">
+                            <img
+                                onClick={infoPerfil}
+                                src={url}
+                                alt="Profile"
+                                className="w-24 h-24 rounded-full object-cover"
+                            />
 
-        ) : null}
+                            <h1 className="text-2xl font-semibold">{profile && profile[0].user_name}</h1>
+                            <h3 htmlFor="descripcion" className="form-label font-bold">Biografia:</h3>
+                            <h3 className="text-xl">{profile && profile[0].descripcion}</h3>
+                        </div>
+                        <ul className="text-sm space-y-2 mt-4">
+
+                            <li className="flex items-center">
+                                <PhoneIcon className="h-5 w-5 mr-2" />
+                                Teléfono: {' '}
+
+                                {profile && profile[0].telefono}
+
+                            </li>
+                            <li className="flex items-center">
+                                <UserGroupIcon className="h-5 w-5 mr-2" />
+                                Logros: 0
+                            </li>
+                            <li className="flex items-center">
+                                <MailIcon className="h-5 w-5 mr-2" />
+
+                                Correo electrónico: {profile && profile[0].email}
+                            </li>
+                            <li className="flex items-center">
+                                <CakeIcon className="h-5 w-5 mr-2" />
+                                Edad:{' '}
+
+                                {profile && profile[0].edad}
+
+                            </li>
+                        </ul>
+                        <div className="flex flex-wrap justify-center sm:justify-start space-y-4 sm:space-y-0 sm:space-x-4 mt-6">
+                            {
+                                relationshipStatus.soliRec &&
+                                <button className="bg-yellow-600 text-white font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
+                                    <UserGroupIcon className="h-5 w-5 inline-block mr-2" />
+                                    Solicitud Enviada
+                                </button>
+                            }
+                            {
+                                relationshipStatus.soliEnv &&
+                                <button className="bg-orange-600 text-white font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
+                                    <UserGroupIcon className="h-5 w-5 inline-block mr-2" />
+                                    Te ha enviado solicitud
+                                </button>
+                            }
+                            {!relationshipStatus.soliEnv && !relationshipStatus.esAmigo && !relationshipStatus.soliRec ? (
+                                <>
+                                    <button onClick={enviarAmistad} className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
+                                        <NewspaperIcon className="h-5 w-5 inline-block mr-2" />
+                                        Enviar Amistad
+                                    </button>
+                                </>) : null}
+                        </div>
+                    </ProfileCard >
+                    <div className="mt-20 ml-20 mr-20 mb-20 text-center animate-bounce">
+                        <h1 className="text-4xl font-bold text-gray-700 animate-pulse">Este perfil es privado</h1>
+                        <p className="mt-4 text-gray-500">Para poder ver sus publicaciones y me gusta, enviale amistad</p>
+                    </div>
+                </>
+
+            ) : null}
             {privacidad && relationshipStatus.esAmigo || !privacidad ? (
                 <>
                     <ProfileCard className="mt-10 mx-10 rounded-lg shadow-md p-6">
@@ -298,8 +308,8 @@ const PerfilDeOtro1 = () => {
                             </div>
                         </div>
                     )}
-                    {publicaciones && <TabSelectorOtro />
-                    }
+                    {publicaciones && profile ? <TabSelectorOtro mislikes={profile[0].publicaciones_con_mis_likes} imga={profile[0].user_publicaciones} profile={profile[0]} />
+                        : null}
                 </>
             ) : null}
 

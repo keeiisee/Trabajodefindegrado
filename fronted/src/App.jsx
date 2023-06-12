@@ -14,15 +14,14 @@ import MisPublicaciones from './containers/Post/MisPublicaciones';
 import { Error403 } from './Error403';
 import Layout from './hocs/Layout';
 import { Navbarhome } from './containers/Home/Navbarhome';
-import { PublicacionDeOtro } from './containers/Post/PublicacionDeOtro';
 import { Parques } from './parque/Parques';
-
-import LocationForm from './parque/LocationForm';
 import MisMeGusta from './containers/Post/MisMeGusta';
 import NewPostForm from './containers/Post/NewPostForm';
 import PaginaDeInicio1 from './containers/PaginaDeInicio1';
 import PerfilDeOtro1 from './containers/Perfil/PerfilDeOtro1';
-import Navbar from './components/Navbar';
+import CrearRutina from './containers/Rutinas/CrearRutina';
+import Medio from './containers/Rutinas/Medio';
+
 
 export const PrivateRoute = ({ children }) => {
       //const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
@@ -53,9 +52,10 @@ const App = () => {
                                           {/* <Route path='/profile' element={<PrivateRoute><Navbar /></PrivateRoute>}></Route> */}
                                           <Route path='/crear-perfil' element={<PrivateRoute><CrearPerfil /></PrivateRoute>}></Route>
                                           <Route path='/perfil/:id' element={<PrivateRoute><PerfilDeOtro1 /></PrivateRoute>}></Route>
+                                          <Route path='/perfilPorimg/:id' element={<PrivateRoute><PerfilDeOtro1 /></PrivateRoute>}></Route>
                                           <Route path='/profile/crear-post' element={<PrivateRoute><NewPostForm /></PrivateRoute>}></Route>
                                           <Route path='/profile/mispublicaciones' element={<PrivateRoute><MisPublicaciones /></PrivateRoute>}></Route>
-                                          <Route path='/suspublicaciones/:id' element={<PrivateRoute><PublicacionDeOtro /></PrivateRoute>}></Route>
+                                          <Route path='/crearRutina' element={<CrearRutina />}></Route>
                                           <Route path='/parques' element={<Parques />}></Route>
                                           <Route path='/profile/misMeGusta' element={<MisMeGusta />}></Route>
                                     </Routes>

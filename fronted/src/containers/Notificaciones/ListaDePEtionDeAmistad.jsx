@@ -1,10 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion';
 import { addFriend, rejectFriend } from '../../actions/auth';
 import { useDispatch } from 'react-redux';
+import { UserContext } from '../../provider/UserContext';
 
-const ListaDePEtionDeAmistad = ({ onProfileUpdate }) => {
+const ListaDePEtionDeAmistad = () => {
     const dispatch = useDispatch();
+    const { handleProfileUpdate, updateProfileKey } = useContext(UserContext);
     const [usuariosQueSolicitan, setUsuariosQueSolicitan] = useState({});
     const [isSubmittingA, setIsSubmittingA] = useState(false);
     const [isSubmittingD, setIsSubmittingD] = useState(false);
@@ -52,7 +54,7 @@ const ListaDePEtionDeAmistad = ({ onProfileUpdate }) => {
         };
 
         fetchData();
-    }, [onProfileUpdate]);
+    }, [updateProfileKey]);
 
     const solicitudRecibida = useMemo(() => {
         if (profile && profile.length > 0) {
@@ -69,7 +71,7 @@ const ListaDePEtionDeAmistad = ({ onProfileUpdate }) => {
         setIsSubmittingA(true);
         dispatch(addFriend(id))
             .then(() => {
-                onProfileUpdate();
+                handleProfileUpdate();
                 setIsSubmittingA(false);
             })
             .catch(() => {
@@ -83,7 +85,7 @@ const ListaDePEtionDeAmistad = ({ onProfileUpdate }) => {
         setIsSubmittingD(true);
         dispatch(rejectFriend(id))
             .then(() => {
-                onProfileUpdate();
+                handleProfileUpdate();
                 setIsSubmittingD(false);
             })
             .catch(() => {

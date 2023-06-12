@@ -36,3 +36,20 @@ export const crear_reserva = (park, fecha, hora, materiales, enBD) => async (dis
     }
 };
 
+export const deleted_reserva = (id) => async (dispatch) => {
+    
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `JWT ${localStorage.getItem('access')}`,
+        },
+    };
+
+    const body = JSON.stringify({ id });
+    console.log(body)
+    try {
+        await axios.post(`${apiUrl}/accounts/reservasDeleted/`, body, config);
+    } catch (err) {
+        console.log(err);
+    }
+};

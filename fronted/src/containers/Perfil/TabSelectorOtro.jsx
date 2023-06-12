@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
-import { PublicacionDeOtro } from '../Post/PublicacionDeOtro';
-import MisMeGusta from '../Post/MisMeGusta';
-import MeGustaDeOtro from '../Post/MeGustaDeOtro';
+import React, { useContext, useEffect, useState } from 'react'
+import MisPublicaciones from '../Post/MisPublicaciones';
+import { UserContext } from '../../provider/UserContext';
 
-const TabSelectorOtro = () => {
+
+const TabSelectorOtro = ({imga, profile, mislikes}) => {
     const [activeTab, setActiveTab] = useState('publications');
-
+    const { handleProfileUpdate, updateProfileKey } = useContext(UserContext);
     const handleClick = (tab) => {
         setActiveTab(tab);
+        handleProfileUpdate()
     };
     //puede que lo quite, en ese caso hay que cambiar el div de abajo por el siguiente <div className="mt-10 flex justify-center">
     const scrollToButtons = () => {
@@ -42,8 +43,8 @@ const TabSelectorOtro = () => {
                     Sus me gusta
                 </button>
             </div>
-            {activeTab === 'publications' && <PublicacionDeOtro />}
-            {activeTab === 'likes' && <MeGustaDeOtro />}
+            {activeTab === 'publications' && <MisPublicaciones imga={imga} profile={profile} otro={true}/>}
+            {activeTab === 'likes' && <MisPublicaciones imga={mislikes} profile={profile} otro={true} />}
         </>
 
     );

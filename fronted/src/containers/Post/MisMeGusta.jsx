@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Post1 from './Post1';
 import PostMiosMeGusta from './PostMiosMeGusta';
 
 

@@ -1,16 +1,46 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux';
-import { eliminar_post, modificar_post } from '../../actions/post';
-import { CogIcon } from '@heroicons/react/solid';
+import React, { useCallback, useContext, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { eliminar_post, modificar_post, post_like } from '../../actions/post';
+import { CogIcon, HeartIcon as HeartIconSolid } from '@heroicons/react/solid';
 import { motion } from 'framer-motion';
 import Modal from 'react-modal';
 import { MdClose } from 'react-icons/md';
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { HeartIcon } from '@heroicons/react/outline';
+import { load_Idprofile } from '../../actions/auth';
+import { UserContext } from '../../provider/UserContext';
+
 Modal.setAppElement('#root');
-const PostMiosPublic = ({ imagen, profile, onProfileUpdate }) => {
+const PostMiosPublic = ({ imagen, profile, otro }) => {
+    const { handleProfileUpdate, updateProfileKey } = useContext(UserContext);
     const [showImagePopup, setShowImagePopup] = useState(false);
     const [isOpenPM, setIsOpenPM] = useState(false)
-    const dispatch = useDispatch()
+    const user = useSelector(state => state.auth.user);
+    if (user.name === imagen.autor_name) {
+        otro = false
+    }
+    const dispatch = useDispatch();
+    const [meGusta, setMeGusta] = useState(false);
+    const [idProf, setIdProf] = useState(null);
+
+    if (otro) {
+
+        useEffect(() => {
+            const fetchData = async () => {
+                const datosProfile = await dispatch(load_Idprofile());
+                setIdProf(datosProfile);
+            };
+            fetchData();
+        }, []);
+        useEffect(() => {
+            if (idProf) {
+                setMeGusta(imagen.like.includes(idProf[0].id));
+            }
+        }, [idProf, imagen.like, updateProfileKey]);
+
+    }
+
+
     const [isLoading, setIsLoading] = useState(false);
     const showSpinner = (callback, time) => {
         setIsLoading(true);
@@ -32,9 +62,9 @@ const PostMiosPublic = ({ imagen, profile, onProfileUpdate }) => {
     function eliminarPost() {
         showSpinner(() => {
             dispatch(eliminar_post(imagen.id))
-            .then(()=>{
-                onProfileUpdate();
-            })
+                .then(() => {
+                    handleProfileUpdate();
+                })
 
             setIsOpenPM(false)
         }, 2000);
@@ -43,9 +73,9 @@ const PostMiosPublic = ({ imagen, profile, onProfileUpdate }) => {
     function modificarPu() {
         showSpinner(() => {
             dispatch(modificar_post(imagen.id, descripcion))
-            .then(()=>{
-                onProfileUpdate();
-            })
+                .then(() => {
+                    handleProfileUpdate();
+                })
             setIsOpenPM(false)
         }, 3000);
     }
@@ -71,7 +101,10 @@ const PostMiosPublic = ({ imagen, profile, onProfileUpdate }) => {
         setShowConfirmPopup((prevState) => !prevState);
     }, []);
 
-
+    function like() {
+        dispatch(post_like(imagen.id, !meGusta))
+        setMeGusta(!meGusta)
+    }
     const customStyles = {
         overlay: {
             backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -127,7 +160,7 @@ const PostMiosPublic = ({ imagen, profile, onProfileUpdate }) => {
                 </div>
                 <div className="flex-1 flex flex-col">
                     <h2 className="text-xl font-semibold mb-2">
-                        Por {profile && profile.user_name}, el dia: {imagen.fecha_publicacion.substring(0, 10)}
+                        Por {imagen.autor_name}, el dia: {imagen.fecha_publicacion.substring(0, 10)}
                     </h2>
                     {!isOpenPM && <p className="mb-2 break-words whitespace-normal">{imagen.descripcion}</p>}
                     {isOpenPM && (
@@ -144,12 +177,21 @@ const PostMiosPublic = ({ imagen, profile, onProfileUpdate }) => {
                         />
                     )}
                     <div className="flex items-center justify-between">
-                        {!isOpenPM &&
+                        {!isOpenPM && otro ? (
+                            <button onClick={like} className="focus:outline-none">
+                                {meGusta ? (
+                                    <HeartIconSolid className="w-6 h-6 text-red-500 transition-colors duration-300 ease-in-out animate-like" />
+                                ) : (
+                                    <HeartIcon className="w-6 h-6 text-gray-500 transition-colors duration-300 ease-in-out hover:text-red-500" />
+                                )}
+                            </button>
+                        ) : !otro && !isOpenPM ? (
                             <button onClick={openPostM} className="text-gray-500 flex items-center space-x-2 focus:outline-none">
                                 <CogIcon className="h-6 w-6" />
                                 <span>Configurar Imagen</span>
                             </button>
-                        }
+                        ) : null}
+
                         {isOpenPM && (
                             <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full">
                                 <button
@@ -168,7 +210,7 @@ const PostMiosPublic = ({ imagen, profile, onProfileUpdate }) => {
                                 </button>
                                 <button
                                     className="text-sm sm:text-base bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded transition duration-200 ease-in-out transform hover:-translate-y-1 hover:shadow-lg w-full sm:w-auto mb-2 sm:mb-0 flex-grow sm:flex-basis-1/3"
-                                    type="submit"
+                                    type="button"
                                     onClick={modificarPu}
                                 >
                                     Modificar Post
@@ -194,7 +236,7 @@ const PostMiosPublic = ({ imagen, profile, onProfileUpdate }) => {
                                             type="button"
                                             onClick={() => {
                                                 eliminarPost()
-                                                
+
                                                 // Aquí puedes agregar la función para eliminar la foto
                                                 toggleConfirmPopup();
                                             }}
@@ -225,9 +267,18 @@ const PostMiosPublic = ({ imagen, profile, onProfileUpdate }) => {
                             </button>
                             <img src={imagen.imagen} alt={imagen.descripcion} className="object-contain max-w-full max-h-[290px] mb-2" />
                             {/* Nuevo div para el párrafo "Descripción" */}
-                            <div className="bg-gradient-to-r from-pink-500 to-indigo-500 text-white font-bold py-1 px-4 mb-2 rounded shadow-md">
-                                Descripción
-                            </div>
+                            {otro &&
+                                <div className="bg-gradient-to-r from-pink-500 to-indigo-500 text-white font-bold py-1 px-4 mb-2 rounded shadow-md">
+                                    <a href={`/#/perfil/${imagen.autor_id}`}>Ver Perfil</a>
+
+                                </div>
+                            }
+                            {!otro &&
+                                <div className="bg-gradient-to-r from-pink-500 to-indigo-500 text-white font-bold py-1 px-4 mb-2 rounded shadow-md">
+                                    Descripción
+                                </div>
+                            }
+
                             <p className="break-all whitespace-normal">{imagen.descripcion}</p>
                         </div>
                     </div>

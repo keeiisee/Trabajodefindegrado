@@ -69,17 +69,20 @@ class Profile(models.Model):
 
 class Rutina(models.Model):
     NIVEL_CHOICES = (
-        ('principiante', 'Principiante'),
-        ('intermedio', 'Intermedio'),
-        ('avanzado', 'Avanzado'),
+        (1, "Principiante"),
+        (2, "Intermedio"),
+        (3, "Avanzado"),
     )
-    nombre = models.CharField(max_length=255)
-    descripcion = models.TextField()
-    nivel = models.CharField(max_length=20, choices=NIVEL_CHOICES)
-    experiencia = models.IntegerField()
-
+    nombre = models.CharField(max_length=255, null=True)
+    nivel = models.IntegerField(choices=NIVEL_CHOICES)
+    repeticiones_set = models.IntegerField()
     def __str__(self):
         return self.nombre
+    
+class SetEjercicio(models.Model):
+    rutina = models.ForeignKey(Rutina, on_delete=models.CASCADE, related_name='sets')
+    repeticiones = models.IntegerField()
+    ejercicio = models.CharField(max_length=255)
     
 class Publicacion(models.Model):
     autor = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='publicaciones')

@@ -4,13 +4,79 @@ from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, viewsets, status
 from rest_framework.response import Response
-from .models import Material, Profile, UserAccount, Publicacion, ParqueCalistenia, Reserva
-from .serializers import ProfileOtherSerializer, UserSearchSerializerView, ProfileUpdateSerializer, PublicacionSerializer, ReservaCreateSerializer, ProfileCreateSerializer, UserCreateSerializerView, PublicacionCreateSerializer, ParqueCalisteniaCreateSerializer
+from .models import Material, Profile, Rutina, UserAccount, Publicacion, ParqueCalistenia, Reserva
+from .serializers import ProfileOtherSerializer, RutinaSerializer, UserSearchSerializerView, ProfileUpdateSerializer, PublicacionSerializer, ReservaCreateSerializer, ProfileCreateSerializer, UserCreateSerializerView, PublicacionCreateSerializer, ParqueCalisteniaCreateSerializer
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from rest_framework.generics import ListAPIView
 from datetime import date
 
+class AddRutina(APIView):
+    def post(self, request):
+        rutina_id = request.data.get('rutina_id')
+        user = request.user
+        profile = Profile.objects.get(user=user)
+
+        try:
+            rutina = Rutina.objects.get(id=rutina_id)
+            profile.rutinas.add(rutina)
+            profile.save()
+            return Response({'detail': f'Rutina {rutina.nombre} añadida al perfil.'}, status=status.HTTP_200_OK)
+        except Rutina.DoesNotExist:
+            return Response({'detail': 'Rutina no encontrada.'}, status=status.HTTP_404_NOT_FOUND)
+
+class GetRutinas(APIView):
+    def get(self, request):
+        user = request.user
+        profile = Profile.objects.get(user=user)
+
+        # Obtenemos las rutinas de la base de datos excluyendo las que ya están en el perfil
+        rutinas_queryset = Rutina.objects.exclude(usuarios_rutinas=profile)
+
+        # Serializamos las rutinas
+        rutinas_serialized = RutinaSerializer(rutinas_queryset, many=True)
+
+        # Organizamos las rutinas por nivel
+        rutinas = {
+            'beginner': [],
+            'intermediate': [],
+            'advanced': [],
+        }
+
+        for rutina in rutinas_serialized.data:
+            if rutina['nivel'] == 1:
+                rutinas['beginner'].append(rutina)
+            elif rutina['nivel'] == 2:
+                rutinas['intermediate'].append(rutina)
+            elif rutina['nivel'] == 3:
+                rutinas['advanced'].append(rutina)
+
+        return Response(rutinas) 
+    
+class RutinaListCreate(APIView):
+    def get(self, request, *args, **kwargs):
+        rutinas = Rutina.objects.all()
+        serializer = RutinaSerializer(rutinas, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        serializer = RutinaSerializer(data=request.data, context={'request': request})
+
+        if serializer.is_valid():
+            # Aquí puedes agregar validaciones adicionales si lo deseas
+            # Por ejemplo, verificar si ya existe una rutina con ciertas características
+
+            rutina = serializer.save()
+
+            try:
+                response_serializer = RutinaSerializer(rutina)
+                return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                print("Error al serializar el objeto creado:", e)
+                return Response({"error": "Error interno del servidor"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 class EliminarPublicacionView(APIView):
     def post(self, request, *args, **kwargs):
         # Obtener el ID de la publicación a eliminar del cuerpo de la solicitud

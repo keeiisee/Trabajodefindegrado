@@ -11,6 +11,7 @@ import LocationForm from '../parque/LocationForm';
 import NewPostForm from '../containers/Post/NewPostForm';
 import Profile1 from '../containers/Perfil/Profile1';
 import CrearPerfil from '../containers/Perfil/CrearPerfil';
+import CrearRutina from '../containers/Rutinas/CrearRutina';
 
 const PalabrasList = ({ palabras, cerrar }) => (
   <div className="position-relative">
@@ -96,7 +97,7 @@ export const Navbar = () => {
       setPalabras([]);
     }
   };
-
+  const [modalOpen, setModalOpen] = useState(false);
   const url = useMemo(() => (profileI.length > 0 ? profileI[0].imagen : ''), [profileI]);
   const soli = useMemo(() => (profileI.length > 0 ? profileI[0].solicitudRecibida : []), [profileI]);
   return (
@@ -176,6 +177,10 @@ export const Navbar = () => {
                   <ul className="ml-3 flex items-center space-x-6 space-y-0 md:space-y-0 md:space-x-6">
                     {profile ? (
                       <>
+                      <li className="text-lg font-medium group">
+                          <button type="button" onClick={() => { setModalOpen(true); }}><UploadIcon className="h-6 w-6" /></button>
+                          <div className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out" />
+                        </li>
                         <li className="text-lg font-medium group">
                           <button type="button" onClick={() => { openPos(); setIsOpen(false); }}><UploadIcon className="h-6 w-6" /></button>
                           <div className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out" />
@@ -310,6 +315,7 @@ export const Navbar = () => {
               </div>
             )}
           </nav>
+          {modalOpen && <CrearRutina setModalOpen={setModalOpen}handleProfileUpdate={handleProfileUpdate}/>}
           {showCrearPerfil && <CrearPerfil onClose={handleCrearPerfil} handleProfileUpdate={handleProfileUpdate} />}
         </>
       }

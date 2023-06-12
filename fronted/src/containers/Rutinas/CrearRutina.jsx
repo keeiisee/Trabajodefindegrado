@@ -3,6 +3,7 @@ import { Listbox, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 
 import Modal from 'react-modal';
+import axios from 'axios';
 const niveles = [
     { id: 1, name: 'Principiante' },
     { id: 2, name: 'Intermedio' },
@@ -10,15 +11,17 @@ const niveles = [
 ];
 
 
-const CrearRutina = () => {
+const CrearRutina = ({ handleProfileUpdate, setModalOpen }) => {
     const [nivel, setNivel] = useState(niveles[0]);
     const [repeticionesSet, setRepeticionesSet] = useState(1);
     const [sets, setSets] = useState([{ repeticiones: 1, ejercicio: '' }]);
-
+    const [nombreRutina, setNombreRutina] = useState('');
     const handleNivelChange = (nivel) => {
         setNivel(nivel);
     };
-
+    const handleNombreRutinaChange = (event) => {
+        setNombreRutina(event.target.value);
+    };
     const handleRepeticionesSetChange = (event) => {
         setRepeticionesSet(parseInt(event.target.value));
     };
@@ -28,7 +31,7 @@ const CrearRutina = () => {
         newSets[index][field] = value;
         setSets(newSets);
     };
-    const [modalOpen, setModalOpen] = useState(false);
+
     const handleAddSet = () => {
         setSets([...sets, { repeticiones: 1, ejercicio: '' }]);
     };
@@ -38,19 +41,39 @@ const CrearRutina = () => {
         newSets.splice(index, 1);
         setSets(newSets);
     };
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const handleSubmit = async (event) => {
 
-    const handleSubmit = (event) => {
         event.preventDefault();
-        const setsString = sets.map((set) => `${set.repeticiones} x ${set.ejercicio}`).join(', ');
-        console.log(`Nivel: ${nivel.name}, Repeticiones del set: ${repeticionesSet}, Sets: ${setsString}`);
+        const setsData = sets.map((set) => ({ repeticiones: set.repeticiones, ejercicio: set.ejercicio }));
+        try {
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `JWT ${localStorage.getItem('access')}`,
+                }
+            }
+
+            const body = {
+                nombre: nombreRutina,
+                nivel: nivel.id,
+                repeticiones_set: repeticionesSet,
+                sets: setsData,
+            };
+            console.log(body)
+            await axios.post(`${apiUrl}/accounts/crearRutina/`, body, config);
+            setModalOpen(false);
+        } catch (error) {
+            console.error('Error al enviar los datos', error);
+        }
         // Aquí puedes enviar los datos al servidor
     };
 
     return (
         <>
-            <button onClick={() => setModalOpen(true)}>Abrir formulario</button>
+
             <Modal
-                isOpen={modalOpen}
+                isOpen={true}
                 onRequestClose={() => setModalOpen(false)}
                 className="fixed inset-0 flex items-center justify-center p-4 overflow-y-auto outline-none bg-gray-600 bg-opacity-75"
                 overlayClassName="fixed inset-0 z-50 overflow-y-auto"
@@ -75,6 +98,20 @@ const CrearRutina = () => {
                         </svg>
                     </button>
                     <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="space-y-1">
+                            <label htmlFor="nombreRutina" className="block text-sm font-medium text-gray-700">
+                                Nombre de la rutina:
+                            </label>
+                            <input
+                            placeholder='Nombre de la rutina'
+                                required
+                                type="text"
+                                id="nombreRutina"
+                                value={nombreRutina}
+                                onChange={handleNombreRutinaChange}
+                                className="block w-full py-2 pl-3 pr-12 sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            />
+                        </div>
                         <div className="space-y-1">
                             <label className="block text-sm font-medium text-gray-700">Nivel de dificultad:</label>
                             <Listbox value={nivel} onChange={handleNivelChange} className="w-full">

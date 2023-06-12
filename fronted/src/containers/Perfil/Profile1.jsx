@@ -14,6 +14,7 @@ import TailwindSpinner from './TailwindSpinner';
 import MisParques from './MisParques';
 import MediaQuery from 'react-responsive';
 import { UserContext } from '../../provider/UserContext';
+import MisRutinas from '../Rutinas/MisRutinas';
 
 const ProfileCard = styled.div`
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -125,7 +126,7 @@ function Profile1({ datas }) {
             setFormData({ ...formData, [e.target.name]: e.target.value });
         }
     };
-
+    
     const saveChanges = useCallback(() => {
         let isValid = true;
 
@@ -198,9 +199,11 @@ function Profile1({ datas }) {
     function handlePasswordChange() {
         setShowModalPassword(true);
     }
+    console.log(datas.user_rutinas)
     const [amigosList, setAmigosList] = useState([]);
     return (
         <>
+        
             <ProfileCard className="mt-10 mx-10 rounded-lg shadow-md p-6">
                 <div className="space-y-4">
                     {editMode ? (
@@ -543,6 +546,7 @@ function Profile1({ datas }) {
                     </div>
                 </div>
             )}
+            {<MisRutinas rutinas={datas.user_rutinas}/>}
             {reservas && <MisParques reservas={datas.user_reservas} />}
             {publicaciones && <TabSelector mislikes={datas.publicaciones_con_mis_likes} imga={datas.user_publicaciones} profile={datas} />}
             {notificaciones && <TabSelectorNotis  />}

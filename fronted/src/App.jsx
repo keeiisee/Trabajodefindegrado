@@ -21,6 +21,7 @@ import PaginaDeInicio1 from './containers/PaginaDeInicio1';
 import PerfilDeOtro1 from './containers/Perfil/PerfilDeOtro1';
 import CrearRutina from './containers/Rutinas/CrearRutina';
 import Medio from './containers/Rutinas/Medio';
+import Rutinas from './containers/Rutinas/Rutinas';
 
 
 export const PrivateRoute = ({ children }) => {
@@ -55,7 +56,7 @@ const App = () => {
                                           <Route path='/perfilPorimg/:id' element={<PrivateRoute><PerfilDeOtro1 /></PrivateRoute>}></Route>
                                           <Route path='/profile/crear-post' element={<PrivateRoute><NewPostForm /></PrivateRoute>}></Route>
                                           <Route path='/profile/mispublicaciones' element={<PrivateRoute><MisPublicaciones /></PrivateRoute>}></Route>
-                                          <Route path='/crearRutina' element={<CrearRutina />}></Route>
+                                          <Route path='/rutina' element={<Rutinas />}></Route>
                                           <Route path='/parques' element={<Parques />}></Route>
                                           <Route path='/profile/misMeGusta' element={<MisMeGusta />}></Route>
                                     </Routes>

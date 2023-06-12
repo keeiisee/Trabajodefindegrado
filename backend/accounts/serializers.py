@@ -1,10 +1,37 @@
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 #from .models import Post, Comment
-from .models import Profile, Publicacion, ParqueCalistenia, Reserva, Material
+from .models import Profile, Publicacion, ParqueCalistenia, Reserva, Material, Rutina, SetEjercicio
 from rest_framework import serializers
 
 User = get_user_model()
+class SetEjercicioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SetEjercicio
+        fields = ('id', 'repeticiones', 'ejercicio')
+
+class RutinaSerializer(serializers.ModelSerializer):
+    sets = SetEjercicioSerializer(many=True)
+
+    class Meta:
+        model = Rutina
+        fields = ('id', 'nivel', 'repeticiones_set', 'sets', 'nombre')
+
+    def validate(self, data):
+        if 'sets' not in data:
+            raise serializers.ValidationError("Faltan los datos de los sets.")
+        if not data['sets']:
+            raise serializers.ValidationError("Debe haber al menos un set en la rutina.")
+        return data
+    
+    def create(self, validated_data):
+        sets_data = validated_data.pop('sets')
+        rutina = Rutina.objects.create(**validated_data)
+        for set_data in sets_data:
+            SetEjercicio.objects.create(rutina=rutina, **set_data)
+        return rutina
+    
+    
 class ImagenUrlField(serializers.ImageField):
     def to_representation(self, value):
         if value:
@@ -58,6 +85,14 @@ class ReservaSerializer(serializers.ModelSerializer):
         model = Reserva
         fields = ('id','usuario', 'parque', 'fecha', 'hora', 'usuario_name', 'materiales')
 
+from .models import Rutina
+
+
+class RutinasSerializer(serializers.ModelSerializer):
+    sets = SetEjercicioSerializer(many=True, read_only=True)
+    class Meta:
+        model = Rutina
+        fields = '__all__'
 
 class ProfileCreateSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source='user.id', read_only=True)
@@ -66,9 +101,10 @@ class ProfileCreateSerializer(serializers.ModelSerializer):
     user_publicaciones = PublicacionSerializer(source="publicaciones", many=True, read_only=True)
     user_reservas = ReservaSerializer(source="reserva", many=True, read_only=True)
     publicaciones_con_mis_likes = serializers.SerializerMethodField()
+    user_rutinas = RutinasSerializer(source="rutinas", many=True, read_only=True)
     class Meta:
         model = Profile
-        fields = ('id', 'user','user_publicaciones','publicaciones_con_mis_likes', 'descripcion','solicitudEnviada','solicitudRecibida','amigos','imagen','user_id', 'user_name','user_email','telefono','edad','is_private', 'user_reservas')
+        fields = ('id', 'user','user_publicaciones','user_rutinas','publicaciones_con_mis_likes', 'descripcion','solicitudEnviada','solicitudRecibida','amigos','imagen','user_id', 'user_name','user_email','telefono','edad','is_private', 'user_reservas')
     def get_publicaciones_con_mis_likes(self, obj):
         # Filtra las publicaciones que tienen tu "me gusta"
         publicaciones_con_mis_likes = Publicacion.objects.filter(like=obj)

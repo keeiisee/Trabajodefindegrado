@@ -4,13 +4,14 @@ import axios from 'axios';
 import Post1 from './Post/Post1';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import Rutinas from './Rutinas/Rutinas';
 
 const PaginaDeInicio1 = () => {
     const [tabIndex, setTabIndex] = useState(0);
     const profile = useSelector(state => state.auth.profile);
     const [posts, setPost] = useState([]);
     const [filtro, setFiltro] = useState('amigos');
-    
+
     const apiUrl = import.meta.env.VITE_API_URL;
     useEffect(() => {
 
@@ -73,14 +74,14 @@ const PaginaDeInicio1 = () => {
         }
 
         if (filtro === 'mis_megusta') {
-            mg();
+
         }
 
         if (filtro === 'sin_seguir') {
             noAmigos();
         }
     }, [filtro]);
-   
+
     const handleTabChange = (event, newValue) => {
         setTabIndex(newValue);
         switch (newValue) {
@@ -115,44 +116,52 @@ const PaginaDeInicio1 = () => {
                     </Tabs>
                 </div>
             )}
-            {posts.length <= 0 && (
+            {filtro !== 'mis_megusta' &&
                 <>
-                    {!profile ? (
-                        <div className="mt-40 ml-20 mr-20 text-center animate-bounce">
-                            <h1 className="text-4xl font-bold text-gray-700 animate-pulse">
-                                No tienes un perfil
-                            </h1>
-                            <p className="mt-4 text-gray-500">
-                                Lo sentimos, crea un perfil.
-                            </p>
-                        </div>
-                    ) : (
-                        <div className="mt-40 ml-20 mr-20 text-center animate-bounce">
-                            <h1 className="text-4xl font-bold text-gray-700 animate-pulse">
-                                No hay publicaciones que ver
-                            </h1>
-                            <p className="mt-4 text-gray-500">
-                                Lo sentimos, no hay contenido disponible en este momento.
-                            </p>
-                        </div>
+                    {posts.length <= 0 && (
+                        <>
+                            {!profile ? (
+                                <div className="mt-40 ml-20 mr-20 text-center animate-bounce">
+                                    <h1 className="text-4xl font-bold text-gray-700 animate-pulse">
+                                        No tienes un perfil
+                                    </h1>
+                                    <p className="mt-4 text-gray-500">
+                                        Lo sentimos, crea un perfil.
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className="mt-40 ml-20 mr-20 text-center animate-bounce">
+                                    <h1 className="text-4xl font-bold text-gray-700 animate-pulse">
+                                        No hay publicaciones que ver
+                                    </h1>
+                                    <p className="mt-4 text-gray-500">
+                                        Lo sentimos, no hay contenido disponible en este momento.
+                                    </p>
+                                </div>
+                            )}
+                        </>
                     )}
-                </>
-            )}
 
-            <section className="text-gray-600 body-font">
-                <div className="container px-5 py-24 mx-auto">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-8">
-                        {posts.map((post) => (
-                            <div
-                                key={post.id}
-                                className="transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105"
-                            >
-                                <Post1 imagen={post} />
+                    <section className="text-gray-600 body-font">
+                        <div className="container px-5 py-24 mx-auto">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-8">
+                                {posts.map((post) => (
+                                    <div
+                                        key={post.id}
+                                        className="transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105"
+                                    >
+                                        <Post1 imagen={post} />
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+                        </div>
+                    </section>
+                </>
+            }
+
+            {filtro === 'mis_megusta' &&
+                <Rutinas></Rutinas>
+            }
         </>
     )
 }

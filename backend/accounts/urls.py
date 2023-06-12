@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import EliminarReservaView, CrearParqueCalisteniaView, DislikeParque, LikeParqueView, PublicacionesDeOtroFav, ReservasPorFecha, ReservasPorPerfilView, UpdatePostDescriptionView, EliminarPublicacionView, DeleteUserView, PublicacionesFavoritas, UltimasPublicacionesNoAmigosView,LikePublicacionView, UpdateProfileImageView, CrearProfileView, CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
+from .views import AddRutina, EliminarReservaView, CrearParqueCalisteniaView, DislikeParque, GetRutinas, LikeParqueView, PublicacionesDeOtroFav, ReservasPorFecha, ReservasPorPerfilView, RutinaListCreate, UpdatePostDescriptionView, EliminarPublicacionView, DeleteUserView, PublicacionesFavoritas, UltimasPublicacionesNoAmigosView,LikePublicacionView, UpdateProfileImageView, CrearProfileView, CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
 
 router = routers.DefaultRouter()
 router.register(r'profiles/profiles', ProfileList)
@@ -50,4 +50,7 @@ urlpatterns = [
     path('parques/like/', LikeParqueView.as_view(), name='like_parque'),
     path('parques/dislike/', DislikeParque.as_view(), name='dislike_parque'),
     
+    path('crearRutina/', RutinaListCreate.as_view(), name='rutinas-crear'),
+    path('rutinas/', GetRutinas.as_view(), name='get_rutinas'),
+    path('add_rutina/', AddRutina.as_view(), name='add_rutina'),
 ]

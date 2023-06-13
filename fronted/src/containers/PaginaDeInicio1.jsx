@@ -100,67 +100,67 @@ const PaginaDeInicio1 = () => {
     };
     return (
         <>
-            {profile && (
+                {profile && (
 
-                <div className="container px-5 mx-auto mb-8 mt-8">
-                    <Tabs
-                        value={tabIndex}
-                        onChange={handleTabChange}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        centered
-                    >
-                        <Tab label="Amigos" />
-                        <Tab label="Explorar" />
-                        <Tab label="Rutinas" />
-                    </Tabs>
-                </div>
-            )}
-            {filtro !== 'mis_megusta' &&
-                <>
-                    {posts.length <= 0 && (
-                        <>
-                            {!profile ? (
-                                <div className="mt-40 ml-20 mr-20 text-center animate-bounce">
-                                    <h1 className="text-4xl font-bold text-gray-700 animate-pulse">
-                                        No tienes un perfil
-                                    </h1>
-                                    <p className="mt-4 text-gray-500">
-                                        Lo sentimos, crea un perfil.
-                                    </p>
-                                </div>
-                            ) : (
-                                <div className="mt-40 ml-20 mr-20 text-center animate-bounce">
-                                    <h1 className="text-4xl font-bold text-gray-700 animate-pulse">
-                                        No hay publicaciones que ver
-                                    </h1>
-                                    <p className="mt-4 text-gray-500">
-                                        Lo sentimos, no hay contenido disponible en este momento.
-                                    </p>
-                                </div>
-                            )}
-                        </>
-                    )}
-
-                    <section className="text-gray-600 body-font">
-                        <div className="container px-5 py-24 mx-auto">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-8">
-                                {posts.map((post) => (
-                                    <div
-                                        key={post.id}
-                                        className="transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105"
-                                    >
-                                        <Post1 imagen={post} />
+                    <div className="container px-5 mx-auto mb-8 mt-8">
+                        <Tabs
+                            value={tabIndex}
+                            onChange={handleTabChange}
+                            indicatorColor="primary"
+                            textColor="primary"
+                            centered
+                        >
+                            <Tab label="Amigos" />
+                            <Tab label="Explorar" />
+                            <Tab label="Rutinas" />
+                        </Tabs>
+                    </div>
+                )}
+                {filtro !== 'mis_megusta' &&
+                    <>
+                        {posts.length <= 0 && (
+                            <>
+                                {!profile ? (
+                                    <div className="mt-40 ml-20 mr-20 text-center animate-bounce">
+                                        <h1 className="text-4xl font-bold text-gray-700 animate-pulse">
+                                            No tienes un perfil
+                                        </h1>
+                                        <p className="mt-4 text-gray-500">
+                                            Lo sentimos, crea un perfil.
+                                        </p>
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-                </>
-            }
+                                ) : (
+                                    <div className="mt-40 ml-20 mr-20 text-center animate-bounce">
+                                        <h1 className="text-4xl font-bold text-gray-700 animate-pulse">
+                                            No hay publicaciones que ver
+                                        </h1>
+                                        <p className="mt-4 text-gray-500">
+                                            Lo sentimos, no hay contenido disponible en este momento.
+                                        </p>
+                                    </div>
+                                )}
+                            </>
+                        )}
 
-            {filtro === 'mis_megusta' &&
-                <Rutinas></Rutinas>
+                        <section className="text-gray-600 body-font">
+                            <div className="container px-5 py-24 mx-auto">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-8">
+                                    {posts.map((post) => (
+                                        <div
+                                            key={post.id}
+                                            className="transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105"
+                                        >
+                                            <Post1 imagen={post} />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+                    </>
+                }
+
+                {filtro === 'mis_megusta' &&
+                    <Rutinas></Rutinas>
             }
         </>
     )

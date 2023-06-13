@@ -18,7 +18,7 @@ const Layout = ({ children }) => {
     }, []);
   
     return (
-      <div>
+      <div className="main-container bg-gradient-to-r from-purple-300 via-indigo-300 to-blue-300 min-h-screen flex flex-col">
         {!navBarHome && !activate && !ResetPassword ? <Navbar /> : null}
         {children}
       </div>

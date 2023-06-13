@@ -45,9 +45,13 @@ function CrearPerfil({ onClose, handleProfileUpdate }) {
   };
 
   return (
-    <div className="overlay fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50" onClick={handleClickOutside}>
-      <div className="w-full max-w-xl mx-auto mt-5">
-        <motion.div className="bg-white rounded-lg shadow-lg p-8">
+    <div
+      className="overlay fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50 sm:px-5"
+      onClick={handleClickOutside}
+    >
+      <div className="w-full max-w-xl mx-3 mb-5 mt-5">
+        <motion.div className="bg-white rounded-lg shadow-lg p-8 overflow-y-auto max-h-screen">
+
           <h2 className="text-2xl font-semibold mb-6 text-center text-indigo-600">
             Crear Perfil
           </h2>
@@ -131,7 +135,7 @@ function CrearPerfil({ onClose, handleProfileUpdate }) {
               <button
                 className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-200"
                 type="button"
-                onClick={()=>{onClose()}}
+                onClick={() => { onClose() }}
               >
                 Cerrar
               </button>

@@ -199,7 +199,7 @@ function Profile1({ datas }) {
     function handlePasswordChange() {
         setShowModalPassword(true);
     }
-    console.log(datas.user_rutinas)
+    
     const [amigosList, setAmigosList] = useState([]);
     return (
         <>

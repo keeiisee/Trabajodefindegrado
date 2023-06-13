@@ -21,5 +21,6 @@ init: ## Iniciar contenedores y sus servicios
 	@docker compose up -d
 	@docker exec -it ${DOCKER_BE} python manage.py makemigrations
 	@docker exec -it ${DOCKER_BE} python manage.py migrate
+	@docker exec -it ${DOCKER_BE} python manage.py collectstatic
 	@docker exec -it ${DOCKER_FE} yarn install
 	@docker exec ${DOCKER_FE} yarn dev --host &

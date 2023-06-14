@@ -108,49 +108,27 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'auth_system',
-#         'USER': 'postgres',
-#         'PASSWORD': '2203',
-#         'HOST': os.getenv('DB_HOST', 'localhost')
-#     }
-# }
-# DATABASES = {
-#   'default': {
-#     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#     'NAME': 'railway',
-#     'USER': 'postgres',
-#     'PASSWORD': 'SXSfoHrBHTKnBL7nG5MA',
-#     'HOST': 'containers-us-west-181.railway.app',
-#     'PORT': '6381',
-#   }
-# }
-# Heroku
 DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'd15qfgsjb766jq',
-    'USER': 'pieabtixwtzpzs',
-    'PASSWORD': '7ca93e89b45dadc411e4b4a37131a77674b6518dd908ed7e43d236c3e25dedd3',
-    'HOST': 'ec2-52-215-68-14.eu-west-1.compute.amazonaws.com',
-    'PORT': '5432',
-  }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'auth_system',
+        'USER': 'postgres',
+        'PASSWORD': '2203',
+        'HOST': os.getenv('DB_HOST', 'localhost')
+    }
 }
-#amazon
+
+# Heroku
 # DATABASES = {
 #   'default': {
 #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#     'NAME': 'myfirstname',
-#     'USER': 'postgres',
-#     'PASSWORD': 'Hierro20',
-#     'HOST': 'mibasededatos.cqk3eeydya7k.eu-north-1.rds.amazonaws.com',
+#     'NAME': 'd76sasm11vls25',
+#     'USER': 'wvnoqqfucxvuyl',
+#     'PASSWORD': 'b5058afd19ef3e4b27d67710f6a2f26acc62dbcbd23578a5586e3e0c9b16e39d',
+#     'HOST': 'ec2-34-247-16-250.eu-west-1.compute.amazonaws.com',
 #     'PORT': '5432',
 #   }
 # }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

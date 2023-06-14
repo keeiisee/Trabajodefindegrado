@@ -11,6 +11,114 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.generics import ListAPIView
 from datetime import date
 
+# class AddExperience(APIView):
+#     def put(self, request, *args, **kwargs):
+#         user_id = request.data.get('user_id')
+#         experience_to_add = request.data.get('experience_to_add', 0)
+
+#         if not user_id:
+#             return Response({"error": "Debe proporcionar un user_id."}, status=status.HTTP_400_BAD_REQUEST)
+
+#         user = get_object_or_404(UserAccount, id=user_id)
+#         profile = user.profile
+
+#         profile.experiencia += experience_to_add
+#         profile.save()
+
+        
+#         return Response({"message": f"Se agregaron {experience_to_add} puntos de experiencia al usuario."}, status=status.HTTP_200_OK)
+
+# class ReduceExperience(APIView):
+#     def put(self, request, *args, **kwargs):
+#         user_id = request.data.get('user_id')
+#         experience_to_reduce = request.data.get('experience_to_reduce', 0)
+
+#         if not user_id:
+#             return Response({"error": "Debe proporcionar un user_id."}, status=status.HTTP_400_BAD_REQUEST)
+
+#         user = get_object_or_404(UserAccount, id=user_id)
+#         profile = user.profile
+
+#         if profile.experiencia >= experience_to_reduce:
+#             profile.experiencia -= experience_to_reduce
+#             profile.save()
+#             return Response({"message": f"Se redujeron {experience_to_reduce} puntos de experiencia al usuario."}, status=status.HTTP_200_OK)
+#         else:
+#             return Response({"error": "La experiencia del usuario no puede ser negativa."}, status=status.HTTP_400_BAD_REQUEST) 
+        
+
+class DeleteRutina(APIView):
+    def post(self, request):
+        rutina_id = request.data.get('rutina_id')
+        user = request.user
+        profile = Profile.objects.get(user=user)
+        experience = request.data.get('experience', 0)
+
+        try:
+            # Actualiza la experiencia del perfil
+            new_experience = profile.experiencia + experience
+            profile.experiencia = max(new_experience, 0)  # Asegura que la experiencia no sea negativa
+            profile.save()
+
+            # Elimina la rutina
+            rutina = Rutina.objects.get(id=rutina_id)
+            rutina.delete()  # Elimina la rutina en lugar de marcarla como abandonada
+
+            return Response({'detail': f'Rutina {rutina.nombre} eliminada y experiencia actualizada.'}, status=status.HTTP_200_OK)
+
+        except Rutina.DoesNotExist:
+            return Response({'detail': 'Rutina no encontrada.'}, status=status.HTTP_404_NOT_FOUND)
+        
+class LevelUpUser(APIView):
+    def put(self, request):
+        user_id = request.data.get('user_id')
+        if not user_id:
+            return Response({"error": "Debe proporcionar un user_id."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = get_object_or_404(UserAccount, id=user_id)
+        profile = user.profile
+
+        profile.nivel += 1
+        profile.experiencia = 0
+        profile.save()
+
+        return Response({"message": "Usuario subió de nivel."}, status=status.HTTP_200_OK)
+    
+class CompleteRutina(APIView):
+    def post(self, request):
+        rutina_id = request.data.get('rutina_id')
+        user = request.user
+        profile = Profile.objects.get(user=user)
+        experience_to_add = request.data.get('experience_to_add', 0)
+        try:
+            rutina = Rutina.objects.get(id=rutina_id)
+            rutina.perfiles_completados.add(profile)
+            rutina.save()
+            profile.experiencia += experience_to_add
+            profile.save()
+            return Response({'detail': f'Rutina {rutina.nombre} marcada como completada.'}, status=status.HTTP_200_OK)
+        except Rutina.DoesNotExist:
+            return Response({'detail': 'Rutina no encontrada.'}, status=status.HTTP_404_NOT_FOUND)
+
+class AbandonRutina(APIView):
+    def post(self, request):
+        rutina_id = request.data.get('rutina_id')
+        user = request.user
+        profile = Profile.objects.get(user=user)
+        experience_to_reduce = request.data.get('experience_to_reduce', 0)
+        try:
+            print(profile.experiencia)
+            if profile.experiencia >= experience_to_reduce:
+                profile.experiencia -= experience_to_reduce
+                profile.save()
+            
+            rutina = Rutina.objects.get(id=rutina_id)
+            rutina.perfiles_abandonados.add(profile)
+            rutina.save()
+            return Response({'detail': f'Rutina {rutina.nombre} marcada como abandonada.'}, status=status.HTTP_200_OK)
+        except Rutina.DoesNotExist:
+            return Response({'detail': 'Rutina no encontrada.'}, status=status.HTTP_404_NOT_FOUND)
+        
 class AddRutina(APIView):
     def post(self, request):
         rutina_id = request.data.get('rutina_id')

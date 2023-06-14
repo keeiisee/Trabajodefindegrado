@@ -76,6 +76,9 @@ class Rutina(models.Model):
     nombre = models.CharField(max_length=255, null=True)
     nivel = models.IntegerField(choices=NIVEL_CHOICES)
     repeticiones_set = models.IntegerField()
+    perfiles_completados = models.ManyToManyField(Profile, blank=True, related_name='rutinas_completadas')
+    perfiles_abandonados = models.ManyToManyField(Profile, blank=True, related_name='rutinas_abandonadas')
+
     def __str__(self):
         return self.nombre
     

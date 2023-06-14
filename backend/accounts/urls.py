@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import AddRutina, EliminarReservaView, CrearParqueCalisteniaView, DislikeParque, GetRutinas, LikeParqueView, PublicacionesDeOtroFav, ReservasPorFecha, ReservasPorPerfilView, RutinaListCreate, UpdatePostDescriptionView, EliminarPublicacionView, DeleteUserView, PublicacionesFavoritas, UltimasPublicacionesNoAmigosView,LikePublicacionView, UpdateProfileImageView, CrearProfileView, CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
+from .views import AbandonRutina, AddRutina,DeleteRutina, CompleteRutina, EliminarReservaView, CrearParqueCalisteniaView, DislikeParque, GetRutinas, LevelUpUser, LikeParqueView, PublicacionesDeOtroFav, ReservasPorFecha, ReservasPorPerfilView, RutinaListCreate, UpdatePostDescriptionView, EliminarPublicacionView, DeleteUserView, PublicacionesFavoritas, UltimasPublicacionesNoAmigosView,LikePublicacionView, UpdateProfileImageView, CrearProfileView, CrearPublicacionView, RemoveFriendView, ReservasPorParque,UltimaPublicacionView, SendFriendRequestView, RejectFriendRequestView, AddFriendView, ReservaCalisteniaList, ParqueCalisteniaList, PublicacionListForUser, ProfileList, UserDetail, UserListLeter, ProfileDetailForRequestUser, ProfileDetailForUser, PublicacionList
 
 router = routers.DefaultRouter()
 router.register(r'profiles/profiles', ProfileList)
@@ -53,4 +53,10 @@ urlpatterns = [
     path('crearRutina/', RutinaListCreate.as_view(), name='rutinas-crear'),
     path('rutinas/', GetRutinas.as_view(), name='get_rutinas'),
     path('add_rutina/', AddRutina.as_view(), name='add_rutina'),
+    path('completarRutina/', CompleteRutina.as_view(), name='complete_rutina'),
+    path('abandonarRutina/', AbandonRutina.as_view(), name='abandon_rutina'),
+    path('deleteRutina/', DeleteRutina.as_view(), name='delete_rutina'),
+    
+    path('level_up/', LevelUpUser.as_view(), name='level_up_user'),
+    
 ]

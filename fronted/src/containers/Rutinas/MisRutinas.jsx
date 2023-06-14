@@ -17,12 +17,13 @@ const groupRutinasByLevel = (rutinas) => {
 
     return groupedRutinas;
 };
-const MisRutinas = ({ rutinas }) => {
+const MisRutinas = ({ rutinas, profile }) => {
+
     const [selectedRutina, setSelectedRutina] = useState(null);
     const [activeTab, setActiveTab] = useState(0);
 
     const levels = ['nivel 1', 'nivel 2', 'nivel 3'];
-
+    const nivel = ['Principiante', 'Intermedio', 'Avanzada']
     const handleTabChange = (event, newValue) => {
         setActiveTab(newValue);
     };
@@ -31,7 +32,115 @@ const MisRutinas = ({ rutinas }) => {
         setSelectedRutina(null);
     };
 
+    const isRutinaCompleted = (rutina) => {
+        return rutina.perfiles_completados.includes(profile);
+    };
+
+    const isRutinaAbandoned = (rutina) => {
+        return rutina.perfiles_abandonados.includes(profile);
+    };
     const groupedRutinas = groupRutinasByLevel(rutinas);
+    const apiUrl = import.meta.env.VITE_API_URL;
+    const handleCompleteRutina = async (rutinaId, level) => {
+        let experience = 0
+        if (level == 1) {
+            experience = 60
+        } else if (level == 2) {
+            experience = 150
+        } else if (level == 3) {
+            experience = 325
+        }
+        try {
+            const response = await fetch(`${apiUrl}/accounts/completarRutina/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `JWT ${localStorage.getItem('access')}`,
+                },
+                body: JSON.stringify({ rutina_id: rutinaId, experience_to_add: experience }),
+            });
+
+            if (response.ok) {
+                // Rutina completada con éxito
+                closeModal();
+            } else {
+                // Error al completar la rutina
+            }
+        } catch (error) {
+            // Error en la solicitud
+        }
+    };
+
+    const handleAbandonRutina = async (rutinaId, level) => {
+        let experience = 0
+        if (level == 1) {
+            experience = 20
+        } else if (level == 2) {
+            experience = 60
+        } else if (level == 3) {
+            experience = 120
+        }
+        try {
+            const response = await fetch(`${apiUrl}/accounts/abandonarRutina/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `JWT ${localStorage.getItem('access')}`,
+                },
+                body: JSON.stringify({ rutina_id: rutinaId, experience_to_reduce: experience }),
+            });
+
+            if (response.ok) {
+                // Rutina abandonada con éxito
+                closeModal();
+            } else {
+                // Error al abandonar la rutina
+            }
+        } catch (error) {
+            // Error en la solicitud
+        }
+    };
+
+    const handleDeleteRutina = async (rutinaId, level, estado) => {
+        let experience = 0
+        if (estado == "a") {
+            if (level == 1) {
+                experience = -20
+            } else if (level == 2) {
+                experience = -60
+            } else if (level == 3) {
+                experience = -120
+            }
+        } else {
+            if (level == 1) {
+                experience = 60
+            } else if (level == 2) {
+                experience = 150
+            } else if (level == 3) {
+                experience = 325
+            }
+        }
+
+        try {
+            const response = await fetch(`${apiUrl}/accounts/deleteRutina/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `JWT ${localStorage.getItem('access')}`,
+                },
+                body: JSON.stringify({ rutina_id: rutinaId, experience: experience }),
+            });
+
+            if (response.ok) {
+                // Rutina abandonada con éxito
+                closeModal();
+            } else {
+                // Error al abandonar la rutina
+            }
+        } catch (error) {
+            // Error en la solicitud
+        }
+    };
     return (
         <div className="container px-5 mx-auto mb-8 mt-8">
             <Tabs
@@ -41,7 +150,7 @@ const MisRutinas = ({ rutinas }) => {
                 textColor="primary"
                 centered
             >
-                {levels.map((level, index) => (
+                {nivel.map((level, index) => (
                     <Tab
                         key={level}
                         label={level.charAt(0).toUpperCase() + level.slice(1)}
@@ -54,7 +163,12 @@ const MisRutinas = ({ rutinas }) => {
                         ? groupedRutinas[level]?.map((rutina, idx) => (
                             <div
                                 key={idx}
-                                className="p-4 bg-white shadow-md rounded-lg cursor-pointer"
+                                className={`p-4 shadow-md rounded-lg cursor-pointer ${isRutinaCompleted(rutina)
+                                    ? 'bg-green-400 text-white'
+                                    : isRutinaAbandoned(rutina)
+                                        ? 'bg-red-400 text-white'
+                                        : 'bg-white'
+                                    }`}
                                 onClick={() => setSelectedRutina(rutina)}
                             >
                                 <h2 className="text-xl font-bold">{rutina.nombre}</h2>
@@ -127,28 +241,96 @@ const MisRutinas = ({ rutinas }) => {
                                         {/* Agrega aquí más información sobre la rutina */}
                                     </div>
                                     <div className="mt-6 grid gap-2 grid-cols-1 md:grid-cols-3">
-                                        <button
-                                            type="button"
-                                            className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-500"
-                                            onClick={closeModal}
-                                        >
-                                            Cerrar
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-red-700 bg-red-100 border border-red-300 rounded-md hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
-                                        >
-                                            Abandonar
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-green-700 bg-green-100 border border-green-300 rounded-md hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                                            onClick={() => {
-                                                addRutina(selectedRutina.id);
-                                            }}
-                                        >
-                                            Completada
-                                        </button>
+                                        {
+                                            isRutinaCompleted(selectedRutina) ? (
+                                                <>
+                                                    <button
+                                                        type="button"
+                                                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-500"
+                                                        onClick={() => {
+                                                            closeModal()
+                                                        }}
+                                                    >
+                                                        Cerrar
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-green-700 bg-green-100 border border-green-300 rounded-md hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-green-500"
+
+                                                    >
+                                                        Completada
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-red-700 bg-red-100 border border-red-300 rounded-md hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
+                                                        onClick={() => {
+                                                            handleDeleteRutina(selectedRutina.id, selectedRutina.nivel, "c");
+                                                        }}
+                                                    >
+                                                        Eliminar
+                                                    </button>
+
+                                                </>
+                                            ) : isRutinaAbandoned(selectedRutina) ? (
+                                                <>
+                                                    <button
+                                                        type="button"
+                                                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-500"
+                                                        onClick={() => {
+                                                            closeModal()
+                                                        }}
+                                                    >
+                                                        Cerrar
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-red-700 bg-red-100 border border-red-300 rounded-md hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
+
+                                                    >
+                                                        Abandonada
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="inline-flex items-center justify-center px-4 py-2 text-smfont-medium text-red-700 bg-red-100 border border-red-300 rounded-md hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
+                                                        onClick={() => {
+                                                            handleDeleteRutina(selectedRutina.id, selectedRutina.nivel, "a");
+                                                        }}
+                                                    >
+                                                        Eliminar
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <button
+                                                        type="button"
+                                                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-500"
+                                                        onClick={() => {
+                                                            closeModal()
+                                                        }}
+                                                    >
+                                                        Cerrar
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-red-700 bg-red-100 border border-red-300 rounded-md hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
+                                                        onClick={() => {
+                                                            handleAbandonRutina(selectedRutina.id, selectedRutina.nivel);
+                                                        }}
+                                                    >
+                                                        Abandonar
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-green-700 bg-green-100 border border-green-300 rounded-md hover:bg-green-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-green-500"
+                                                        onClick={() => {
+                                                            handleCompleteRutina(selectedRutina.id, selectedRutina.nivel);
+                                                        }}
+                                                    >
+                                                        Completada
+                                                    </button>
+                                                </>
+                                            )
+                                        }
                                     </div>
                                 </div>
                             </Transition.Child>

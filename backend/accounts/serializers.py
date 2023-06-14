@@ -104,7 +104,7 @@ class ProfileCreateSerializer(serializers.ModelSerializer):
     user_rutinas = RutinasSerializer(source="rutinas", many=True, read_only=True)
     class Meta:
         model = Profile
-        fields = ('id', 'user','user_publicaciones','user_rutinas','publicaciones_con_mis_likes', 'descripcion','solicitudEnviada','solicitudRecibida','amigos','imagen','user_id', 'user_name','user_email','telefono','edad','is_private', 'user_reservas')
+        fields = ('id', 'user','user_publicaciones','user_rutinas','publicaciones_con_mis_likes', 'descripcion','solicitudEnviada','solicitudRecibida','amigos','imagen','user_id', 'user_name','user_email','telefono','edad','is_private', 'user_reservas','experiencia','nivel')
     def get_publicaciones_con_mis_likes(self, obj):
         # Filtra las publicaciones que tienen tu "me gusta"
         publicaciones_con_mis_likes = Publicacion.objects.filter(like=obj)

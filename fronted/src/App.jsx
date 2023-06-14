@@ -9,7 +9,6 @@ import { Provider } from 'react-redux';
 import store from './store';
 import CrearPerfil from './containers/Perfil/CrearPerfil';
 import { UserProvider } from './provider/ProviderContext';
-import ConPerfil from './containers/Perfil/ConPerfil';
 import MisPublicaciones from './containers/Post/MisPublicaciones';
 import { Error403 } from './Error403';
 import Layout from './hocs/Layout';

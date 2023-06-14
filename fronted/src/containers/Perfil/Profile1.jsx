@@ -15,6 +15,7 @@ import MisParques from './MisParques';
 import MediaQuery from 'react-responsive';
 import { UserContext } from '../../provider/UserContext';
 import MisRutinas from '../Rutinas/MisRutinas';
+import ExperienceBar from '../probar/ExperienceBar';
 
 const ProfileCard = styled.div`
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -27,6 +28,7 @@ function Profile1({ datas }) {
     const [publicaciones, setPublicaciones] = useState(true)
     const [amigos, setAmigos] = useState(false)
     const [notificaciones, setNotificaciones] = useState(false)
+    const [rutinas, setRutinas] = useState(false)
     const [reservas, setReservas] = useState(false)
     const [descripcionError, setDescripcionError] = useState("");
     const [telefonoError, setTelefonoError] = useState("");
@@ -126,7 +128,7 @@ function Profile1({ datas }) {
             setFormData({ ...formData, [e.target.name]: e.target.value });
         }
     };
-    
+
     const saveChanges = useCallback(() => {
         let isValid = true;
 
@@ -164,13 +166,14 @@ function Profile1({ datas }) {
 
     }, [dispatch, formData, privateProfile, datas.user, handleProfileUpdate]);
     //
-
+ 
     function clickPubli() {
         setPublicaciones(true)
         setAmigos(false)
         setNotificaciones(false)
         setReservas(false)
         setEditMode(false);
+        setRutinas(false)
     }
     function clickAmi() {
         setAmigos(true)
@@ -181,10 +184,20 @@ function Profile1({ datas }) {
         setAmigos(false)
         setNotificaciones(true)
         setReservas(false)
+        setRutinas(false)
         setEditMode(false);
     }
     function clickReserva() {
         setReservas(true)
+        setRutinas(false)
+        setPublicaciones(false)
+        setAmigos(false)
+        setNotificaciones(false)
+        setEditMode(false);
+    }
+    function clickRutina() {
+        setReservas(false)
+        setRutinas(true)
         setPublicaciones(false)
         setAmigos(false)
         setNotificaciones(false)
@@ -199,12 +212,12 @@ function Profile1({ datas }) {
     function handlePasswordChange() {
         setShowModalPassword(true);
     }
-    
+
     const [amigosList, setAmigosList] = useState([]);
     return (
         <>
-        
-            <ProfileCard className="mt-10 mx-10 rounded-lg shadow-md p-6">
+
+            <ProfileCard className="mt-10 mx-2 sm:mx-4 md:mx-6 lg:mx-8 xl:mx-10 rounded-lg shadow-md p-6">
                 <div className="space-y-4">
                     {editMode ? (
                         <>
@@ -256,10 +269,14 @@ function Profile1({ datas }) {
                     )}
                 </div>
                 <ul className="text-sm space-y-2 mt-4">
-                    <li className="flex items-center">
+                    <div className="mt-4">
+                        <h3 className="form-label font-bold">Nivel: {datas.nivel}</h3>
+                        <ExperienceBar level={datas.nivel} experience={datas.experiencia} userId={datas.user} />
+                    </div>
+                    {/* <li className="flex items-center">
                         <UserGroupIcon className="h-5 w-5 mr-2" />
                         Logros: 0
-                    </li>
+                    </li> */}
                     <li className="flex items-center">
                         <PhoneIcon className="h-5 w-5 mr-2" />
                         Teléfono:{" "}
@@ -351,13 +368,13 @@ function Profile1({ datas }) {
                         )}
                     </button>
 
-                    <MediaQuery minWidth={673}>
-                        <button onClick={clickAmi} className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
-                            <UserGroupIcon className="h-5 w-5 inline-block mr-2" />
-                            Amigos {datas && datas.amigos.length}
-                        </button>
-                    </MediaQuery>
-                    <MediaQuery minWidth={1049}>
+
+                    <button onClick={clickAmi} className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
+                        <UserGroupIcon className="h-5 w-5 inline-block mr-2" />
+                        Amigos {datas && datas.amigos.length}
+                    </button>
+
+                    <MediaQuery minWidth={1121}>
                         <button onClick={clickReserva} className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-5 w-5 inline-block mr-2">
@@ -365,6 +382,13 @@ function Profile1({ datas }) {
                             </svg>
 
                             Agenda {datas && datas.user_reservas.length}
+                        </button>
+                        <button
+                            onClick={clickRutina}
+                            className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto"
+                        >
+                            <CogIcon className="h-5 w-5 inline-block mr-2" />
+                            Rutinas
                         </button>
                         {
                             !editMode &&
@@ -376,21 +400,29 @@ function Profile1({ datas }) {
                                 Configuración
                             </button>
                         }
+
                     </MediaQuery>
                 </div>
-                <MediaQuery maxWidth={1049}>
+                <MediaQuery maxWidth={1121}>
                     <div className='space-y-4 sm:space-y-0 sm:space-x-4 mt-3'>
-                        <MediaQuery maxWidth={673}>
+                        {/* <MediaQuery maxWidth={673}>
                             <button onClick={clickAmi} className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
                                 <UserGroupIcon className="h-5 w-5 inline-block mr-2" />
                                 Amigos {datas && datas.amigos.length}
                             </button>
-                        </MediaQuery>
+                        </MediaQuery> */}
                         <button onClick={clickReserva} className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-5 w-5 inline-block mr-2">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
                             </svg>
                             Agenda {datas && datas.user_reservas.length}
+                        </button>
+                        <button
+                            onClick={clickRutina}
+                            className="bg-white text-purple-600 font-bold py-2 px-4 rounded focus:outline-none w-full sm:w-auto"
+                        >
+                            <CogIcon className="h-5 w-5 inline-block mr-2" />
+                            Rutinas
                         </button>
                         {
                             !editMode &&
@@ -415,7 +447,7 @@ function Profile1({ datas }) {
                             >
                                 {isSaving ? 'Guardando...' : 'Guardar'}
                             </button>
-                          
+
 
                             <button
                                 onClick={cancelEdit}
@@ -546,10 +578,10 @@ function Profile1({ datas }) {
                     </div>
                 </div>
             )}
-            {<MisRutinas rutinas={datas.user_rutinas}/>}
             {reservas && <MisParques reservas={datas.user_reservas} />}
             {publicaciones && <TabSelector mislikes={datas.publicaciones_con_mis_likes} imga={datas.user_publicaciones} profile={datas} />}
-            {notificaciones && <TabSelectorNotis  />}
+            {notificaciones && <TabSelectorNotis />}
+            {rutinas && <MisRutinas rutinas={datas.user_rutinas} profile={datas.id} />}
             {amigos && (
                 <>
                     <ListaAmigos friends={amigosList} onClose={() => setAmigos(false)} />

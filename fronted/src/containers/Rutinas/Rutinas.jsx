@@ -4,14 +4,21 @@ import Tab from '@mui/material/Tab';
 import axios from 'axios';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
-
+import { Select, MenuItem } from '@material-ui/core';
 const Rutinas = () => {
+    const [mobileActiveTab, setMobileActiveTab] = useState(0);
+
+    const handleMobileTabChange = (event) => {
+        setMobileActiveTab(event.target.value);
+        handleTabChange(null, event.target.value);
+    };
     const [activeTab, setActiveTab] = useState(0);
     const [rutinas, setRutinas] = useState({
         beginner: [],
         intermediate: [],
         advanced: [],
     });
+    const nivel = ['Principiante', 'Intermedio', 'Avanzada']
     const [selectedRutina, setSelectedRutina] = useState(null);
     const apiUrl = import.meta.env.VITE_API_URL;
     const addRutina = async (rutinaId) => {
@@ -61,20 +68,33 @@ const Rutinas = () => {
 
     return (
         <div className="container px-5 mx-auto mb-8 mt-8">
-            <Tabs
-                value={activeTab}
-                onChange={handleTabChange}
-                indicatorColor="primary"
-                textColor="primary"
-                centered
-            >
-                {levels.map((level, index) => (
-                    <Tab
-                        key={level}
-                        label={level.charAt(0).toUpperCase() + level.slice(1)}
-                    />
-                ))}
-            </Tabs>
+            <div className="hidden sm:block">
+                <Tabs
+                    value={activeTab}
+                    onChange={handleTabChange}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    centered
+                >
+                    {nivel.map((level, index) => (
+                        <Tab key={level} label={level.charAt(0).toUpperCase() + level.slice(1)} />
+                    ))}
+                </Tabs>
+            </div>
+            <div className="block sm:hidden">
+                <Select
+                    value={mobileActiveTab}
+                    onChange={handleMobileTabChange}
+                    variant="outlined"
+                    className="w-full"
+                >
+                    {nivel.map((level, index) => (
+                        <MenuItem key={level} value={index}>
+                            {level.charAt(0).toUpperCase() + level.slice(1)}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-8">
                 {levels.map((level, index) =>
                     activeTab === index

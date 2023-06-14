@@ -14,7 +14,7 @@ import CrearPerfil from '../containers/Perfil/CrearPerfil';
 import CrearRutina from '../containers/Rutinas/CrearRutina';
 
 const PalabrasList = ({ palabras, cerrar }) => (
-  <div className="position-relative">
+  <div className="position-relative z-50">
     <ul className="list-group position-absolute top-100 start-0">
       {palabras.map((palabra, index) => (
         <li className="list-group-item" key={index}>
@@ -177,8 +177,8 @@ export const Navbar = () => {
                   <ul className="ml-3 flex items-center space-x-6 space-y-0 md:space-y-0 md:space-x-6">
                     {profile ? (
                       <>
-                      <li className="text-lg font-medium group">
-                          <button type="button" onClick={() => { setModalOpen(true); }}><UploadIcon className="h-6 w-6" /></button>
+                        <li className="text-lg font-medium group">
+                          <button type="button" onClick={() => { setModalOpen(true); }}><img src="https://cdn-icons-png.flaticon.com/512/1373/1373779.png" alt="Custom Icon" className="h-6 w-6" /></button>
                           <div className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out" />
                         </li>
                         <li className="text-lg font-medium group">
@@ -315,7 +315,7 @@ export const Navbar = () => {
               </div>
             )}
           </nav>
-          {modalOpen && <CrearRutina setModalOpen={setModalOpen}handleProfileUpdate={handleProfileUpdate}/>}
+          {modalOpen && <CrearRutina setModalOpen={setModalOpen} handleProfileUpdate={handleProfileUpdate} />}
           {showCrearPerfil && <CrearPerfil onClose={handleCrearPerfil} handleProfileUpdate={handleProfileUpdate} />}
         </>
       }

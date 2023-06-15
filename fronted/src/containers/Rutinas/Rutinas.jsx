@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import axios from 'axios';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { Select, MenuItem } from '@material-ui/core';
+import { UserContext } from '../../provider/UserContext';
 const Rutinas = () => {
     const [mobileActiveTab, setMobileActiveTab] = useState(0);
-
+    const { handleProfileUpdate, updateProfileKey } = useContext(UserContext);
     const handleMobileTabChange = (event) => {
         setMobileActiveTab(event.target.value);
         handleTabChange(null, event.target.value);
@@ -31,6 +32,7 @@ const Rutinas = () => {
             };
             const response = await axios.post(`${apiUrl}/accounts/add_rutina/`, { rutina_id: rutinaId }, config);
             closeModal();
+            handleProfileUpdate()
             console.log('Rutina añadida:', response.data);
         } catch (error) {
             console.error('Error al añadir la rutina:', error);

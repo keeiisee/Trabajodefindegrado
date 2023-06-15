@@ -66,64 +66,61 @@ export const Navbarhome = () => {
         {isOpenL && <LoginModal />}
       </div>
       <nav className="bg-gradient-to-r from-purple-600 via-indigo-500 to-blue-600 py-4 px-6 shadow-md">
-      <div className="container mx-auto flex items-center justify-between">
-        <Link
-          to="/paginadeinicio"
-          className="text-2xl sm:text-3xl font-bold tracking-wide text-white"
-        >
-          Calistenia
-        </Link>
-        {isAuthenticated ? (
-          <ul className="flex items-center space-x-4 sm:space-x-6">
-            <>
-              <li className="text-base sm:text-lg font-medium group">
-                <a
-                  type="button"
-                  onClick={() => {
-                    navigate('/paginadeinicio');
-                  }}
-                  className="text-white hover:text-yellow-300 transition-colors duration-200"
-                >
-                  Entrar
-                </a>
-              </li>
-              <li className="text-base sm:text-lg font-medium group">
-                <a
-                  type="button"
-                  onClick={logout_user}
-                  className="text-white hover:text-yellow-300 transition-colors duration-200"
-                >
-                  Cerrar Sesion
-                </a>
-              </li>
-            </>
-          </ul>
-        ) : (
-          <ul className="flex items-center space-x-4 sm:space-x-6">
-            <>
-              <li className="text-base sm:text-lg font-medium group">
-                <a
-                  type="button"
-                  onClick={openLog}
-                  className="text-white hover:text-yellow-300 transition-colors duration-200"
-                >
-                  Login
-                </a>
-              </li>
-              <li className="text-base sm:text-lg font-medium group">
-                <a
-                  type="button"
-                  onClick={openReg}
-                  className="text-white hover:text-yellow-300 transition-colors duration-200"
-                >
-                  Registrarse
-                </a>
-              </li>
-            </>
-          </ul>
-        )}
-      </div>
-    </nav>
+        <div className="container mx-auto flex items-center justify-between">
+          <Link to="/paginadeinicio" className="text-2xl font-bold tracking-wide font-sans text-white hover:text-yellow-300 transition duration-300 ease-in-out">
+            Calis<span className="text-yellow-500">Connect</span>
+          </Link>
+          {isAuthenticated ? (
+            <ul className="flex items-center space-x-4 sm:space-x-6">
+              <>
+                <li className="text-base sm:text-lg font-medium group">
+                  <a
+                    type="button"
+                    onClick={() => {
+                      navigate('/paginadeinicio');
+                    }}
+                    className="text-white hover:text-yellow-300 transition-colors duration-200"
+                  >
+                    Entrar
+                  </a>
+                </li>
+                <li className="text-base sm:text-lg font-medium group">
+                  <a
+                    type="button"
+                    onClick={logout_user}
+                    className="text-white hover:text-yellow-300 transition-colors duration-200"
+                  >
+                    Cerrar Sesion
+                  </a>
+                </li>
+              </>
+            </ul>
+          ) : (
+            <ul className="flex items-center space-x-4 sm:space-x-6">
+              <>
+                <li className="text-base sm:text-lg font-medium group">
+                  <a
+                    type="button"
+                    onClick={openLog}
+                    className="text-white hover:text-yellow-300 transition-colors duration-200"
+                  >
+                    Login
+                  </a>
+                </li>
+                <li className="text-base sm:text-lg font-medium group">
+                  <a
+                    type="button"
+                    onClick={openReg}
+                    className="text-white hover:text-yellow-300 transition-colors duration-200"
+                  >
+                    Registrarse
+                  </a>
+                </li>
+              </>
+            </ul>
+          )}
+        </div>
+      </nav>
       {notification && (
         <div className="notification-popup">
           Recibirás un correo de confirmación en breve.

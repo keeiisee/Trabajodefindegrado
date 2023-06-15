@@ -100,7 +100,7 @@ const PerfilDeOtro1 = () => {
             }
             {!isLoading && privacidad && !relationshipStatus.esAmigo ? (
                 <>
-                    <ProfileCard className="mt-10 mx-10 rounded-lg shadow-md p-6">
+                    <ProfileCard className="mt-10 mx-2 sm:mx-4 md:mx-6 lg:mx-8 xl:mx-10 rounded-lg shadow-md p-6">
                         <div className="space-y-4">
                             <img
                                 onClick={infoPerfil}
@@ -172,7 +172,7 @@ const PerfilDeOtro1 = () => {
             ) : null}
             {privacidad && relationshipStatus.esAmigo || !privacidad ? (
                 <>
-                    <ProfileCard className="mt-10 mx-10 rounded-lg shadow-md p-6">
+                    <ProfileCard className="mt-10 mx-2 sm:mx-4 md:mx-6 lg:mx-8 xl:mx-10 rounded-lg shadow-md p-6">
                         <div className="space-y-4">
                             <img
                                 onClick={infoPerfil}
@@ -189,14 +189,12 @@ const PerfilDeOtro1 = () => {
 
                             <li className="flex items-center">
                                 <PhoneIcon className="h-5 w-5 mr-2" />
-                                Teléfono: {' '}
-
-                                {profile && profile[0].telefono}
+                                Teléfono: {profile && profile[0].telefono}
 
                             </li>
                             <li className="flex items-center">
                                 <UserGroupIcon className="h-5 w-5 mr-2" />
-                                Logros: 0
+                                Nivel: {profile && profile[0].nivel}
                             </li>
                             <li className="flex items-center">
                                 <MailIcon className="h-5 w-5 mr-2" />
@@ -204,9 +202,7 @@ const PerfilDeOtro1 = () => {
                             </li>
                             <li className="flex items-center">
                                 <CakeIcon className="h-5 w-5 mr-2" />
-                                Edad:{' '}
-
-                                24
+                                Edad: {profile && profile[0].edad}
 
                             </li>
                         </ul>

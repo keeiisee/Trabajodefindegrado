@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import axios from 'axios';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import { UserContext } from '../../provider/UserContext';
 const groupRutinasByLevel = (rutinas) => {
     const groupedRutinas = {};
 
@@ -21,7 +21,7 @@ const MisRutinas = ({ rutinas, profile }) => {
 
     const [selectedRutina, setSelectedRutina] = useState(null);
     const [activeTab, setActiveTab] = useState(0);
-
+    const { handleProfileUpdate, updateProfileKey } = useContext(UserContext);
     const levels = ['nivel 1', 'nivel 2', 'nivel 3'];
     const nivel = ['Principiante', 'Intermedio', 'Avanzada']
     const handleTabChange = (event, newValue) => {
@@ -62,6 +62,7 @@ const MisRutinas = ({ rutinas, profile }) => {
 
             if (response.ok) {
                 // Rutina completada con éxito
+                handleProfileUpdate()
                 closeModal();
             } else {
                 // Error al completar la rutina
@@ -91,6 +92,7 @@ const MisRutinas = ({ rutinas, profile }) => {
             });
 
             if (response.ok) {
+                handleProfileUpdate()
                 // Rutina abandonada con éxito
                 closeModal();
             } else {
@@ -113,11 +115,11 @@ const MisRutinas = ({ rutinas, profile }) => {
             }
         } else {
             if (level == 1) {
-                experience = 60
+                experience = -60
             } else if (level == 2) {
-                experience = 150
+                experience = -150
             } else if (level == 3) {
-                experience = 325
+                experience = -325
             }
         }
 
@@ -132,6 +134,7 @@ const MisRutinas = ({ rutinas, profile }) => {
             });
 
             if (response.ok) {
+                handleProfileUpdate()
                 // Rutina abandonada con éxito
                 closeModal();
             } else {

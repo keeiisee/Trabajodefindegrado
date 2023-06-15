@@ -107,10 +107,9 @@ export const Navbar = () => {
         <>
           <nav className="bg-gradient-to-r from-purple-600 via-indigo-500 to-blue-600 py-4 px-6 shadow-md">
             <div className="container mx-auto flex items-center justify-between">
-              <Link to="/paginadeinicio" className="text-3xl font-bold tracking-wide font-sans text-white hover:text-yellow-300 transition duration-300 ease-in-out">
-                Cal<span className="text-yellow-500">istenia</span>
+              <Link to="/paginadeinicio" className="text-2xl font-bold tracking-wide font-sans text-white hover:text-yellow-300 transition duration-300 ease-in-out">
+                Calis<span className="text-yellow-500">Connect</span>
               </Link>
-
               <div className="flex">
                 <div className="flex-1 flex justify-center px-2 lg:ml-6 lg:justify-end">
                 </div>
@@ -126,9 +125,6 @@ export const Navbar = () => {
                     <Link to="/profile">
                       <img className="w-10 h-10 rounded-full object-cover" src={url} alt="Foto de Perfil" />
                     </Link>
-                    <div
-                      className="h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out"
-                    />
                   </li>
                 </ul>
               </div>
@@ -157,8 +153,8 @@ export const Navbar = () => {
 
           <nav className="bg-gradient-to-r from-purple-600 via-indigo-500 to-blue-600 py-4 px-6 shadow-md">
             <div className="container mx-auto flex items-center justify-between">
-              <Link to="/paginadeinicio" onClick={() => setShowCrearPerfil(false)} className="text-3xl font-bold tracking-wide font-sans text-white hover:text-yellow-300 transition duration-300 ease-in-out">
-                Cal<span className="text-yellow-500">istenia</span>
+              <Link to="/paginadeinicio" className="text-2xl font-bold tracking-wide font-sans text-white hover:text-yellow-300 transition duration-300 ease-in-out">
+                Calis<span className="text-yellow-500">Connect</span>
               </Link>
               <div className="hidden sm:block sm:ml-6">
                 <div className="flex">
@@ -235,7 +231,7 @@ export const Navbar = () => {
                   </svg>
                 </button>
                 {profile &&
-                  <div className="sm:hidden">
+                  <div className="sm:hidden relative">
                     <Link onClick={() => setIsOpen(false)} to="/profile">
                       <img className="w-10 h-10 rounded-full object-cover" src={url} alt="Foto de Perfil" />
                     </Link>
@@ -278,6 +274,14 @@ export const Navbar = () => {
                           <div className="flex justify-between">
                             Buscar Parques
                             <img src="https://cdn-icons-png.flaticon.com/512/4615/4615521.png" alt="Custom Icon" className="h-6 w-6" />
+                          </div>
+                        </a>
+                      </li>
+                      <li>
+                        <a type="button" onClick={() => { setModalOpen(true); }} className="block px-4 py-2 text-gray-800">
+                          <div className="flex justify-between">
+                            Crear Rutina
+                            <img src="https://cdn-icons-png.flaticon.com/512/1373/1373779.png" alt="Custom Icon" className="h-6 w-6" />
                           </div>
                         </a>
                       </li>

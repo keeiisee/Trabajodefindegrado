@@ -1,12 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { addLevel } from '../../actions/nivelUsuairo';
 import { useDispatch } from 'react-redux';
+import { UserContext } from '../../provider/UserContext';
 const ExperienceBar = ({ level, experience, userId }) => {
     const dispatch = useDispatch();
-    
+    const { handleProfileUpdate, updateProfileKey } = useContext(UserContext);
     useEffect(() => {
       if (level < MAX_LEVEL && calculateXpPercentage() >= 100) {
-        dispatch(addLevel(userId));
+        dispatch(addLevel(userId))
+        .then(()=>{
+            handleProfileUpdate()
+        })
       }
     }, [level, experience]);
   

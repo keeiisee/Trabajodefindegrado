@@ -19,7 +19,7 @@ const TabSelectorNotis = () => {
       };
     return (
         <>
-            <div className="button-container mt-10 flex justify-center">
+            <div className="button-container mt-10 flex justify-center mb-10">
                 <button
                     onClick={() => {
                         handleClick('amistad');

@@ -67,11 +67,11 @@ export const Navbarhome = () => {
       </div>
       <nav className="bg-gradient-to-r from-purple-600 via-indigo-500 to-blue-600 py-4 px-6 shadow-md">
         <div className="container mx-auto flex items-center justify-between">
-          <Link to="/paginadeinicio" className="text-2xl font-bold tracking-wide font-sans text-white hover:text-yellow-300 transition duration-300 ease-in-out">
+          <Link to="/" className="text-xl font-bold tracking-wide font-sans text-white hover:text-yellow-300 transition duration-300 ease-in-out">
             Calis<span className="text-yellow-500">Connect</span>
           </Link>
           {isAuthenticated ? (
-            <ul className="flex items-center space-x-4 sm:space-x-6">
+            <ul className="ml-1 lex items-center space-x-4 sm:space-x-6">
               <>
                 <li className="text-base sm:text-lg font-medium group">
                   <a
@@ -84,7 +84,7 @@ export const Navbarhome = () => {
                     Entrar
                   </a>
                 </li>
-                <li className="text-base sm:text-lg font-medium group">
+                {/* <li className="text-base sm:text-lg font-medium group">
                   <a
                     type="button"
                     onClick={logout_user}
@@ -92,7 +92,7 @@ export const Navbarhome = () => {
                   >
                     Cerrar Sesion
                   </a>
-                </li>
+                </li> */}
               </>
             </ul>
           ) : (

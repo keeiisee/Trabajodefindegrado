@@ -107,7 +107,7 @@ export const Navbar = () => {
         <>
           <nav className="bg-gradient-to-r from-purple-600 via-indigo-500 to-blue-600 py-4 px-6 shadow-md">
             <div className="container mx-auto flex items-center justify-between">
-              <Link to="/paginadeinicio" className="text-2xl font-bold tracking-wide font-sans text-white hover:text-yellow-300 transition duration-300 ease-in-out">
+              <Link to="/paginadeinicio" className="text-xl font-bold tracking-wide font-sans text-white hover:text-yellow-300 transition duration-300 ease-in-out">
                 Calis<span className="text-yellow-500">Connect</span>
               </Link>
               <div className="flex">
@@ -153,7 +153,7 @@ export const Navbar = () => {
 
           <nav className="bg-gradient-to-r from-purple-600 via-indigo-500 to-blue-600 py-4 px-6 shadow-md">
             <div className="container mx-auto flex items-center justify-between">
-              <Link to="/paginadeinicio" className="text-2xl font-bold tracking-wide font-sans text-white hover:text-yellow-300 transition duration-300 ease-in-out">
+              <Link to="/paginadeinicio" className="text-xl font-bold tracking-wide font-sans text-white hover:text-yellow-300 transition duration-300 ease-in-out">
                 Calis<span className="text-yellow-500">Connect</span>
               </Link>
               <div className="hidden sm:block sm:ml-6">
